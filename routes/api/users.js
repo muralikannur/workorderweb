@@ -56,33 +56,36 @@ router.post('/', (req, res) => {
       newUser.save()
         .then(user => {
 
-          //send email with confirmation link
-          const transporter = nodemailer.createTransport({
-            host: 'smtp.mailgun.org',
-            port: 587,
-            secure: false,
-            auth: {
-              user: 'postmaster@mg.workorderweb.com',
-              pass: 'be77fe2f6c394ebaa486472b63a70210-713d4f73-ce718c57'
-            }
-          });
+          if (process.env.NODE_ENV != 'development') {
+            //send email with confirmation link
+            const transporter = nodemailer.createTransport({
+              host: 'smtp.mailgun.org',
+              port: 587,
+              secure: false,
+              auth: {
+                user: 'postmaster@mg.workorderweb.com',
+                pass: 'abda5ddf2df141bae37c1d9ae6319cb1-0a4b0c40-50d98dee'
+              }
+            });
 
-          const mailOptions = {
-            from: 'postmaster@workorderweb.com',
-            to: 'muralikannur@gmail.com,jaijack@gmail.com,compworld@gmail.com,priyeshnidumbram@gmail.com',
-            subject: 'WoW Activation - ' + user.email,
-            html: '<h1>Work Order Web Activation</h1><p>Hello Admin, <br/> <br/> Click the below link to activate the user ' +  user.email  + '.<br/><br/> <a href="https://workorderweb.com/activation?uid=' + user._id + '">Activation Link </a><br/><br/>Activation Code : <b>' + user.code + '</b><br/><br/>Sincerely, <br /> WoW Team.</p>'
-          };
+            const mailOptions = {
+              from: 'postmaster@workorderweb.com',
+              to: 'muralikannur@gmail.com,jaijack@gmail.com,compworld@gmail.com,priyeshnidumbram@gmail.com',
+              subject: 'WoW Activation - ' + user.email,
+              html: '<h1>Work Order Web Activation</h1><p>Hello Admin, <br/> <br/> Click the below link to activate the user ' +  user.email  + '.<br/><br/> <a href="https://workorderweb.com/activation?uid=' + user._id + '">Activation Link </a><br/><br/>Activation Code : <b>' + user.code + '</b><br/><br/>Sincerely, <br /> WoW Team.</p>'
+            };
 
-          transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-              logger.error(error);
-            } else {
-              logger.info('Email sent: ' + info.response);
-            }
-          });
-
+            transporter.sendMail(mailOptions, function(error, info){
+              if (error) {
+                logger.error(error);
+              } else {
+                logger.info('Email sent: ' + info.response);
+              }
+            });
+          }
           res.json({msg:'Activation link sent to the admin.' });
+
+
 
         });
     })
