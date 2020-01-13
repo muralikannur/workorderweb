@@ -1,0 +1,169 @@
+{ level: 'error',
+  message: 'getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017',
+  metadata: 
+   { name: 'MongoNetworkError',
+     errorLabels: [ 'TransientTransactionError' ],
+     service: 'user-service',
+     stack: 'Error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017\n    at errnoException (dns.js:50:10)\n    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:92:26)' },
+  timestamp: '2020-01-11T05:26:47.961Z',
+  [Symbol(mongoErrorContextSymbol)]: {} }
+2020-01-11T16:12:03.588Z [undefined] info: Server started on port 5000
+2020-01-11T16:12:03.597Z [undefined] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
+2020-01-11T16:16:26.231Z [undefined] info: Server started on port 5000
+2020-01-11T16:16:26.239Z [undefined] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
+2020-01-11T16:17:46.103Z [undefined] info: Server started on port 5000
+2020-01-11T16:17:46.118Z [undefined] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
+2020-01-11T16:18:56.831Z [wow\server.js] info: Server started on port 5000
+2020-01-11T16:18:56.851Z [wow\server.js] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
+2020-01-11T16:19:34.664Z [wow\server.js] info: Server started on port 5000
+2020-01-11T16:19:34.690Z [wow\server.js] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
+2020-01-11T16:19:58.360Z [wow\server.js] info: Server started on port 5000
+2020-01-11T16:19:58.374Z [wow\server.js] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
+
+2020-01-11T16:21:33.905Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-11T16:21:33.922Z [wow\server.js] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017 - Error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
+    at errnoException (dns.js:50:10)
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:92:26)
+
+2020-01-11T17:01:58.023Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-11T17:01:58.036Z [wow\server.js] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017 - Error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
+    at errnoException (dns.js:50:10)
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:92:26)
+
+2020-01-11T18:02:49.753Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-11T18:02:49.898Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-11T18:04:51.211Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-11T18:04:51.370Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-11T18:06:55.710Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-11T18:06:55.840Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-11T18:10:47.691Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-11T18:10:47.835Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T04:28:04.608Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T04:28:04.744Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T04:41:10.124Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T04:41:10.253Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T04:42:08.302Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T04:42:08.460Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T04:42:44.492Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T04:42:44.629Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T04:46:46.758Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T04:46:46.881Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T05:53:29.219Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T05:53:29.368Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T05:53:41.895Z [api\auth.js] error: User Does not exist. Email:ashkanna@gmail.com - undefined
+
+2020-01-12T05:57:29.736Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T05:57:29.845Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T05:57:34.826Z [api\auth.js] error: User Does not exist. Email:ashkanna@gmail.com - undefined
+
+2020-01-12T08:09:32.339Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T08:09:32.487Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T08:13:59.687Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T08:13:59.819Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T08:15:12.190Z [api\users.js] error: Invalid login: 535 5.7.0 Mailgun is not loving your login or password - Error: Invalid login: 535 5.7.0 Mailgun is not loving your login or password
+    at SMTPConnection._formatError (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:781:19)
+    at SMTPConnection._actionAUTHComplete (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:1516:34)
+    at SMTPConnection._responseActions.push.str (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
+    at SMTPConnection._processResponse (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:940:20)
+    at SMTPConnection._onData (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:746:14)
+    at TLSSocket.SMTPConnection._onSocketData (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:189:46)
+    at emitOne (events.js:116:13)
+    at TLSSocket.emit (events.js:211:7)
+    at addChunk (_stream_readable.js:263:12)
+    at readableAddChunk (_stream_readable.js:250:11)
+    at TLSSocket.Readable.push (_stream_readable.js:208:10)
+    at TLSWrap.onread (net.js:597:20)
+
+2020-01-12T08:19:25.303Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T08:19:25.452Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T14:09:19.936Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T14:09:20.093Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T14:21:00.765Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T14:21:00.909Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T14:23:25.858Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T14:23:25.993Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T14:27:37.918Z [api\customer.js] error: Customer Code undefined already exists. - undefined
+
+2020-01-12T14:27:59.688Z [api\customer.js] error: Customer Code undefined already exists. - undefined
+
+2020-01-12T14:28:15.883Z [api\customer.js] error: Customer Code undefined already exists. - undefined
+
+2020-01-12T14:29:07.880Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T14:29:07.990Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T14:31:25.899Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T14:31:26.107Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T14:36:59.919Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T14:37:00.032Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T14:38:39.584Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T14:38:39.708Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T14:57:19.597Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T14:57:19.742Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T16:13:59.715Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T16:13:59.860Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T16:26:44.711Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T16:26:44.837Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T16:30:18.377Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T16:30:18.483Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T16:30:35.100Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T16:30:35.202Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T16:30:53.228Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T16:30:53.378Z [wow\server.js] info: MongoDB Connected... - undefined
+
+2020-01-12T16:32:08.196Z [wow\server.js] info: Server started on port 5000 - undefined
+
+2020-01-12T16:32:08.326Z [wow\server.js] info: MongoDB Connected... - undefined

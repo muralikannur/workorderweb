@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\client",
+    "\\client\\src",
+    "\\client\\src\\components",
+    "\\client\\src\\components\\excel",
+    "\\client\\src\\components\\workorder",
+    "\\client\\src\\reducers",
+    "\\models",
+    "\\routes",
+    "\\routes\\api"
+  ],
+  "SelectedNode": "\\client\\src\\reducers\\woReducer.js",
+  "PreviewInSolutionExplorer": false
+}
