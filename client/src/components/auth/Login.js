@@ -12,7 +12,7 @@ class Login extends Component {
 
     //  const user = {
     //    email : 'muralikannur@gmail.com',
-    //    password : 'aaa'
+    //    password : 'murali123'
     //  };
     //  this.props.login(user);
 

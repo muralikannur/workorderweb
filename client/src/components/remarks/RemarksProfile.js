@@ -2,13 +2,15 @@ import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 import { REMARKS, PROFILE_TYPE} from './../../constants';
+import { notify_error } from '../../util';
 
 class RemarksProfile extends Component {
  
   constructor(props){
     super(props);
     this.state = {
-      profileType:0
+      profileType:0,
+      profileSide:''
     }
   }
   componentDidMount(){
@@ -21,6 +23,7 @@ class RemarksProfile extends Component {
   updateState() {
     if(this.props.item != null){
       this.setState({ profileType : this.props.item.profileType })
+      this.setState({ profileSide : this.props.item.profileSide })
     }
   }
 
@@ -30,7 +33,18 @@ class RemarksProfile extends Component {
   }
   
   UpdateRemark(){
-    var newItem = { ...this.props.item, profileType: this.state.profileType}
+
+    if(this.state.profileSide == ''){
+      notify_error('Please select the Profile Side');
+      return;
+    }
+    var newItem = { ...this.props.item, profileType: this.state.profileType, profileSide: this.state.profileSide}
+    if(this.state.profileSide == 'H'){
+      newItem.eb_c = 0; 
+    }
+    if(this.state.profileSide == 'W'){
+      newItem.eb_d = 0; 
+    }
     let remarks = this.props.item.remarks;
     if(remarks.length == 0 || !remarks.includes(REMARKS.PROFILE)){
       remarks.push(REMARKS.PROFILE);
@@ -48,14 +62,29 @@ class RemarksProfile extends Component {
       <div>
           {(this.props.material.profiles && this.props.material.profiles.length > 0) ? 
           <div>
-            <h5>Select the Profile Type</h5>
-            <select style={{width:"300px"}}  id="profileType" name="profileType" value={this.state.profileType}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
-            <option value="0" key="0" >Select...</option>
-            {this.props.material.profiles.filter(p => p.type != PROFILE_TYPE.E).map( (e) => {
-              return (
-                <option value={e.profileNumber} key={e.profileNumber} >{e.type} - H:{e.height} - W:{e.width}</option>
-              )})}
-            </select>   
+            <table style={{width:"100%"}}>
+              <tr>
+                <td>
+                  <h6>Select the Profile Type</h6>
+                  <select style={{width:"300px"}}  id="profileType" name="profileType" value={this.state.profileType}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
+                  <option value="0" key="0" >Select...</option>
+                  {this.props.material.profiles.filter(p => p.type != PROFILE_TYPE.E).map( (e) => {
+                    return (
+                      <option value={e.profileNumber} key={e.profileNumber} >{e.type} - H:{e.height} - W:{e.width}</option>
+                    )})}
+                  </select> 
+                </td>
+                <td>
+                  <h6>Select the side</h6>
+                  <select style={{width:"300px"}}  id="profileSide" name="profileSide" value={this.state.profileSide}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
+                    <option value="" key="" >Select...</option>
+                    <option value="H" key="H" >Height</option>
+                    <option value="W" key="W" >Width</option>
+                  </select> 
+                </td>
+              </tr>
+            </table>
+  
             <hr /><br />
             <div className="modal-footer" style={{paddingTop:"0px",paddingBottom:"5px",display:"block", textAlign:"right"}}>
             <button type="button" class="btn btn-success" onClick={() => {this.UpdateRemark()}}>Update</button>

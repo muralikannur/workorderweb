@@ -239,11 +239,11 @@ class MaterialMain extends Component {
     }
 
     //BOTH BOARD AND LAMINATE SHOULD NOT HAVE GRAINS
-    errItems = materialCodes.filter(i => (i.board != "0" && i.front_laminate != "0") && this.props.material.boards.find(b => b.boardNumber == i.board).grains != "0");
-    if(errItems.length > 0){
-      notify_error("Incorrect Board/Laminate combination. Board has built-in laminate." );
-      return false;
-    }
+    // errItems = materialCodes.filter(i => (i.board != "0" && i.front_laminate != "0") && this.props.material.boards.find(b => b.boardNumber == i.board).grains != "0");
+    // if(errItems.length > 0){
+    //   notify_error("Incorrect Board/Laminate combination. Board has built-in laminate." );
+    //   return false;
+    // }
 
     this.props.saveMaterialCodes(materialCodes);
     return true;
@@ -335,8 +335,7 @@ class MaterialMain extends Component {
                 role="tab" 
                 aria-controls="materialcode" 
                 aria-selected="false">
-                  <i className="icon-list"></i>
-                  Material Code
+                  <i className="icon-list"></i>X Y Combination
                 </a>
               </li>
               <li>

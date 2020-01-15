@@ -74,7 +74,8 @@ class MaterialCode extends Component {
       materialCodeNumber:maxId,
       board:'0',
       front_laminate:'0',
-      back_laminate:'0'
+      back_laminate:'0',
+      shortname:''
     }
     this.setState({materialCodes: [...this.state.materialCodes, newMaterialCode], currentItem:maxId});
     //this.props.saveItems( [...this.state.woitems, newItem]);
@@ -128,9 +129,10 @@ class MaterialCode extends Component {
         <thead>
         <tr  style={{padding:"0px"}}>
               <th>Code</th>
-              <th style={{width:"30%"}}> Board  </th>
-              <th style={{width:"30%"}}> Laminate (front) </th>
-              <th style={{width:"30%"}}> Laminate (back) </th>
+              <th style={{width:"30%"}}> Board (X) </th>
+              <th style={{width:"20%"}}> Front Laminate (Y) </th>
+              <th style={{width:"20%"}}> Back Laminate (Y) </th>
+              <th style={{width:"20%"}}> ShortName </th>    
               <th style={{width:"5%"}}>  </th>
         </tr>
         </thead>
@@ -144,7 +146,7 @@ class MaterialCode extends Component {
                     <option value="0"></option>
                     {this.props.material.boards.map( (e) => {
                     return (
-                    <option value={e.boardNumber} key={e.boardNumber} >{e.type} - {e.thickness}mm ({e.height} x {e.width}) {e.grains} </option>
+                    <option value={e.boardNumber} key={e.boardNumber} >[{e.boardNumber}] {e.type} - {e.thickness}mm ({e.height} x {e.width}) {e.grade}  {e.company} </option>
                     )})}
                     </select>
                 </div>
@@ -155,7 +157,7 @@ class MaterialCode extends Component {
                     <option value="0"></option>
                     {this.props.material.laminates.map( (e) => {
                     return (
-                    <option value={e.laminateNumber} key={e.laminateNumber} >{e.code} - {e.thickness}mm - {e.grains} </option>
+                    <option value={e.laminateNumber} key={e.laminateNumber} >[{e.laminateNumber}] {e.code} - {e.thickness}mm - {e.grains} </option>
                     )})}
                     </select>
                 </div>
@@ -170,7 +172,9 @@ class MaterialCode extends Component {
                     )})}
                     </select>
                 </div>
-            </td>                       
+            </td>    
+            <td><input type="text"  maxLength="50" className="form-control input-xs" value={materialCode.shortname}  id="shortname"  name="shortname" onChange={this.onChange}  /></td>
+                   
 
 
             <td>

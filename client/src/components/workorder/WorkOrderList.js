@@ -7,7 +7,7 @@ import { clearErrors } from '../../actions/errorActions';
 import { getAllWorkOrders, createWorkOrder, getWorkOrder } from '../../actions/woActions';
 import { getMaterial } from '../../actions/materialActions';
 import { getAllCustomers } from '../../actions/customerActions';
-import { notify_error } from '../../util';
+import { notify_error,isEmptyOrSpaces } from '../../util';
 
 class WorkOrderList extends Component {
 
@@ -60,6 +60,16 @@ class WorkOrderList extends Component {
 
     if(customerCode == "" || customerCode == 0 ){
       notify_error('Please select a customer');
+      return;
+    }
+
+    if(isEmptyOrSpaces(this.state.billing_address)){
+      notify_error('Please enter Billing Address');
+      return;
+    }
+
+    if(isEmptyOrSpaces(this.state.shipping_address)){
+      notify_error('Please enter Shipping Address');
       return;
     }
 

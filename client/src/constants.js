@@ -9,9 +9,8 @@ export const REMARKS = {
 }
 
 export const PROFILE_TYPE = {
-    H:'H-Profile',
-    W:'W-Profile',
-    E:'E-Profile'
+    H:'Handle Profile',
+    E:'Edge Profile'
 }
 
 

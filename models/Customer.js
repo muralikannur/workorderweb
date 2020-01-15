@@ -34,6 +34,10 @@ const CustomerSchema = new Schema({
   shipping_address: {
     type: String,
     required: false
+  },
+  user_id: {
+    type: Schema.Types.ObjectId,
+    required: true
   }
   
 });

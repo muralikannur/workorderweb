@@ -6,8 +6,11 @@ const logger = require('../../logger')(module);
 
 //Get list of all Customers
 router.get('/', auth, (req, res) => {
-
-  Customer.find({},{_id:1,customercode:1,companyname:1,contactperson:1,phone:1,whatsapp:1,email:1,billing_address:1,shipping_address:1})
+  let search = { user_id: req.user.id };
+  if (req.user.name == "ADMIN") {
+      search = {};
+  }
+  Customer.find(search,{_id:1,customercode:1,companyname:1,contactperson:1,phone:1,whatsapp:1,email:1,billing_address:1,shipping_address:1})
       .then(c => {
           res.status(200).json(c)
       })
@@ -23,7 +26,10 @@ router.get('/:id',auth, (req, res) => {
     let search = { _id: id };
     Customer.findOne(search)
       .then(customer => {
-        res.status(200).json(customer)
+        if(req.user.name == 'ADMIN' ||  customer.user_id == req.user.id)
+          res.status(200).json(customer)
+        else
+          res.json('Customer not linked to the Userid');
       })
       .catch(err => { 
         logger.error(err);
@@ -43,7 +49,8 @@ router.post('/', auth, (req,  res) => {
           logger.error('Customer Code ' + customercode + ' already exists.');
           res.status(200).json({error:'Customer Code ' + customercode + ' already exists.'})
         } else {
-          const newCustomer = new Customer({ customercode,companyname,contactperson,phone,whatsapp,billing_address,shipping_address});
+          const user_id = req.user.id;
+          const newCustomer = new Customer({ customercode,companyname,contactperson,phone,whatsapp,billing_address,shipping_address, user_id});
           newCustomer.save().then(c => {
               res.status(200).json(c);
           }).catch(err => { 
@@ -63,15 +70,6 @@ router.post('/', auth, (req,  res) => {
         }
       })
     }
-
-
-});
-
-
-//Update Customer
-router.post('/', auth, (req,  res) => {
-
-    let { customercode,companyname,contactperson,phone,whatsapp,billing_address,shipping_address } = req.body;
 
 
 });

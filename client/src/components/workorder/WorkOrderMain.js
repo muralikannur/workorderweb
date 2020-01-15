@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { WO_STATUS,PATTERN_CODE } from './../../constants';
 import XLSX from 'xlsx';
 import { REMARKS, PROFILE_TYPE, EB_START_NUMBER} from './../../constants';
-import { notify_error, notify_success }  from '../../util';
+import { notify_error, notify_success, isEmptyOrSpaces }  from '../../util';
 
 //Components
 import WorkOrderItems from './WorkOrderItems';
@@ -265,9 +265,9 @@ class WorkOrderMain extends Component {
       if(i.profileType != 0){
         if(this.props.material.profiles){
           let profile = this.props.material.profiles.find(p => p.profileNumber == i.profileType)
-          if(profile && profile.type == PROFILE_TYPE.H)
+          if(profile && i.profileSide == 'H')
             cutting_Width -= parseInt(profile.height);
-          if(profile && profile.type == PROFILE_TYPE.W)
+          if(profile && i.profileSide == 'W')
             cutting_Height -= parseInt(profile.height);
         }
       }
@@ -308,7 +308,8 @@ class WorkOrderMain extends Component {
         EB_C:(i.eb_c != undefined && !isNaN(i.eb_c) &&  i.eb_c != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_c).eb_thickness : 0,
         EB_D:(i.eb_d != undefined && !isNaN(i.eb_d) && i.eb_d != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_d).eb_thickness : 0,
         Remark:remarkData,
-        Material:matText
+        Material:matText,
+        Comments:i.comments
       })
 
       //Items
@@ -325,7 +326,7 @@ class WorkOrderMain extends Component {
         EB_C:(i.eb_c != undefined && !isNaN(i.eb_c) &&  i.eb_c != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_c).eb_thickness : 0,
         EB_D:(i.eb_d != undefined && !isNaN(i.eb_d) &&  i.eb_d != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_d).eb_thickness : 0,
         Remark:remarkData,
-       
+        Comments:i.comments
       })
 
     })
@@ -369,6 +370,7 @@ class WorkOrderMain extends Component {
       { wpx : 50 }, 
       { wpx : 100 },      
       { wpx : 150 },     
+      { wpx : 150 }     
     ];
 
     wb["Sheets"]["EdgeBands"]["!cols"] = [
@@ -422,7 +424,11 @@ class WorkOrderMain extends Component {
 
 getMaterialCode(i){
   if(i.code == PATTERN_CODE) return "PATTERN";
+  
+
   const m = this.props.material.materialCodes.find(m => m.materialCodeNumber == i.code);
+  if(!isEmptyOrSpaces(m.shortname)) return '[' + m.materialCodeNumber + '] ' + m.shortname;
+
   const b = this.props.material.boards.find(i => i.boardNumber == m.board);
   const fl = this.props.material.laminates.find(i => i.laminateNumber == m.front_laminate);
   const bl = this.props.material.laminates.find(i => i.laminateNumber == m.back_laminate);

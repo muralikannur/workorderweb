@@ -4,7 +4,7 @@ import $ from 'jquery';
 
 import { remarks } from '../../appConfig';
 import { REMARKS, PROFILE_TYPE, EB_START_NUMBER} from '../../constants';
-import { notify_error, notify_success }  from '../../util';
+import { notify_error, notify_success, isEmptyOrSpaces }  from '../../util';
 
 //Components
 import RemarksMain from '../remarks/RemarksMain';
@@ -33,13 +33,13 @@ class WorkOrderItems extends Component {
     this.setState({woitems: newProps.wo.woitems });
   }
 
-  headerClick = (col) => {
-    if(this.state.sortCol == col){
-      this.setState({sortOrder:this.state.sortOrder * -1})
-    }else {
-      this.setState({sortOrder:1, sortCol:col})
-    }
-  }
+  // headerClick = (col) => {
+  //   if(this.state.sortCol == col){
+  //     this.setState({sortOrder:this.state.sortOrder * -1})
+  //   }else {
+  //     this.setState({sortOrder:1, sortCol:col})
+  //   }
+  // }
 
   onItemClick = (e, i) => {
 
@@ -81,6 +81,25 @@ class WorkOrderItems extends Component {
     },100)
   }  
 
+  copyAtoBCD = (i) => {
+    let items = this.state.woitems;
+    let item = items.find(item => item.itemnumber == i);
+
+    if(item.eb_a == 0){
+      notify_error('Select EdgeBand for A side');
+      return;
+    }
+
+    item.eb_b = item.eb_a;
+    if(item.profileSide != "H") item.eb_c = item.eb_a;
+    if(item.profileSide != "W") item.eb_d = item.eb_a;
+
+    let nonModifiedItems = items.filter(item => item.itemnumber != i);
+
+    this.setState({woitems: [...nonModifiedItems, item]});
+    this.props.saveItems( [...nonModifiedItems, item]);
+  }  
+
   addItem = () => {
     if(this.props.material.materialCodes.length == 0){
       notify_error('Define Materials before adding the items');
@@ -105,7 +124,9 @@ class WorkOrderItems extends Component {
       eb_d:0,
       code:0,
       remarks:[],
+      comments:'',
       profileType:0,
+      profileSide:'',
       doubleThickWidth:0,
       ledgeType:0,
       shapeDetails:'',
@@ -155,32 +176,34 @@ class WorkOrderItems extends Component {
   getSortedItems = () => {
     const so = this.state.sortOrder;
     let items = this.state.woitems.filter(i => i.itemnumber != 0);
-    switch(this.state.sortCol){
-      case 'itemnumber':{
-        items = items.sort((a,b) => a.itemnumber > b.itemnumber ? 1 * so : -1 * so);
-        break;
-      }
-      case 'code':{
-        items = items.sort((a,b) => a.code > b.code ? 1 * so : -1 * so);
-        break;
-      }
-      case 'itemtype':{
-        items = items.sort((a,b) => a.itemtype > b.itemtype ? 1 * so : -1 * so);
-        break;
-      }
-      case 'height':{
-        items = items.sort((a,b) => a.height > b.height ? 1 * so : -1 * so);
-        break;
-      }
-      case 'width':{
-        items = items.sort((a,b) => a.width > b.width ? 1 * so : -1 * so);
-        break;
-      }
-      case 'quantity':{
-        items = items.sort((a,b) => a.quantity > b.quantity ? 1 * so : -1 * so);
-        break;
-      }
-    }
+    items = items.sort((a,b) => a.itemnumber > b.itemnumber ? 1 : -1);
+
+    // switch(this.state.sortCol){
+    //   case 'itemnumber':{
+    //     items = items.sort((a,b) => a.itemnumber > b.itemnumber ? 1 * so : -1 * so);
+    //     break;
+    //   }
+    //   case 'code':{
+    //     items = items.sort((a,b) => a.code > b.code ? 1 * so : -1 * so);
+    //     break;
+    //   }
+    //   case 'itemtype':{
+    //     items = items.sort((a,b) => a.itemtype > b.itemtype ? 1 * so : -1 * so);
+    //     break;
+    //   }
+    //   case 'height':{
+    //     items = items.sort((a,b) => a.height > b.height ? 1 * so : -1 * so);
+    //     break;
+    //   }
+    //   case 'width':{
+    //     items = items.sort((a,b) => a.width > b.width ? 1 * so : -1 * so);
+    //     break;
+    //   }
+    //   case 'quantity':{
+    //     items = items.sort((a,b) => a.quantity > b.quantity ? 1 * so : -1 * so);
+    //     break;
+    //   }
+    // }
     return items;
   }
 
@@ -198,6 +221,7 @@ class WorkOrderItems extends Component {
       switch(remarkId){
         case REMARKS.PROFILE:
           modifiedItem.profileType = 0;
+          modifiedItem.profileSide= '';
           break;
         case REMARKS.E_PROFILE:
             modifiedItem.eb_a = 0;
@@ -269,6 +293,8 @@ class WorkOrderItems extends Component {
 
   getMaterialText(m){
 
+    if(!isEmptyOrSpaces(m.shortname)) return '[' + m.materialCodeNumber + '] ' + m.shortname;
+
     const b = (m.board != 0 ? this.props.material.boards.find(i => i.boardNumber == m.board) : null);
     const fl =(m.front_laminate != 0 ?  this.props.material.laminates.find(i => i.laminateNumber == m.front_laminate): null);
     const bl = (m.back_laminate != 0 ? this.props.material.laminates.find(i => i.laminateNumber == m.back_laminate): null);
@@ -285,16 +311,18 @@ class WorkOrderItems extends Component {
 
     this.colNames = [
       {n:'itemnumber',t:'#',c:'pointer',w:2},
-      {n:'code',t:'Material Code',c:'pointer',w:15},
+      {n:'code',t:'Material',c:'pointer',w:15},
       {n:'itemtype',t:'Type',c:'pointer',w:10},
-      {n:'height',t:'Height',c:'pointer',w:7},
-      {n:'width',t:'Width',c:'pointer',w:7},
-      {n:'quantity',t:'Qty',c:'pointer',w:6},
-      {n:'remark',t:'Remarks',c:'',w:20},
+      {n:'height',t:'Height',c:'pointer',w:5},
+      {n:'width',t:'Width',c:'pointer',w:5},
+      {n:'quantity',t:'Qty',c:'pointer',w:4},
+      {n:'remark',t:'Remarks',c:'',w:16},
       {n:'eb_a',t:'EB-A',c:'',w:7},
+      {n:'',t:'',c:'',w:2},
       {n:'eb_b',t:'EB-B',c:'',w:7},
       {n:'eb_c',t:'EB-C',c:'',w:7},
-      {n:'eb_d',t:'EB-D',c:'',w:7}
+      {n:'eb_d',t:'EB-D',c:'',w:7},
+      {n:'comments',t:'Comments',c:'',w:7}
 
       ];
 
@@ -307,7 +335,7 @@ class WorkOrderItems extends Component {
             <tr>
                 {this.colNames.map((c,i) => {
                   return (
-                    <th key={i} style={{width:`${c.w}%`, cursor:`${c.c}`}} onClick={()=>{ if(c.c != '')  this.headerClick(c.n)}}>{c.t} <span style={{color:"red"}}> {this.state.sortCol == c.n ? this.state.sortOrder == 1 ? <i className="icon-arrow-up"></i> :  <i className="icon-arrow-down"></i> : ''} </span></th>
+                    <th key={i} style={{width:`${c.w}%`}}>{c.t}</th>
                   )
                 })}
                 <th> &nbsp; </th>
@@ -353,6 +381,8 @@ class WorkOrderItems extends Component {
             }
           }
 
+          let handleProfile = this.props.material.profiles.find(p => p.profileNumber == item.profileType)
+
           return (
             <tbody>
             <tr key={item.itemnumber}  onClick={(e) => this.onItemClick(e,item.itemnumber)} style={{backgroundColor:`${item.itemnumber == this.state.currentItem ? "#b5d1ff" : "#eee"}`}} >
@@ -388,7 +418,7 @@ class WorkOrderItems extends Component {
                         case REMARKS.PROFILE:
                             const profile = this.props.material.profiles.find(p => p.profileNumber == item.profileType)
                             if(profile)
-                              remarkData = profile.type + ' - H: ' + profile.height + ' - W: ' + profile.width;
+                              remarkData = profile.type + ' - H: ' + profile.height + ' - W: ' + profile.width + '(' + item.profileSide + ')';
                             break;
                         case REMARKS.E_PROFILE:
                             const eProfile = this.props.material.profiles.find(p => p.type == PROFILE_TYPE.E)
@@ -424,7 +454,7 @@ class WorkOrderItems extends Component {
                 
                 <td>
                   <div className="form-group" style={{marginBottom:"0px"}}>
-                    <select  onChange={this.onChange} value={item.eb_a}  id="eb_a" name="eb_a" className="js-example-basic-single input-xs  w-100">
+                    <select  onChange={this.onChange} value={item.eb_a}  id="eb_a" name="eb_a" className="js-example-basic-single input-xs w-100" > 
                     {
                       ebOptions.map( (e) => {
                         return (
@@ -432,8 +462,10 @@ class WorkOrderItems extends Component {
                         )})
                     }
                     </select>
+                    
                   </div>
                 </td>
+                <td><i className="icon icon-arrow-right-circle" title="Copy to BCD" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyAtoBCD(item.itemnumber)}}></i> </td>
                 <td>
                   <div className="form-group" style={{marginBottom:"0px"}}>
                     <select id="eb_b"  onChange={this.onChange} value={item.eb_b}  name="eb_b" className="js-example-basic-single input-xs  w-100">
@@ -448,28 +480,37 @@ class WorkOrderItems extends Component {
                 </td>
                 <td>
                   <div className="form-group" style={{marginBottom:"0px"}}>
-                    <select id="eb_c"  onChange={this.onChange}  value={item.eb_c} name="eb_c" className="js-example-basic-single input-xs  w-100">
                     {
-                      ebOptions.map( (e) => {
-                        return (
-                          <option value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} >{e.eb_thickness} - {e.eb_width}</option>
-                        )})
+                      (handleProfile && item.profileSide == 'H') ? <input type="text" className="form-control input-xs" maxLength="4" value={' HP  ' + handleProfile.height}  disabled /> :
+                      <select id="eb_c"  onChange={this.onChange}  value={item.eb_c} name="eb_c" className="js-example-basic-single input-xs  w-100">
+                      {
+                        ebOptions.map( (e) => {
+                          return (
+                            <option value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} >{e.eb_thickness} - {e.eb_width}</option>
+                          )})
+                      }
+                      </select>
                     }
-                    </select>
+
                   </div>
                 </td>
                 <td>
                   <div className="form-group" style={{marginBottom:"0px"}}>
-                    <select id="eb_d"  onChange={this.onChange}  value={item.eb_d} name="eb_d" className="js-example-basic-single input-xs  w-100">
                     {
-                      ebOptions.map( (e) => {
-                        return (
-                          <option value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} >{e.eb_thickness} - {e.eb_width}</option>
-                        )})
+                      (handleProfile && item.profileSide == 'W') ? <input type="text" className="form-control input-xs" maxLength="4" value={' HP  ' + handleProfile.height}  disabled /> :
+
+                      <select id="eb_d"  onChange={this.onChange}  value={item.eb_d} name="eb_d" className="js-example-basic-single input-xs  w-100">
+                        {
+                          ebOptions.map( (e) => {
+                            return (
+                              <option value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} >{e.eb_thickness} - {e.eb_width}</option>
+                            )})
+                        }
+                      </select>
                     }
-                    </select>
                   </div>
                 </td>
+                <td><input type="text" className="form-control input-xs" value={item.comments}  id="comments"  name="comments" onChange={this.onChange}  /></td>
                 <td>
                 <i className="icon icon-layers" title="Make a Copy" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyItem(item.itemnumber)}}></i> &nbsp; 
                 <i className="remove icon-close" title="Remove" style={{color:"red", cursor:"pointer",paddingTop:"4px", display:"block", float:"right"}} onClick={()=>{this.deleteItem(item.itemnumber)}}></i>

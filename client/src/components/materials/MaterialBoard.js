@@ -149,11 +149,11 @@ class MaterialBoard extends Component {
               <th style={{width:"20%"}}> Type </th>
               <th style={{width:"8%"}}> Height </th>
               <th style={{width:"8%"}}> Width </th>
-              <th style={{width:"5%"}}> Thickness </th>
+              <th style={{width:"4%"}}> Thickness </th>
               <th style={{width:"14%"}}> Grains </th>
-              <th> Grade/Shade </th>
-              <th> Company </th>
-              <th style={{width:"10%"}}> EdgeBand </th>
+              <th style={{width:"15%"}}> Grade/Shade </th>
+              <th style={{width:"15%"}}> Company </th>
+              <th style={{width:"10%"}}> EdgeBand </th>          
               <th style={{width:"5%"}}>  </th>
 
         </tr>

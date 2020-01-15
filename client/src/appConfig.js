@@ -6,7 +6,7 @@ export const edgeBandWidth = [0,22,30,45];
 
 export const boardType = ['Plywood','MDF','PVC','Particle Board']; 
 
-export const profileType = [PROFILE_TYPE.H, PROFILE_TYPE.W, PROFILE_TYPE.E]; 
+export const profileType = [PROFILE_TYPE.H, PROFILE_TYPE.E]; 
 
 
 export const uniqueKeys = {
@@ -28,7 +28,7 @@ export const threshold = {
 };
 
 export const remarks = [
-  {id:REMARKS.PROFILE,name:'Profile'},
+  {id:REMARKS.PROFILE,name:'Handle Profile'},
   {id:REMARKS.E_PROFILE,name:'Edge Profile'},
   {id:REMARKS.GLASS,name:'Glass'},
   {id:REMARKS.DBLTHICK,name:'Double Thick'}, 

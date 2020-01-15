@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import { notify_error } from '../../util';
-
+import $ from 'jquery';
 
 
 class CustomerDetails extends Component {
@@ -61,6 +61,7 @@ class CustomerDetails extends Component {
     const newCustomer = {customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address };
 
       this.props.saveCustomer(newCustomer, this.props.currentCustomer);
+      $('#btnCustomersClose').click();
 
   };
 

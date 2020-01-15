@@ -44,8 +44,8 @@ class RemarksEdgeProfile extends Component {
       if(edgeband){
         newItem.eb_a = edgeband.materialEdgeBandNumber;
         newItem.eb_b = edgeband.materialEdgeBandNumber;
-        newItem.eb_c = edgeband.materialEdgeBandNumber;
-        newItem.eb_d = edgeband.materialEdgeBandNumber;
+        if(newItem.profileSide != 'H') newItem.eb_c = edgeband.materialEdgeBandNumber;
+        if(newItem.profileSide != 'W') newItem.eb_d = edgeband.materialEdgeBandNumber;
       }
     }
 
