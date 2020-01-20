@@ -209,7 +209,7 @@ export const forgotpassword = ( {email}) => dispatch => {
   const body = JSON.stringify({email});
 
   axios
-    .post('/api/resetpassword', body, config)
+    .post('/api/forgot', body, config)
     .then(res =>
       dispatch({
         type: LOGIN_SUCCESS,
