@@ -2,44 +2,62 @@ import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 
-import { activate } from '../../actions/authActions';
+import { resetpassword } from '../../actions/authActions';
 import { clearErrors, returnErrors } from '../../actions/errorActions';
 import * as qs from 'query-string';
 
-class Activation extends Component {
+class ResetPassword extends Component {
 
   componentDidMount(){
     this.props.clearErrors();
   }
 
   state = {
-    code: ''
+    email: '',
+    password: '',
+    password2: '',
+    code:''
   };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
-
+ 
   onSubmit = e => {
     e.preventDefault();
+
     const uid = qs.parse(this.props.location.search);
     if(!uid){
       this.props.returnErrors({msg:'UserId is missing...'});
       return;
     }
+    const { code, email, password, password2 } = this.state;
 
-    const code = this.state.code;
-    if(!code || code.trim() == ''){
-      this.props.returnErrors({msg:'Please enter the Activation Code'});
+    if(code == '' || email == '' || password ==''){
+      this.props.returnErrors({msg:'All fields are mandatory'});
       return;
-    }   
+    }
 
-    const activation = {
+    if(email.indexOf('@') == -1){
+      this.props.returnErrors({msg:'Incorrect Email Address'});
+      return;
+    }
+
+    if(password != password2){
+      this.props.returnErrors({msg:'Password does not match'});
+      return;
+    }
+
+    const newPassword = {
       uid,
+      email,
+      password,
       code
     };
-    this.props.activate(activation);
+
+    this.props.resetpassword(newPassword);
   };
+
 
   ToDashBoard = () => {
     const { history } = this.props;
@@ -66,8 +84,11 @@ class Activation extends Component {
                   <Link className="btn get-started-btn" to="/register">REGISTER</Link>
                 </div>
                 <form action="#">
-                  <h3 className="mr-auto">Account Activation</h3>
-                  <p className="mb-5 mr-auto">Enter your activation code below.</p>
+                  <h3 className="mr-auto">Password Reset</h3>
+                  <p className="mb-5 mr-auto">Enter the follwoing details to reset your password. <i>
+                      <br />1. Registered Email address.
+                      <br />2. Verification code that is sent to your email.
+                      <br />3. New Password that you wish to set for your account.</i></p>
 
                   {this.props.error.msg.msg ? (
                     <div className="alert alert-danger" role="alert">
@@ -76,6 +97,16 @@ class Activation extends Component {
                   ) : null}
 
 
+
+
+                  <div className="form-group">
+                    <div className="input-group">
+                      <div className="input-group-prepend">
+                        <span className="input-group-text"><i className="icon-envelope-open"></i></span>
+                      </div>
+                      <input type="text"  maxLength="100" onChange={this.onChange} className="form-control" placeholder="Email" name="email" id="email"  />
+                    </div>
+                  </div>
                   <div className="form-group">
                     <div className="input-group">
                       <div className="input-group-prepend">
@@ -86,15 +117,29 @@ class Activation extends Component {
                         maxLength='100'
                         name='code'
                         id='code'
-                        placeholder='Activation Code'
+                        placeholder='Verification Code'
                         className='form-control'
-                        onChange={this.onChange}
                       />
                     </div>
                   </div>
-
                   <div className="form-group">
-                    <button onClick={this.onSubmit} className="btn btn-primary submit-btn">Activate</button>
+                    <div className="input-group">
+                      <div className="input-group-prepend">
+                        <span className="input-group-text"><i className="icon-lock"></i></span>
+                      </div>
+                      <input type="password"  maxLength="100" onChange={this.onChange} className="form-control" placeholder="New Password" name="password" id="password" />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <div className="input-group">
+                      <div className="input-group-prepend">
+                        <span className="input-group-text"><i className="icon-lock"></i></span>
+                      </div>
+                      <input type="password"  maxLength="100" onChange={this.onChange} className="form-control" placeholder="Confirm New Password"  name="password2" id="password2"  />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <button  onClick={this.onSubmit} className="btn btn-primary submit-btn">RESET PASSWORD</button>
                   </div>
                 </form>
               </div>
@@ -115,5 +160,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { activate, clearErrors, returnErrors }
-)(Activation);
+  { resetpassword, clearErrors, returnErrors }
+)(ResetPassword);

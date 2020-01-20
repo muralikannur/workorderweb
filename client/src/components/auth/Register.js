@@ -114,12 +114,6 @@ class Register extends Component {
                   <div className="form-group">
                     <button  onClick={this.onSubmit} className="btn btn-primary submit-btn">REGISTER</button>
                   </div>
-                  <div className="wrapper mt-5 text-gray">
-                    <p className="footer-text">Copyright © 2019 Shape. All rights reserved.</p>
-                    <ul className="auth-footer text-gray">
-                      <li><a href="#">Terms & Conditions</a></li>
-                    </ul>
-                  </div>
                 </form>
               </div>
             </div>

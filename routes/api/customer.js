@@ -45,7 +45,7 @@ router.post('/', auth, (req,  res) => {
     if(action == 'create'){
       Customer.findOne({customercode})
       .then(customer => {
-        if(customer){
+        if(customer && customer.user_id == req.user.id){
           logger.error('Customer Code ' + customercode + ' already exists.');
           res.status(200).json({error:'Customer Code ' + customercode + ' already exists.'})
         } else {

@@ -2,44 +2,37 @@ import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 
-import { activate } from '../../actions/authActions';
+import { forgotpassword } from '../../actions/authActions';
 import { clearErrors, returnErrors } from '../../actions/errorActions';
 import * as qs from 'query-string';
 
-class Activation extends Component {
+class ForgotPassword extends Component {
 
   componentDidMount(){
     this.props.clearErrors();
   }
 
   state = {
-    code: ''
+    email: ''
   };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
-
+ 
   onSubmit = e => {
     e.preventDefault();
-    const uid = qs.parse(this.props.location.search);
-    if(!uid){
-      this.props.returnErrors({msg:'UserId is missing...'});
+
+    const { email } = this.state;
+
+    if(email.indexOf('@') == -1){
+      this.props.returnErrors({msg:'Incorrect Email Address'});
       return;
     }
 
-    const code = this.state.code;
-    if(!code || code.trim() == ''){
-      this.props.returnErrors({msg:'Please enter the Activation Code'});
-      return;
-    }   
-
-    const activation = {
-      uid,
-      code
-    };
-    this.props.activate(activation);
+    this.props.forgotpassword( { email });
   };
+
 
   ToDashBoard = () => {
     const { history } = this.props;
@@ -66,8 +59,8 @@ class Activation extends Component {
                   <Link className="btn get-started-btn" to="/register">REGISTER</Link>
                 </div>
                 <form action="#">
-                  <h3 className="mr-auto">Account Activation</h3>
-                  <p className="mb-5 mr-auto">Enter your activation code below.</p>
+                  <h3 className="mr-auto">Forgot Password ?</h3>
+                  <p className="mb-5 mr-auto">Don't worry. Please provide your registered email address. <br />We will sent the password reset link.</p>
 
                   {this.props.error.msg.msg ? (
                     <div className="alert alert-danger" role="alert">
@@ -76,25 +69,18 @@ class Activation extends Component {
                   ) : null}
 
 
+
+
                   <div className="form-group">
                     <div className="input-group">
                       <div className="input-group-prepend">
-                        <span className="input-group-text"><i className="icon-lock"></i></span>
+                        <span className="input-group-text"><i className="icon-envelope-open"></i></span>
                       </div>
-                      <input
-                        type='text'
-                        maxLength='100'
-                        name='code'
-                        id='code'
-                        placeholder='Activation Code'
-                        className='form-control'
-                        onChange={this.onChange}
-                      />
+                      <input type="text"  maxLength="100" onChange={this.onChange} className="form-control" placeholder="Email" name="email" id="email"  />
                     </div>
                   </div>
-
                   <div className="form-group">
-                    <button onClick={this.onSubmit} className="btn btn-primary submit-btn">Activate</button>
+                    <button  onClick={this.onSubmit} className="btn btn-primary submit-btn">SEND PASSWORD RESET LINK</button>
                   </div>
                 </form>
               </div>
@@ -115,5 +101,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { activate, clearErrors, returnErrors }
-)(Activation);
+  { forgotpassword, clearErrors, returnErrors }
+)(ForgotPassword);

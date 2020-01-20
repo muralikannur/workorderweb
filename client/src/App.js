@@ -16,6 +16,9 @@ import Login from './components/auth/Login'
 import Register from './components/auth/Register'
 import Activation from './components/auth/Activation'
 import Settings from './components/settings/Settings';
+import Verification from './components/auth/Verification';
+import ResetPassword from './components/auth/ResetPassword';
+import ForgotPassword from './components/auth/ForgotPassword';
 
 class App extends Component {
 
@@ -25,7 +28,10 @@ class App extends Component {
         <BrowserRouter>
         <Route path="/login" component={Login}></Route>
         <Route path="/register" component={Register}></Route>    
-        <Route path="/activation" component={Activation}></Route>     
+        <Route path="/activation" component={Activation}></Route>  
+        <Route path="/verification" component={Verification}></Route>    
+        <Route path="/resetpassword" component={ResetPassword}></Route>        
+        <Route path="/forgotpassword" component={ForgotPassword}></Route>                   
           <div className="container-scroller">
             <Header />
             <div className="container-fluid page-body-wrapper">

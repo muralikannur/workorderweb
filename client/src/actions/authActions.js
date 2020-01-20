@@ -52,7 +52,7 @@ export const register = ({ name, email, password }) => dispatch => {
     .then(res =>
       {
         dispatch(
-          returnErrors({msg:'Registration Success! Contact Admin to activate you account'})
+          returnErrors({msg:'Registration Success! Verification Link sent to your email'})
         );
       }
     )
@@ -133,12 +133,108 @@ export const activate = ({ uid, code }) => dispatch => {
 };
 
 
-// Logout User
-export const logout = () => {
-  return {
-    type: LOGOUT_SUCCESS
+// Verify Email Address
+export const verify = ({ uid, code }) => dispatch => {
+  // Headers
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
   };
+
+  // Request body
+  const body = JSON.stringify({  uid, code });
+
+  axios
+    .post('/api/verify', body, config)
+    .then(res =>
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL')
+      );
+      dispatch({
+        type: LOGIN_FAIL
+      });
+    });
 };
+
+
+
+// Reset password
+export const resetpassword = ({ uid, email, password , code}) => dispatch => {
+  // Headers
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  // Request body
+  const body = JSON.stringify({ uid, email, password , code});
+
+  axios
+    .post('/api/resetpassword', body, config)
+    .then(res =>
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL')
+      );
+      dispatch({
+        type: LOGIN_FAIL
+      });
+    });
+};
+
+
+// Forgot password
+export const forgotpassword = ( {email}) => dispatch => {
+  // Headers
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  // Request body
+  const body = JSON.stringify({email});
+
+  axios
+    .post('/api/resetpassword', body, config)
+    .then(res =>
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL')
+      );
+      dispatch({
+        type: LOGIN_FAIL
+      });
+    });
+};
+
+
+export const logout = () => (dispatch, getState) => {
+  axios.post('/api/logout/',{}, tokenConfig(getState));
+  dispatch( {
+    type: LOGOUT_SUCCESS
+  });
+
+};
+
 
 // Setup config/headers and token
 export const tokenConfig = getState => {

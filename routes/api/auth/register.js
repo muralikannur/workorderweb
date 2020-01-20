@@ -4,10 +4,10 @@ const bcrypt = require('bcryptjs');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const logger = require('../../logger')(module);
+const logger = require('../../../logger')(module);
 
 // User Model
-const User = require('../../models/User');
+const User = require('../../../models/User');
 
 const validateEmail = (email) => {
   var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,9 +70,9 @@ router.post('/', (req, res) => {
 
             const mailOptions = {
               from: 'postmaster@workorderweb.com',
-              to: 'muralikannur@gmail.com,jaijack@gmail.com,compworld@gmail.com,priyeshnidumbram@gmail.com',
-              subject: 'WoW Activation - ' + user.email,
-              html: '<h1>Work Order Web Activation</h1><p>Hello Admin, <br/> <br/> Click the below link to activate the user ' +  user.email  + '.<br/><br/> <a href="https://workorderweb.com/activation?uid=' + user._id + '">Activation Link </a><br/><br/>Activation Code : <b>' + user.code + '</b><br/><br/>Sincerely, <br /> WoW Team.</p>'
+              to: user.email,
+              subject: 'Work Order Web - Email verification',
+              html: '<h1>Welcome!</h1><p>Thank you for registering with Work Order Web.<br/> <br/> Click the below link to verify your email address.<br/><br/> <a href="https://workorderweb.com/verification?uid=' + user._id + '">Verification Link </a><br/><br/>Verification Code : <b>' + user.verification_code + '</b><br/><br/>Sincerely, <br /> WoW Team.</p>'
             };
 
             transporter.sendMail(mailOptions, function(error, info){
@@ -82,8 +82,10 @@ router.post('/', (req, res) => {
                 logger.info('Email sent: ' + info.response);
               }
             });
+
+
           }
-          res.json({msg:'Activation link sent to the admin.' });
+          res.json({msg:'Email verification link sent to ' + user.email});
 
 
 

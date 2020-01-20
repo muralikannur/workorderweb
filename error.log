@@ -45,3 +45,31 @@
 2020-01-12T14:27:59.688Z [api\customer.js] error: Customer Code undefined already exists. - undefined
 
 
+
+2020-01-18T15:59:29.510Z [api\verify.js] error: Email already verified. UID: 5e21385c0824d8165ae0fb87 - undefined
+
+2020-01-18T16:00:34.440Z [api\verify.js] error: Invalid Verification Code. UID: 5e23297cbbc18b29c8068097 - undefined
+
+2020-01-18T16:00:49.428Z [api\verify.js] error: Invalid Verification Code. UID: 5e23297cbbc18b29c8068097 - undefined
+
+2020-01-18T16:06:21.916Z [api\verify.js] error: Email already verified. UID: 5e23297cbbc18b29c8068097 - undefined
+
+2020-01-18T16:06:53.027Z [api\verify.js] error: Invalid Verification Code. UID: 5e23297cbbc18b29c8068097 - undefined
+
+2020-01-18T16:18:41.837Z [api\auth.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
+
+2020-01-19T09:57:47.711Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
+
+2020-01-19T10:00:03.562Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
+
+2020-01-19T10:01:02.677Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
+
+2020-01-19T15:48:04.510Z [auth\login.js] error: Error while setting timestamp during log in. CastError: Cast to date failed for value "[Function: now]" at path "last_timestamp" - undefined
+
+2020-01-20T02:47:11.098Z [auth\login.js] error: User already logged in from another device. - undefined
+
+2020-01-20T02:48:58.165Z [auth\login.js] error: User already logged in from another device. - undefined
+
+2020-01-20T02:57:56.855Z [workorderweb\server.js] error: read ECONNRESET - Error: read ECONNRESET
+    at _errnoException (util.js:992:11)
+    at TCP.onread (net.js:618:25)

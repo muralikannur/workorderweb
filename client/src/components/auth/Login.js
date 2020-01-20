@@ -118,13 +118,10 @@ class Login extends Component {
                   </div>
                   <div className="form-group">
                     <button onClick={this.onSubmit} className="btn btn-primary submit-btn">SIGN IN</button>
+                    &nbsp; &nbsp;
+                      <Link className="btn get-started-btn" to="/forgotpassword">Forgot Password?</Link>
                   </div>
-                  <div className="wrapper mt-5 text-gray">
-                    <p className="footer-text">Copyright © 2019 Shape. All rights reserved.</p>
-                    <ul className="auth-footer text-gray">
-                      <li><a href="#">Terms & Conditions</a></li>
-                    </ul>
-                  </div>
+
                 </form>
               </div>
             </div>

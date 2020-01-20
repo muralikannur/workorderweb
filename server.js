@@ -7,9 +7,10 @@ const logger = require('./logger')(module);
 
 const app = express();
 app.use(express.json());
+app.set('trust proxy', true);
 
 const db = config.get('mongoURI');
-
+console.log(process.env.NODE_ENV)
 mongoose
   .connect(db, { 
     useNewUrlParser: true,
@@ -19,11 +20,14 @@ mongoose
   .catch(err => logger.error(err));
 
 // Use Routes
-app.use('/api/users', require('./routes/api/users'));
-app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/users', require('./routes/api/auth/register'));
+app.use('/api/auth', require('./routes/api/auth/login'));
+app.use('/api/verify', require('./routes/api/auth/verify'));
+app.use('/api/activate', require('./routes/api/auth/activate'));
+app.use('/api/logout', require('./routes/api/auth/logout'));
+
 app.use('/api/wo', require('./routes/api/workorder'));
 app.use('/api/material', require('./routes/api/material'));
-app.use('/api/activate', require('./routes/api/activate'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/customer', require('./routes/api/customer'));
 

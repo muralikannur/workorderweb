@@ -331,3 +331,231 @@
 2020-01-15T15:58:40.754Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
 2020-01-15T15:58:40.883Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-18T15:47:53.139Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-18T15:47:53.305Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-18T15:56:28.059Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-18T15:56:28.235Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-18T15:58:01.513Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-18T15:58:01.683Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-18T15:59:24.546Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-18T15:59:24.663Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-18T15:59:29.510Z [api\verify.js] error: Email already verified. UID: 5e21385c0824d8165ae0fb87 - undefined
+
+2020-01-18T16:00:34.440Z [api\verify.js] error: Invalid Verification Code. UID: 5e23297cbbc18b29c8068097 - undefined
+
+2020-01-18T16:00:49.428Z [api\verify.js] error: Invalid Verification Code. UID: 5e23297cbbc18b29c8068097 - undefined
+
+2020-01-18T16:05:54.534Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-18T16:05:54.687Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-18T16:06:21.916Z [api\verify.js] error: Email already verified. UID: 5e23297cbbc18b29c8068097 - undefined
+
+2020-01-18T16:06:53.027Z [api\verify.js] error: Invalid Verification Code. UID: 5e23297cbbc18b29c8068097 - undefined
+
+2020-01-18T16:07:14.537Z [api\verify.js] info: Email verified successfully. UID: 5e23297cbbc18b29c8068097 - undefined
+
+2020-01-18T16:14:27.152Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-18T16:14:27.282Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-18T16:17:38.237Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-18T16:17:38.469Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-18T16:18:41.837Z [api\auth.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
+
+2020-01-18T16:23:55.615Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-18T16:23:55.794Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-18T16:28:11.067Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-18T16:28:11.206Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:11:16.536Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:11:16.693Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:17:53.118Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:17:53.285Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:23:20.845Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:23:21.002Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:24:05.825Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:24:05.961Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:24:44.052Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:24:44.200Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:25:22.630Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:25:22.756Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:25:42.633Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:25:42.798Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:31:26.797Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:31:26.962Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:33:21.579Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:33:21.734Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:36:08.338Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:36:08.455Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:36:41.117Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:36:41.244Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:40:04.494Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:40:04.661Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:40:26.603Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:40:26.811Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T07:43:19.710Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T07:43:19.846Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T09:54:58.921Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T09:54:59.950Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T09:57:47.711Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
+
+2020-01-19T09:59:24.510Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T09:59:25.534Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T10:00:03.562Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
+
+2020-01-19T10:01:00.010Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T10:01:01.052Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T10:01:02.677Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
+
+2020-01-19T10:17:10.051Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T10:17:11.078Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T10:17:20.703Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T10:17:21.742Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T10:17:25.461Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T10:17:26.503Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T10:37:44.169Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T10:37:45.213Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T14:25:25.889Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T14:25:26.916Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T15:47:32.151Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T15:47:33.210Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T15:48:04.510Z [auth\login.js] error: Error while setting timestamp during log in. CastError: Cast to date failed for value "[Function: now]" at path "last_timestamp" - undefined
+
+2020-01-19T15:49:33.868Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T15:49:34.902Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-19T23:58:11.917Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-19T23:58:12.958Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T00:01:01.612Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T00:01:02.651Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:02:14.519Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:02:15.565Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:02:20.264Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:02:21.289Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:13:10.443Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:13:11.485Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:16:46.086Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:16:47.119Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:17:50.371Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:17:51.408Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:26:24.318Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:26:25.366Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:29:23.419Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:29:24.466Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:33:24.273Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:33:25.303Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:36:05.419Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:36:06.463Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:37:42.872Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:37:43.922Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:37:47.550Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:37:48.605Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:39:45.980Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:39:47.026Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:44:15.272Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:44:16.324Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:47:02.835Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:47:03.870Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-01-20T02:47:11.098Z [auth\login.js] error: User already logged in from another device. - undefined
+
+2020-01-20T02:48:58.165Z [auth\login.js] error: User already logged in from another device. - undefined
+
+2020-01-20T02:57:53.824Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-01-20T02:57:56.855Z [workorderweb\server.js] error: read ECONNRESET - Error: read ECONNRESET
+    at _errnoException (util.js:992:11)
+    at TCP.onread (net.js:618:25)

@@ -2,11 +2,11 @@ import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 
-import { activate } from '../../actions/authActions';
+import { verify } from '../../actions/authActions';
 import { clearErrors, returnErrors } from '../../actions/errorActions';
 import * as qs from 'query-string';
 
-class Activation extends Component {
+class Verification extends Component {
 
   componentDidMount(){
     this.props.clearErrors();
@@ -30,15 +30,15 @@ class Activation extends Component {
 
     const code = this.state.code;
     if(!code || code.trim() == ''){
-      this.props.returnErrors({msg:'Please enter the Activation Code'});
+      this.props.returnErrors({msg:'Please enter the Verification Code'});
       return;
     }   
 
-    const activation = {
+    const verification = {
       uid,
       code
     };
-    this.props.activate(activation);
+    this.props.verify(verification);
   };
 
   ToDashBoard = () => {
@@ -66,8 +66,8 @@ class Activation extends Component {
                   <Link className="btn get-started-btn" to="/register">REGISTER</Link>
                 </div>
                 <form action="#">
-                  <h3 className="mr-auto">Account Activation</h3>
-                  <p className="mb-5 mr-auto">Enter your activation code below.</p>
+                  <h3 className="mr-auto">Email Verification</h3>
+                  <p className="mb-5 mr-auto">Enter the verification code, which is sent to your registered email.</p>
 
                   {this.props.error.msg.msg ? (
                     <div className="alert alert-danger" role="alert">
@@ -86,7 +86,7 @@ class Activation extends Component {
                         maxLength='100'
                         name='code'
                         id='code'
-                        placeholder='Activation Code'
+                        placeholder='Verification Code'
                         className='form-control'
                         onChange={this.onChange}
                       />
@@ -94,7 +94,7 @@ class Activation extends Component {
                   </div>
 
                   <div className="form-group">
-                    <button onClick={this.onSubmit} className="btn btn-primary submit-btn">Activate</button>
+                    <button onClick={this.onSubmit} className="btn btn-primary submit-btn">Verify</button>
                   </div>
                 </form>
               </div>
@@ -115,5 +115,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { activate, clearErrors, returnErrors }
-)(Activation);
+  { verify, clearErrors, returnErrors }
+)(Verification);

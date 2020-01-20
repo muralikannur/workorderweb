@@ -17,6 +17,7 @@ function auth(req, res, next) {
       req.user = decoded;
       User.findById(req.user.id).then(u => {
           req.user.name = u.name;
+          User.updateOne({_id:req.user.id},{last_timestamp:Date.now()},(err,raw) => {})
           next();
       }).catch(err => { logger.error(err); next(); })
     

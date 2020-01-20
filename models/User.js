@@ -24,12 +24,28 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false
   },
-  code: {
+  account_activated: {
+    type: Boolean,
+    default: false
+  },
+  activation_code: {
     type: Schema.Types.ObjectId,
     required: true,
     default: new mongoose.Types.ObjectId()
+  },
+  verification_code: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    default: new mongoose.Types.ObjectId()
+  },
+  last_timestamp: {
+    type: Date,
+    default: Date.now
+  },
+  ip_address: {
+    type: String,
+    default:''
   }
-  
 });
 
 module.exports = User = mongoose.model('user', UserSchema);
