@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
       logger.error("Invalid Activation Code. UID: " + uid.uid);
       return res.status(400).json({ msg: 'Invalid Activation Code' });
     } 
-    User.updateOne({_id:uid.uid},{email_verified:true},(err,raw) => {
+    User.updateOne({_id:uid.uid},{account_activated:true},(err,raw) => {
       if(err){
         logger.error("Error while activating the account. UID: " + uid.uid + ". " + err);
         return res.status(400).json({ msg: 'Error while activating the account' });

@@ -1,4 +1,5 @@
 import React, { Component} from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { notify_error } from '../../util';
 import $ from 'jquery';
@@ -18,6 +19,12 @@ class CustomerDetails extends Component {
       billing_address:'',
       shipping_address:''
     }
+  }
+
+  componentDidMount(){
+    const { customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address } = this.props.customer;
+    this.setState({ customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address })
+
   }
 
 
@@ -61,7 +68,7 @@ class CustomerDetails extends Component {
     const newCustomer = {customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address };
 
       this.props.saveCustomer(newCustomer, this.props.currentCustomer);
-      $('#btnCustomersClose').click();
+      //$('#btnCustomersClose').click();
 
   };
 
@@ -157,4 +164,13 @@ class CustomerDetails extends Component {
 //   saveCustomer: PropTypes.func.isRequired
 // }
 
-export default CustomerDetails;
+
+const mapStateToProps = state => ({
+  customer: state.customer
+});
+
+export default connect(
+  mapStateToProps,
+  {}
+)(CustomerDetails);
+

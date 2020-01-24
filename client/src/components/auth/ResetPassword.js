@@ -112,7 +112,7 @@ class ResetPassword extends Component {
                       <div className="input-group-prepend">
                         <span className="input-group-text"><i className="icon-lock"></i></span>
                       </div>
-                      <input
+                      <input onChange={this.onChange}
                         type='text'
                         maxLength='100'
                         name='code'

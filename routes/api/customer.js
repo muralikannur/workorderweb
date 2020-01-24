@@ -40,7 +40,7 @@ router.get('/:id',auth, (req, res) => {
 //Create Customer
 router.post('/', auth, (req,  res) => {
 
-    let { action, customercode,companyname,contactperson,phone,whatsapp,email,billing_address,shipping_address } = req.body;
+    let { action, customercode, companyname,contactperson,phone,whatsapp,email,billing_address,shipping_address } = req.body;
 
     if(action == 'create'){
       Customer.findOne({customercode})
@@ -50,7 +50,7 @@ router.post('/', auth, (req,  res) => {
           res.status(200).json({error:'Customer Code ' + customercode + ' already exists.'})
         } else {
           const user_id = req.user.id;
-          const newCustomer = new Customer({ customercode,companyname,contactperson,phone,whatsapp,billing_address,shipping_address, user_id});
+          const newCustomer = new Customer({ customercode,companyname,contactperson,phone,whatsapp,email,billing_address,shipping_address, user_id});
           newCustomer.save().then(c => {
               res.status(200).json(c);
           }).catch(err => { 

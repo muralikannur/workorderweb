@@ -1,5 +1,5 @@
 const express = require('express');
-
+const mongoose = require('mongoose');
 const logger = require('../../../logger')(module);
 
 const router = express.Router();
@@ -56,7 +56,7 @@ router.post('/', (req, res) => {
       }
     });
 
-    return res.status(200).json({ msg: 'Password reset link will be sent to ' + email + ' if it is registered with us.' });
+    return res.status(200).json({ msg: 'Password reset link will be sent to ' + email + ' if it is registered with us. Please check your email.' });
 
   })
 });

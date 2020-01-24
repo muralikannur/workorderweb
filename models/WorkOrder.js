@@ -16,6 +16,10 @@ const WorkOrderSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true
   },
+  customer_id: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
   woitems:{
     type: Array,
     default:[]
@@ -23,6 +27,14 @@ const WorkOrderSchema = new Schema({
   status: {
     type:String,
     default:'New'
+  },  
+  billing_address: {
+    type: String,
+    required: false
+  },
+  shipping_address: {
+    type: String,
+    required: false
   }
 });
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_WO, SAVE_MAIN, GET_WO_LIST, SAVE_MATERIAL, SAVE_ITEMS, CREATE_WO } from './types';
+import { GET_WO, SAVE_MAIN, GET_WO_LIST, SAVE_MATERIAL, SAVE_ITEMS, CREATE_WO, ADD_WO_TO_LIST } from './types';
 import { tokenConfig } from './authActions';
 import { returnErrors } from './errorActions';
 import { getMaterial } from './materialActions';
@@ -14,6 +14,20 @@ export const createWorkOrder = wo => (dispatch, getState) => {
           type: CREATE_WO,
           payload: res.data
         });
+
+        let newWO = {
+          status:res.data.status,
+          _id:res.data._id,
+          wonumber:res.data.wonumber,
+          customer_id:res.data.customer_id,
+          date:res.data.date
+        }
+
+        dispatch({
+          type: ADD_WO_TO_LIST,
+          payload: newWO
+        })
+
         dispatch(getMaterial(res.data._id))
       } else {
         notify_error('ERROR while creating Work Order...');
@@ -37,7 +51,9 @@ export const saveWorkOrder = wo => (dispatch, getState) => {
         dispatch({
           type: SAVE_MAIN,
           status
-        })
+        });
+
+
         notify_success('Saved successfully...');
       } else {
         notify_error('ERROR while saving...');
@@ -66,7 +82,7 @@ export const getWorkOrder = id => (dispatch, getState) => {
     );
 };
 
-export const getAllWorkOrders = () => (dispatch, getState) => {
+export const getAllWorkOrders = customer_id => (dispatch, getState) => {
   axios
     .get('/api/wo/', tokenConfig(getState))
     .then(res =>

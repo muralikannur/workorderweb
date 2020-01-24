@@ -1,6 +1,5 @@
 import {
-  GET_CUSTOMER,
-  SAVE_CUSTOMER
+  GET_CUSTOMER
 } from '../actions/types';
 
 const initialState = {
@@ -8,6 +7,7 @@ const initialState = {
   companyname:'',
   contactperson:'',
   phone:'',
+  email:'',
   whatsapp:'',
   billing_address:'',
   shipping_address:''
@@ -16,7 +16,7 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case  GET_CUSTOMER:
-      return action.payload;
+      return action.payload == {} ? initialState : action.payload;
     default:
       return state;
   }

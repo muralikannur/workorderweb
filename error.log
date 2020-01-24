@@ -1,75 +1,22 @@
-{ level: 'error',
-  message: 'getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017',
-  metadata: 
-   { name: 'MongoNetworkError',
-     errorLabels: [ 'TransientTransactionError' ],
-     service: 'user-service',
-     stack: 'Error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017\n    at errnoException (dns.js:50:10)\n    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:92:26)' },
-  timestamp: '2020-01-11T05:26:47.961Z',
-  [Symbol(mongoErrorContextSymbol)]: {} }
-2020-01-11T16:12:03.597Z [undefined] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
-2020-01-11T16:16:26.239Z [undefined] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
-2020-01-11T16:17:46.118Z [undefined] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
-2020-01-11T16:18:56.851Z [wow\server.js] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
-2020-01-11T16:19:34.690Z [wow\server.js] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
-2020-01-11T16:19:58.374Z [wow\server.js] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
 
-2020-01-11T16:21:33.922Z [wow\server.js] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017 - Error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
-    at errnoException (dns.js:50:10)
-    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:92:26)
+2020-01-24T00:52:32.757Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-01-11T17:01:58.036Z [wow\server.js] error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017 - Error: getaddrinfo ENOTFOUND 139.59.58.641 139.59.58.641:27017
-    at errnoException (dns.js:50:10)
-    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:92:26)
+2020-01-24T00:53:05.765Z [auth\verify.js] error: Invalid Verification Code. UID: 5e2a3fa516df2e4b546bef3d - undefined
 
-2020-01-12T05:53:41.895Z [api\auth.js] error: User Does not exist. Email:ashkanna@gmail.com - undefined
+2020-01-24T00:53:35.234Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
 
-2020-01-12T05:57:34.826Z [api\auth.js] error: User Does not exist. Email:ashkanna@gmail.com - undefined
+2020-01-24T00:54:20.738Z [auth\activate.js] error: Invalid Activation Code. UID: 5e2a3fa516df2e4b546bef3d - undefined
 
-2020-01-12T08:15:12.190Z [api\users.js] error: Invalid login: 535 5.7.0 Mailgun is not loving your login or password - Error: Invalid login: 535 5.7.0 Mailgun is not loving your login or password
-    at SMTPConnection._formatError (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:781:19)
-    at SMTPConnection._actionAUTHComplete (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:1516:34)
-    at SMTPConnection._responseActions.push.str (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:554:26)
-    at SMTPConnection._processResponse (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:940:20)
-    at SMTPConnection._onData (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:746:14)
-    at TLSSocket.SMTPConnection._onSocketData (C:\murali\shape\wow\node_modules\nodemailer\lib\smtp-connection\index.js:189:46)
-    at emitOne (events.js:116:13)
-    at TLSSocket.emit (events.js:211:7)
-    at addChunk (_stream_readable.js:263:12)
-    at readableAddChunk (_stream_readable.js:250:11)
-    at TLSSocket.Readable.push (_stream_readable.js:208:10)
-    at TLSWrap.onread (net.js:597:20)
+2020-01-24T00:54:35.825Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
 
-2020-01-12T14:27:37.918Z [api\customer.js] error: Customer Code undefined already exists. - undefined
+2020-01-24T01:54:34.912Z [auth\reset.js] error: Error while resetting password. CastError: Cast to ObjectId failed for value "{ uid: '5e2a3fa516df2e4b546bef3d' }" at path "_id" for model "user" - undefined
 
-2020-01-12T14:27:59.688Z [api\customer.js] error: Customer Code undefined already exists. - undefined
+2020-01-24T02:14:49.503Z [auth\reset.js] error: Invalid Verification Code. : muralikannur@gmail.com - undefined
 
+2020-01-24T02:18:22.070Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
 
+2020-01-24T02:25:58.214Z [auth\reset.js] error: Invalid Verification Code. : muralikannur@gmail.com - undefined
 
-2020-01-18T15:59:29.510Z [api\verify.js] error: Email already verified. UID: 5e21385c0824d8165ae0fb87 - undefined
-
-2020-01-18T16:00:34.440Z [api\verify.js] error: Invalid Verification Code. UID: 5e23297cbbc18b29c8068097 - undefined
-
-2020-01-18T16:00:49.428Z [api\verify.js] error: Invalid Verification Code. UID: 5e23297cbbc18b29c8068097 - undefined
-
-2020-01-18T16:06:21.916Z [api\verify.js] error: Email already verified. UID: 5e23297cbbc18b29c8068097 - undefined
-
-2020-01-18T16:06:53.027Z [api\verify.js] error: Invalid Verification Code. UID: 5e23297cbbc18b29c8068097 - undefined
-
-2020-01-18T16:18:41.837Z [api\auth.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
-
-2020-01-19T09:57:47.711Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
-
-2020-01-19T10:00:03.562Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
-
-2020-01-19T10:01:02.677Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
-
-2020-01-19T15:48:04.510Z [auth\login.js] error: Error while setting timestamp during log in. CastError: Cast to date failed for value "[Function: now]" at path "last_timestamp" - undefined
-
-2020-01-20T02:47:11.098Z [auth\login.js] error: User already logged in from another device. - undefined
-
-2020-01-20T02:48:58.165Z [auth\login.js] error: User already logged in from another device. - undefined
-
-2020-01-20T02:57:56.855Z [workorderweb\server.js] error: read ECONNRESET - Error: read ECONNRESET
+2020-01-24T02:38:09.908Z [workorderweb\server.js] error: read ECONNRESET - Error: read ECONNRESET
     at _errnoException (util.js:992:11)
     at TCP.onread (net.js:618:25)

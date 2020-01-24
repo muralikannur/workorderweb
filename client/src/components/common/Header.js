@@ -5,6 +5,7 @@ import { logout } from '../../actions/authActions';
 
 class Header extends Component {
  
+
     render() {
         const { user } = this.props;
         return(
@@ -12,18 +13,20 @@ class Header extends Component {
             <div className="nav-top flex-grow-1">
                 <div className="container d-flex flex-row h-100 align-items-center">
                 <div className="text-center navbar-brand-wrapper d-flex align-items-center">
-                  <a className="navbar-brand brand-logo" href="index.html"><span style={{fontFamily:"Impact", fontSize:"32px"}}><span style={{color:"#fff"}}>W</span>ORK <span style={{color:"#fff"}}>O</span>RDER <span style={{color:"#fff"}}>W</span>EB</span></a>
-                  <a className="navbar-brand brand-logo-mini" href="index.html"><span style={{ color: "#fff",fontFamily:"Impact", fontSize:"32px" }}>WOW</span></a>
+                  <div className="navbar-brand brand-logo" ><span style={{fontFamily:"Impact", fontSize:"32px", color:"#439aff"}}><span style={{color:"#fff"}}>W</span>ORK <span style={{color:"#fff"}}>O</span>RDER <span style={{color:"#fff"}}>W</span>EB</span></div>
+                  <div className="navbar-brand brand-logo-mini" ><span style={{ color: "#fff",fontFamily:"Impact", fontSize:"32px" }}>WOW</span></div>
                 </div>
 
                 {!user ? null : 
                 <div className="navbar-menu-wrapper d-flex align-items-center justify-content-between flex-grow-1">
+                    
                     <ul className="navbar-nav navbar-nav-right mr-0 ml-auto">
+                    <div className="badge badge-pill badge-success" style={{fontSize:"16px", fontWeight:"bold"}}><i className="icon-user ml-2"></i> &nbsp;  {this.props.customer.customercode}  &nbsp; </div>
                         <li className="nav-item nav-profile dropdown">
                             <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-                            <div className="badge badge-pill badge-success" style={{fontSize:"16px", fontWeight:"bold"}}><i className="icon-user ml-2"></i> &nbsp;  {user.name}  &nbsp; </div>
+                            
                             &nbsp; 
-                            <span className="nav-profile-name">{user.email}</span>
+                            <span className="nav-profile-name"><b>{user.email}</b></span>
                             </a>
                             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                             {/* <Link to="/settings" className="dropdown-item">
@@ -45,27 +48,29 @@ class Header extends Component {
                 }
                 </div>
             </div>
+            {!user ? null : 
             <div className="nav-bottom">
                 <div className="container">
                     <nav>
                         <ul className="nav" style={{fontWeight:"bold"}}>
-                            <li className="nav-item">
+                            {/* <li className="nav-item">
                                 <NavLink to="/wolist" className="nav-link"><i className="link-icon icon-screen-tablet"></i> &nbsp; <span className="menu-title">Work Orders</span></NavLink>
-                            </li>
+                            </li> */}
                             <li className="nav-item">
                                 <NavLink to="/customerlist" className="nav-link"><i className="link-icon icon-people"></i> &nbsp; <span className="menu-title">Customers</span></NavLink>
                             </li>
                         </ul>
                     </nav>
                 </div>
-            </div>
+            </div>}
             </nav>
         )
     }
 }
 
 const mapStateToProps = state => ({
-    user: state.auth.user
+    user: state.auth.user,
+    customer:state.customer
 });
 
 export default connect(mapStateToProps,{logout})(Header);

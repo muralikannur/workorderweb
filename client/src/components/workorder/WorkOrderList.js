@@ -2,6 +2,7 @@ import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import { ToastContainer} from 'react-toastify';
+import * as qs from 'query-string';
 
 import { clearErrors } from '../../actions/errorActions';
 import { getAllWorkOrders, createWorkOrder, getWorkOrder } from '../../actions/woActions';
@@ -17,14 +18,29 @@ class WorkOrderList extends Component {
       billing_address:'',
       shipping_address:'',
       customercode:'',
+      customer_id:'',
       materialWoId:0
     }
   }
  
   componentDidMount(){
     this.props.clearErrors();
-    this.props.getAllWorkOrders();
-    this.props.getAllCustomers();
+    let customer = this.props.customer;
+    if(customer){
+      this.setState({billing_address:customer.billing_address});
+      this.setState({shipping_address:customer.shipping_address});
+      this.setState({customercode:customer.customercode});
+      this.setState({customer_id:customer._id});
+    }
+  }
+
+  componentWillReceiveProps(newProps){
+    if(newProps.customer){
+      this.setState({billing_address:newProps.customer.billing_address});
+      this.setState({shipping_address:newProps.customer.shipping_address});
+      this.setState({customercode:newProps.customer.customercode});
+      this.setState({customer_id:newProps.customer._id});
+    }
   }
 
   onChange = (e) => {
@@ -40,6 +56,7 @@ class WorkOrderList extends Component {
       this.setState({billing_address:customer.billing_address});
       this.setState({shipping_address:customer.shipping_address});
       this.setState({customercode:code});
+      this.setState({customer_id:customer._id});
     }
 
   }
@@ -76,6 +93,7 @@ class WorkOrderList extends Component {
 
     const newWO = {
       user_id: this.props.user.id,
+      customer_id:this.state.customer_id,
       wonumber: customerCode.toUpperCase() + ' ' + this.getDateFormat() + '-',
       materialWoId,
       billing_address:this.state.billing_address,
@@ -112,6 +130,16 @@ getWorkOrder = (id) => {
   render() {
 
     if(!this.props.isAuthenticated) this.toLoginPage();
+
+    let wolist = this.props.wolist;
+    
+    if(wolist && wolist.length != 0){
+      if(this.props.customer && this.props.customer._id){
+        wolist = wolist.filter(w => w.customer_id == this.props.customer._id)
+      }
+    }
+
+
     return(
       <div className="content-wrapper"  style={{margin:"2px", maxWidth:"100%"}}>
  <ToastContainer />
@@ -126,9 +154,9 @@ getWorkOrder = (id) => {
 
               <form className="forms-sample" style={{width:"90%",margin:"0 auto"}} >
                   <div className="form-group row">
-                  <label htmlFor="customercode" className="col-sm-3 col-form-label">Select the Customer</label>
+                  <label htmlFor="customer_id" className="col-sm-3 col-form-label">Select the Customer</label>
                   <div className="col-sm-9">
-                    <select id="customercode" className="js-example-basic-single input-xs" style={{width:"200px"}} onChange={ (e) => this.onCodeChange(e)} >
+                    <select id="customercode" name="customercode" value={this.state.customercode} className="js-example-basic-single input-xs" style={{width:"200px"}} onChange={ (e) => this.onCodeChange(e)} >
                       <option id="0">Select Customer...</option>
                       {this.props.customerlist.map(cl => { return(
                         <option value={cl.customercode} key={cl.customercode}>{cl.customercode}</option>
@@ -136,8 +164,6 @@ getWorkOrder = (id) => {
                     </select>
                   </div>
                   </div>
-
-
 
                   <div className="form-group row">
                   <label htmlFor="billing_address" className="col-sm-3 col-form-label">Billing Address</label>
@@ -186,7 +212,7 @@ getWorkOrder = (id) => {
           <table style={{width:"100%", color:"#439aff"}}>
             <tbody>
             <tr>
-              <td><h4 className="card-title">WORK ORDERS</h4></td>
+              <td><h4 id="woTitle" className="card-title">WORK ORDERS</h4> </td>
               
               <td style={{textAlign:"right"}}><button type="button"  data-toggle="modal" data-target="#newWoModal"  className="btn btn-success btn-fw"><i  className="icon-notebook"></i>Create New Work Order</button></td>
             </tr>
@@ -196,7 +222,7 @@ getWorkOrder = (id) => {
           <div className="row">
             <div className="col-12" >
 
-            {(!this.props.wolist || this.props.wolist.length == 0) ? <h5>No Work Orders</h5> :
+            {(!wolist || wolist.length == 0) ? <h5>No Work Orders</h5> :
               <table className="table table-striped table-hover wolist" style={{border:"#CCC 1px solid", width:"100%"}}>
                 <thead>
                   <tr>
@@ -206,7 +232,7 @@ getWorkOrder = (id) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.props.wolist.map(wl => { return(
+                  {wolist.map(wl => { return(
                     <tr onClick={() => {this.getWorkOrder(wl._id)}} key={wl._id}>
                       <td>{wl.wonumber}</td>
                       <td>{wl.date}</td>
@@ -230,7 +256,8 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
   user: state.auth.user,
   wolist: state.wolist,
-  customerlist: state.customerlist
+  customerlist: state.customerlist,
+  customer: state.customer
 
 });
 

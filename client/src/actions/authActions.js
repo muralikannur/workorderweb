@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { returnErrors } from './errorActions';
 import { getProfile } from './profileActions';
-
+import { getAllWorkOrders} from './woActions';
+import { getAllCustomers } from './customerActions';
 
 import {
   USER_LOADED,
@@ -89,6 +90,10 @@ export const login = ({ email, password }) => dispatch => {
         payload: res.data
       })
       dispatch(getProfile(res.data.user.id));
+      dispatch(getAllWorkOrders());
+      dispatch(getAllCustomers());
+
+
       }
     )
     .catch(err => {
@@ -180,10 +185,9 @@ export const resetpassword = ({ uid, email, password , code}) => dispatch => {
   axios
     .post('/api/resetpassword', body, config)
     .then(res =>
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: res.data
-      })
+      dispatch(
+        returnErrors(res.data, 200, '')
+      )
     )
     .catch(err => {
       dispatch(
@@ -211,10 +215,9 @@ export const forgotpassword = ( {email}) => dispatch => {
   axios
     .post('/api/forgot', body, config)
     .then(res =>
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: res.data
-      })
+      dispatch(
+        returnErrors(res.data, 200, '')
+      )
     )
     .catch(err => {
       dispatch(

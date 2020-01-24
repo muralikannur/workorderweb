@@ -5,10 +5,12 @@ import { Link } from "react-router-dom";
 import { login } from '../../actions/authActions';
 import { clearErrors, returnErrors } from '../../actions/errorActions';
 
+
 class Login extends Component {
 
   componentDidMount(){
     this.props.clearErrors();
+
 
     //  const user = {
     //    email : 'muralikannur@gmail.com',
@@ -51,7 +53,7 @@ class Login extends Component {
 
   ToDashBoard = () => {
     const { history } = this.props;
-    if(history) history.push('/wolist');
+    if(history) history.push('/customerlist');
   }
 
 
@@ -141,5 +143,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { login, clearErrors, returnErrors }
+  { login, clearErrors, returnErrors}
 )(Login);

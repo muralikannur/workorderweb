@@ -14,6 +14,7 @@ export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 
 export const GET_WO_LIST = 'GET_WO_LIST';
+export const ADD_WO_TO_LIST = 'ADD_WO_TO_LIST';
 export const GET_WO = 'GET_WO';
 export const SAVE_WO = 'SAVE_WO';
 export const CREATE_WO = 'CREATE_WO';
@@ -26,7 +27,7 @@ export const SAVE_PROFILE = 'SAVE_PROFILE';
 
 export const SET_CURRENT_ITEM = 'SET_CURRENT_ITEM';
 export const SET_CURRENT_REMARK = 'SET_CURRENT_REMARK';
-
+export const SET_CURRENT_CUSTOMER = 'SET_CURRENT_CUSTOMER';
 //MATERIAL
 export const GET_MATERIAL = 'GET_MATERIAL';      
 export const SAVE_MATERIAL = 'SAVE_MATERIAL';
@@ -44,3 +45,4 @@ export const GET_CUSTOMER_LIST = 'GET_CUSTOMER_LIST';
 export const GET_CUSTOMER = 'GET_CUSTOMER';      
 export const SAVE_CUSTOMER = 'SAVE_CUSTOMER';
 export const ADD_CUSTOMER_TO_LIST = 'ADD_CUSTOMER_TO_LIST';
+export const UPDATE_CUSTOMER_LIST = 'UPDATE_CUSTOMER_LIST';

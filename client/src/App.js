@@ -26,25 +26,28 @@ class App extends Component {
     return (
       <Provider store={store}>
         <BrowserRouter>
-        <Route path="/login" component={Login}></Route>
-        <Route path="/register" component={Register}></Route>    
-        <Route path="/activation" component={Activation}></Route>  
-        <Route path="/verification" component={Verification}></Route>    
-        <Route path="/resetpassword" component={ResetPassword}></Route>        
-        <Route path="/forgotpassword" component={ForgotPassword}></Route>                   
+           
           <div className="container-scroller">
             <Header />
             <div className="container-fluid page-body-wrapper">
               <div className="main-panel">
-                <Route exact path="/" component={WorkOrderList}></Route>
+                <Route exact path="/" component={CustomerList}></Route>
                 <Route path="/workorder" component={WorkOrderMain}></Route>
                 <Route path="/wolist" component={WorkOrderList}></Route>
                 <Route path="/customerlist" component={CustomerList}></Route>                
                 <Route path="/settings" component={Settings}></Route>
-                <Footer />
+
               </div>
             </div>
           </div>
+          <Route path="/login" component={Login}></Route>
+          <Route path="/register" component={Register}></Route>    
+          <Route path="/activation" component={Activation}></Route>  
+          <Route path="/verification" component={Verification}></Route>    
+          <Route path="/resetpassword" component={ResetPassword}></Route>        
+          <Route path="/forgotpassword" component={ForgotPassword}></Route>        
+
+          <Footer />
         </BrowserRouter>
       </Provider>
     );

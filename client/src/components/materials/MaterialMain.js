@@ -279,7 +279,7 @@ class MaterialMain extends Component {
                   role="tab" 
                   aria-controls="board" 
                   aria-selected="true">
-                    <i className="icon-screen-tablet"></i>Board
+                    <i className="icon-screen-tablet"></i>Board (X)
                 </a>
               </li>
 
@@ -293,7 +293,7 @@ class MaterialMain extends Component {
                   role="tab" 
                   aria-controls="laminate" 
                   aria-selected="false">
-                  <i className="icon-calendar"></i>Laminate
+                  <i className="icon-calendar"></i>Laminate (Y)
                 </a>
               </li>
 

@@ -25,6 +25,8 @@ app.use('/api/auth', require('./routes/api/auth/login'));
 app.use('/api/verify', require('./routes/api/auth/verify'));
 app.use('/api/activate', require('./routes/api/auth/activate'));
 app.use('/api/logout', require('./routes/api/auth/logout'));
+app.use('/api/forgot', require('./routes/api/auth/forgot'));
+app.use('/api/resetpassword', require('./routes/api/auth/reset'));
 
 app.use('/api/wo', require('./routes/api/workorder'));
 app.use('/api/material', require('./routes/api/material'));

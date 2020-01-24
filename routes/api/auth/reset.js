@@ -15,6 +15,11 @@ router.post('/', (req, res) => {
   const { uid, code, email, password } = req.body;
   let isValid = true;
 
+  const validateEmail = (email) => {
+    var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+
   // Simple validation
   if(!code || !email || !password) {
     return res.status(400).json({ msg: 'Please enter all fields' });
@@ -27,7 +32,13 @@ router.post('/', (req, res) => {
 
   User.findOne({ email })
     .then(user => {
-      if(!user || user.uid != uid) return res.status(400).json({ msg: 'Invalid User' });
+      console.log(user);
+      if(!user || user._id != uid.uid) return res.status(400).json({ msg: 'Invalid User' });
+
+      if(user.verification_code != code){
+        logger.error("Invalid Verification Code. : " +email);
+        return res.status(400).json({ msg: 'Invalid Verification Code' });
+      } 
     })
 
 
@@ -39,19 +50,16 @@ router.post('/', (req, res) => {
         return res.status(400).json({ msg: 'Error while resetting the password' });
       }
       
-      User.updateOne({_id:uid},{password:hash},(err,raw) => {
+      User.updateOne({email},{password:hash},(err,raw) => {
         if(err) {
           logger.error("Error while resetting password. " + err);
           return res.status(400).json({ msg: 'Error while resetting the password' });
         }
-
-        return res.status(200).json({ msg: 'Password reset successfully. Login with the new password' });
-
       })
-      
-
     })
   })
+
+  return res.status(200).json({ msg: 'Password reset successfully. Login with the new password' });
 
 });
 

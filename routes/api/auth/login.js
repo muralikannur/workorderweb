@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
        
       if(!user.account_activated){
         logger.error("Account not activated. Email:" + email);
-        return res.status(200).json({ msg: 'Account not activated. Please contact WoW Team.' });
+        return res.status(400).json({ msg: 'Account not activated. Please contact WoW Team.' });
       } 
 
       // Validate password
