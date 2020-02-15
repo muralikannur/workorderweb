@@ -3,7 +3,7 @@ import {
   SAVE_MAIN,
   SAVE_ITEMS,
   CREATE_WO
-} from '../actions/types';
+} from '../../actions/types';
 
 const initialState = {
   wonumber:'',

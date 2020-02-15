@@ -8,7 +8,7 @@ class RemarksEdgeProfile extends Component {
   constructor(props){
     super(props);
     this.state = {
-      profileType:0
+      profileNumber:0
     }
   }
   componentDidMount(){
@@ -20,7 +20,7 @@ class RemarksEdgeProfile extends Component {
 
   updateState() {
     if(this.props.item != null){
-      this.setState({ profileType : this.props.item.profileType })
+      this.setState({ profileNumber : this.props.item.profileNumber })
     }
   }
 
@@ -38,10 +38,11 @@ class RemarksEdgeProfile extends Component {
     }
 
     //If E-Profile selected, update the Item's EB sides as E-Profile's thickness
-    let profile = this.props.material.profiles.find(p => p.profileNumber == this.state.profileType)
+    let profile = this.props.material.profiles.find(p => p.profileNumber == this.state.profileNumber)
     if(profile && profile.type == PROFILE_TYPE.E){
-      let edgeband = this.props.material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(this.state.profileType))
+      let edgeband = this.props.material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(this.state.profileNumber))
       if(edgeband){
+        newItem.profileNumber = profile.profileNumber;
         newItem.eb_a = edgeband.materialEdgeBandNumber;
         newItem.eb_b = edgeband.materialEdgeBandNumber;
         if(newItem.profileSide != 'H') newItem.eb_c = edgeband.materialEdgeBandNumber;
@@ -61,7 +62,7 @@ class RemarksEdgeProfile extends Component {
           {(this.props.material.profiles && this.props.material.profiles.length > 0) ? 
           <div>
             <h5>Select the Profile Type</h5>
-            <select style={{width:"300px"}}  id="profileType" name="profileType" value={this.state.profileType}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
+            <select style={{width:"300px"}}  id="profileNumber" name="profileNumber" value={this.state.profileNumber}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
             <option value="0" key="0" >Select...</option>
             {this.props.material.profiles.filter(p => p.type == PROFILE_TYPE.E).map( (e) => {
               return (

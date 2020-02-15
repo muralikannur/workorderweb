@@ -1,15 +1,19 @@
 import axios from 'axios';
-import { SAVE_EDGEBANDS,  SAVE_BOARDS,  SAVE_LAMINATES,  SAVE_MATERIALCODES,  SAVE_PROFILES, GET_MATERIAL } from './types';
-import { tokenConfig } from './authActions';
-import { returnErrors } from './errorActions';
-import { notify_error, notify_success } from '../util';
+import { SAVE_EDGEBANDS,  SAVE_BOARDS,  SAVE_LAMINATES,  SAVE_MATERIALCODES,  SAVE_PROFILES, GET_MATERIAL } from '../../actions/types';
+import { tokenConfig } from '../../actions/authActions';
+import { returnErrors } from '../../actions/errorActions';
+import { notify_error, notify_success } from '../../util';
 
-export const saveMaterial = material => (dispatch, getState) => {
+export const saveMaterial = (material, callback) => (dispatch, getState) => {
   axios
     .post('/api/material', material, tokenConfig(getState))
     .then(res =>{
       if(res.status == 200){
-        //alert('Saved successfully...');
+        callback();
+        dispatch({
+          type: GET_MATERIAL,
+          payload: material
+        })
       } else {
         notify_error('ERROR while saving...');
       }
@@ -18,7 +22,7 @@ export const saveMaterial = material => (dispatch, getState) => {
     .catch(err =>
       {
         notify_error('ERROR while saving...');
-      dispatch(returnErrors(err.response.data, err.response.status))
+      dispatch(returnErrors(err, err.response.status))
       }
     );
 };

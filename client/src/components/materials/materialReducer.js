@@ -5,7 +5,7 @@ import {
   SAVE_LAMINATES,
   SAVE_MATERIALCODES,
   SAVE_PROFILES
-} from '../actions/types';
+} from '../../actions/types';
 
 export default function(state = {}, action) {
   switch (action.type) {

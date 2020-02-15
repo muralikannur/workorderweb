@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { GET_WO, SAVE_MAIN, GET_WO_LIST, SAVE_MATERIAL, SAVE_ITEMS, CREATE_WO, ADD_WO_TO_LIST } from './types';
-import { tokenConfig } from './authActions';
-import { returnErrors } from './errorActions';
-import { getMaterial } from './materialActions';
-import { notify_error, notify_success } from '../util';
+import { GET_WO, SAVE_MAIN, GET_WO_LIST, SAVE_MATERIAL, SAVE_ITEMS, CREATE_WO, ADD_WO_TO_LIST } from '../../actions/types';
+import { tokenConfig } from '../../actions/authActions';
+import { returnErrors } from '../../actions/errorActions';
+import { getMaterial } from '../materials/materialActions';
+import { notify_error, notify_success } from '../../util';
 
 export const createWorkOrder = wo => (dispatch, getState) => {
   axios
@@ -42,19 +42,20 @@ export const createWorkOrder = wo => (dispatch, getState) => {
     );
 };
 
-export const saveWorkOrder = wo => (dispatch, getState) => {
+export const saveWorkOrder = (wo, notify=false) => (dispatch, getState) => {
   const {status} = wo;
   axios
     .post('/api/wo', wo, tokenConfig(getState))
     .then(res =>{
       if(res.status == 200){
-        dispatch({
-          type: SAVE_MAIN,
-          status
-        });
-
-
-        notify_success('Saved successfully...');
+        if(notify){
+          dispatch({
+            type: GET_WO,
+            payload:wo
+          });
+          notify_success('Updated successfully...');
+        }
+        
       } else {
         notify_error('ERROR while saving...');
       }

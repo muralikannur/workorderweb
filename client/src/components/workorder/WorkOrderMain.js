@@ -16,9 +16,9 @@ import MaterialMain from '../materials/MaterialMain';
 
 //Actions
 import { clearErrors } from '../../actions/errorActions';
-import { saveWorkOrder } from '../../actions/woActions';
-import { getMaterial } from '../../actions/materialActions';
-import { saveItems } from '../../actions/woActions';
+import { saveWorkOrder } from './woActions';
+import { getMaterial } from '../materials/materialActions';
+import { saveItems } from './woActions';
 import { setCurrentItem, setCurrentRemark } from '../../actions/configActions';
 import { isNull } from 'util';
 
@@ -27,11 +27,14 @@ class WorkOrderMain extends Component {
   constructor(props){
     super(props);
     this.state = {
-      originalItems : []
+      originalItems : [],
+      originalMaterials : {}
     }
   }
 
   componentDidMount(){
+
+    console.log('LIFECYCLE: Workorder Main - componentDidUpdate');
     this.props.clearErrors();
 
     //CONFIRM EXIT WHEN THERE ARE UNSAVED CHANGES
@@ -45,18 +48,12 @@ class WorkOrderMain extends Component {
     });
 
     setTimeout(() => {
-
-      //this.disableEdit(this.props.wo.status);
-
-      //If no materials added, open the Define Material popup
-      // if(!this.props.material.materialCodes || this.props.material.materialCodes.length < 1){
-      //   $('#btnMaterial').click();
-      // }
       this.setState({originalItems:this.props.wo.woitems});
-    },500)
+    },1000);
   }
 
   componentWillReceiveProps(newProps) {
+    console.log('LIFECYCLE: Workorder Main - componentWillReceiveProps');
     if (newProps.wo.status != this.props.wo.status) {
       this.disableEdit(newProps.wo.status);
     }
@@ -81,10 +78,18 @@ class WorkOrderMain extends Component {
     }
   }
 
-  saveWorkOrder = () => {
+  saveWorkOrder = (resetOriginalItems = false) => {
     if(!this.validate()){return;}
-    this.props.saveWorkOrder(this.props.wo);
-    this.setState({originalItems:this.props.wo.woitems});
+    this.props.saveWorkOrder(this.props.wo, resetOriginalItems);
+    if(resetOriginalItems){
+      this.setState({originalItems:this.props.wo.woitems});
+    }
+  }
+
+  cancelItems = () => {
+    if(window.confirm('Are you sure that you want to cancel all the changes made in Work Order Items since last Save?')){
+      this.props.saveWorkOrder({...this.props.wo,woitems:this.state.originalItems},true);
+    }
   }
 
   resetMaterialChanges = () => {
@@ -102,6 +107,10 @@ class WorkOrderMain extends Component {
       $('#btnSubmitWO').hide();
       $('#btnMaterial').hide();
     }
+  }
+
+  highlightError = (errItems) => {
+    errItems.map(e => {$('#item-row-' + e).css("background-color","#FF9999")});
   }
 
   validate = () => {
@@ -124,9 +133,12 @@ class WorkOrderMain extends Component {
     //Exclude Pattern Main item (code=100) in validaton
     let items = this.props.wo.woitems.filter(i => i.itemnumber != 0 && i.code != 100);
 
+    items.map(e => {$('#item-row-' + e.itemnumber).css("background-color","#fff")});
+
     //MATERIAL NOT SELECTED
     let errItems = items.filter(i => i.code == 0).map(i => i.itemnumber);
     if(errItems.length > 0){
+      this.highlightError(errItems);
       notify_error("Material not selected for the following items..\n" + errItems.join());
       return false;
     }
@@ -134,6 +146,7 @@ class WorkOrderMain extends Component {
     //INCORRECT HEIGHT
     errItems = items.filter(i => (i.height == '' || isNaN(i.height) || i.height < 1 )).map(i => i.itemnumber);
     if(errItems.length > 0){
+      this.highlightError(errItems);
       notify_error("Incorrect Height for the following items..\n" + errItems.join());
       return false;
     }
@@ -141,6 +154,7 @@ class WorkOrderMain extends Component {
     //INCORRECT WIDTH
     errItems = items.filter(i => (i.width == '' || isNaN(i.width) || i.width < 1 || i.width > 3000)).map(i => i.itemnumber);
     if(errItems.length > 0){
+      this.highlightError(errItems);
       notify_error("Incorrect Width for the following items..\n" + errItems.join());
       return false;
     }
@@ -148,6 +162,7 @@ class WorkOrderMain extends Component {
     //HEIGHT exceeds the limit
     errItems = items.filter(i => ( i.code != PATTERN_CODE && i.height > this.props.material.boards.find(b => b.boardNumber = (this.props.material.materialCodes.find(mc => mc.materialCodeNumber == i.code).board)).height)).map(i => i.itemnumber);
     if(errItems.length > 0){
+      this.highlightError(errItems);
       notify_error("Item Height is more than the Board Height for the following items..\n" + errItems.join());
       return false;
     }
@@ -155,6 +170,7 @@ class WorkOrderMain extends Component {
     //WIDTH exceeds the limit
     errItems = items.filter(i => (i.code != PATTERN_CODE && i.width > this.props.material.boards.find(b => b.boardNumber = (this.props.material.materialCodes.find(mc => mc.materialCodeNumber == i.code).board)).width)).map(i => i.itemnumber);
     if(errItems.length > 0){
+      this.highlightError(errItems);
       notify_error("Item Width is more than the Board Board for the following items..\n" + errItems.join());
       return false;
     }
@@ -164,6 +180,7 @@ class WorkOrderMain extends Component {
     //INCORRECT QUANTITY
     errItems = items.filter(i => (i.quantity == '' || isNaN(i.quantity) || i.quantity < 1 )).map(i => i.itemnumber);
     if(errItems.length > 0){
+      this.highlightError(errItems);
       notify_error("Incorrect Quantity for the following items..\n" + errItems.join());
       return false;
     }
@@ -500,7 +517,7 @@ getRemarkData(i){
                   <button id="btnCloseMaterialPopup" type="button" class="btn btn-light" data-dismiss="modal"> Back to Items <i class="icon-login"></i> </button>
               </div>
               <div className="modal-body" style={{paddingBottom:"0px"}}>
-                <MaterialMain material={this.props.material} clearErrors={this.props.clearErrors} history={this.props.history} />
+                <MaterialMain items={this.props.wo.woitems} material={this.props.material} />
               </div>
               {/* <div className="modal-footer" style={{paddingTop:"0px",paddingBottom:"5px",display:"block"}}>
                 <div style={{float:"left"}}>
@@ -508,7 +525,7 @@ getRemarkData(i){
                   <ol>
                     <li>Any modification or deletion of items will be saved only when <b>SAVE</b> button is clicked</li>
                     <li>Click on <b>Undo Changes</b> to cancel any modificaton/deletion made since last SAVE</li>
-                    <li> <span style={{backgroundColor:"#FFB3B3"}}> &nbsp; This color &nbsp; </span>  indicats that the item is being reffered elsewhere. Be cautious while editing/deleting that item</li>
+                    <li> <span style={{backgroundColor:"yellow"}}> &nbsp; This color &nbsp; </span>  indicats that the item is being reffered elsewhere. Be cautious while editing/deleting that item</li>
                   </ol>
                   </i>
                 </div>
@@ -529,7 +546,7 @@ getRemarkData(i){
                     <td style={{ textAlign: "right" }}>
                     <button type="button" id="btnMaterial" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#materialModal">Define Materials</button>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <button id="btnSaveWO" type="button" className="btn btn-success" style={{lineHeight:"1px"}} onClick={() => {this.saveWorkOrder();}}><i className="icon-doc" ></i>Save</button>
+                    <button id="btnSaveWO" type="button" className="btn btn-success" style={{lineHeight:"1px"}} onClick={() => {this.saveWorkOrder(true);}}><i className="icon-doc" ></i>Save</button>
                     &nbsp; &nbsp;
                     <button id="btnSubmitWO" type="button" className="btn btn-secondary"  style={{lineHeight:"1px"}} onClick={() => {this.submitWorkOrder();}}><i className="icon-notebook" ></i>Submit</button>
                     &nbsp; &nbsp;
@@ -539,7 +556,7 @@ getRemarkData(i){
                 </tr>
                 </tbody>
               </table>
-              <WorkOrderItems {...woItemsProps} validate={this.validate} saveWorkOrder={this.saveWorkOrder} />
+              <WorkOrderItems {...woItemsProps} validate={this.validate} cancelItems={this.cancelItems} saveWorkOrder={this.saveWorkOrder} />
             </div>
           </div>
           <div className="col-md-3 grid-margin">

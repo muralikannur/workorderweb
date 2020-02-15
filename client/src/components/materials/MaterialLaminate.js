@@ -6,44 +6,28 @@ class MaterialLaminate extends Component {
     super(props);
     this.state = {
         currentItem:0,
-        laminates:[],
-        tabClicked:'tab-board',
-        isLoaded:false,
-        saveClicked:false
+        laminates:[]
     };
   }
 
-  componentWillReceiveProps(newProps){
-    if(newProps.material.laminates  && (this.state.laminates.length == 0 & !this.state.isLoaded) ){
-      this.setState({laminates: newProps.material.laminates })
-      this.setState({isLoaded:true})
-    }
-
-    if(newProps.isSaveClicked && !this.state.saveClicked && this.state.tabClicked == 'tab-laminate'){
-      this.setState({saveClicked: true});
-      this.props.save('laminate',this.state.laminates)
-      return;
-    }
-    if(!newProps.isSaveClicked){
-      this.setState({saveClicked: false});
-    }
-      
-    if(newProps.tabClicked != this.state.tabClicked){
-      if(this.state.tabClicked == 'tab-laminate' || this.state.tabClicked == ''){
-        if(newProps.tabClicked != '' && newProps.tabClicked != 'tab-laminate')  {
-          this.tabChanged(newProps.tabClicked);
-        } 
-      }
-    }
-
-    this.setState({tabClicked: newProps.tabClicked})
-    
+  componentDidMount(){
+    window.setTimeout(() => {
+      this.setState({laminates:this.props.material.laminates});
+    },1000)
   }
-  
-  tabChanged = (tabClicked) => {
-      if(this.props.save('laminate',this.state.laminates)){
-        this.setState({tabClicked})
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.currentTab == 'laminates' && (nextProps.nextTab != 'laminates' && nextProps.nextTab != '')){
+      if(nextProps.material.laminates != this.state.laminates){
+        this.props.save(this.state.laminates)
+      } else {
+        this.props.save('changeTab');
       }
+    }
+
+    if(this.props.isCancelClicked){
+      this.setState({laminates:this.props.material.laminates});
+    }
   }
 
   onItemClick = (i) => {
@@ -51,6 +35,7 @@ class MaterialLaminate extends Component {
   }
 
   onChange = (e) => {
+    if(this.state.currentItem == 0) return;
     const numberFields = ['height', 'width'];
     let { value, name } = e.target;
     if (numberFields.includes(name) && isNaN(value)) { return;}
@@ -76,7 +61,6 @@ class MaterialLaminate extends Component {
       grains:''
     }
     this.setState({laminates: [...this.state.laminates, newLaminate], currentItem:maxId});
-    //this.props.saveItems( [...this.state.woitems, newItem]);
   }
 
   getMaxId = () => {
@@ -94,21 +78,15 @@ class MaterialLaminate extends Component {
 
       let laminates = this.state.laminates;
       let laminateToDelete = laminates.find(b => b.laminateNumber == id);
-      let isDelete = false;
       if(this.isUsed(id)){
         let msg = 'WARNING! This Laminate is used in the Material Code or Edge Band \n\n';
-        msg += 'Are you sure that you want to delete this Laminate ??\n\n';
+        msg += 'You cannot delete this Laminate.\n\n';
         msg += laminateToDelete.code + ' - ' + laminateToDelete.thickness + ' ( ' + laminateToDelete.grains + ' )' ;
-        if(window.confirm(msg,'Shape')){
-          isDelete = true
-        }
-      } else {
-        isDelete = true
+        window.alert(msg)
+        return;
       }
-      if(isDelete){
-        var newLaminates = laminates.filter(laminate => laminate.laminateNumber != id);
-        this.setState({laminates: newLaminates, currentItem:0});
-      }
+      var newLaminates = laminates.filter(laminate => laminate.laminateNumber != id);
+      this.setState({laminates: newLaminates, currentItem:0});
     },100
     )
   }
@@ -142,8 +120,8 @@ class MaterialLaminate extends Component {
         {
         this.state.laminates.sort((a,b) => a.laminateNumber > b.laminateNumber ? 1  : -1 ).map( (laminate, i) => {
         return (
-        <tr  onClick={() => this.onItemClick(laminate.laminateNumber)} style={{backgroundColor:this.isUsed(laminate.laminateNumber)?'#FFB3B3':'#fff'}}>
-            <td>{i+1}</td>
+        <tr  id={'mat-row-laminate' + laminate.laminateNumber}   onClick={() => this.onItemClick(laminate.laminateNumber)} onMouseDown={() => this.onItemClick(laminate.laminateNumber)} onKeyDown={() => this.onItemClick(laminate.laminateNumber)}  onFocus={() => this.onItemClick(laminate.laminateNumber)}  style={{backgroundColor:this.isUsed(laminate.laminateNumber)?'yellow':'#fff'}}>
+            <td>{laminate.laminateNumber}</td>
             <td><input type="text" className="form-control input-xs" value={laminate.code} maxLength="20"  id="code"  name="code" onChange={this.onChange}  /></td>
             <td><input type="text" className="form-control input-xs" value={laminate.thickness} maxLength="4"  id="thickness"  name="thickness" onChange={this.onChange}  /></td>
 

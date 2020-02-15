@@ -1,5 +1,6 @@
 import React, { Component} from 'react';
 import { boardType } from '../../appConfig';
+import { notify_error } from '../../util';
 
 class MaterialBoard extends Component {
   constructor(props){
@@ -7,46 +8,32 @@ class MaterialBoard extends Component {
       this.state = {
           currentItem:0,
           boards:[],
-          tabClicked:'tab-board',
-          isLoaded:false,
-          saveClicked:false
+          loaded:false
       };
   }
 
-  componentWillReceiveProps(newProps){
-    if(newProps.material.boards  && (this.state.boards.length == 0 & !this.state.isLoaded)){
-      this.setState({boards: newProps.material.boards })
-      this.setState({isLoaded:true})
-    }
-    //alert('Material Board \n\nnew tabclicked = ' + newProps.tabClicked + '. \n\noldtabCLicked =' + this.state.tabClicked);
-    
-    if(newProps.isSaveClicked && !this.state.saveClicked && this.state.tabClicked == 'tab-board'){
-      this.setState({saveClicked: true});
-      this.props.save('board',this.state.boards)
-      return;
-    }
-    if(!newProps.isSaveClicked){
-      this.setState({saveClicked: false});
-    }
-    
-    let tabChangedCalled = false;
-    if(newProps.tabClicked != this.state.tabClicked){
-      if(this.state.tabClicked == 'tab-board' || this.state.tabClicked == '')  {
-        if(newProps.tabClicked != '' && newProps.tabClicked != 'tab-board')  {
-          this.tabChanged(newProps.tabClicked);
-          tabChangedCalled = true;
-        } 
-      }
-    }
-
-    if(!tabChangedCalled)
-      this.setState({tabClicked: newProps.tabClicked});
+  componentDidMount(){
+    window.setTimeout(() => {
+      this.setState({boards:this.props.material.boards});
+    },1000)
   }
 
-  tabChanged = (tabClicked) => {
-      if(this.props.save('board',this.state.boards)){
-        this.setState({tabClicked});
+  componentWillReceiveProps(nextProps){
+
+    if(!this.state.loaded){}
+
+    if(nextProps.currentTab == 'boards' && (nextProps.nextTab != 'boards' && nextProps.nextTab != '')){
+      if(nextProps.material.boards != this.state.boards){
+        this.props.save(this.state.boards)
+      } else {
+        this.props.save('changeTab');
       }
+    }
+
+
+    if(this.props.isCancelClicked){
+      this.setState({boards:this.props.material.boards});
+    }
   }
 
   onItemClick = (i) => {
@@ -55,6 +42,7 @@ class MaterialBoard extends Component {
 
   onChange = (e,i) => {
 
+    if(this.state.currentItem == 0) return;
     const numberFields = ['height', 'width', 'thickness'];
     let { value, name } = e.target;
     let currentItemNumber = this.state.currentItem;
@@ -62,11 +50,9 @@ class MaterialBoard extends Component {
     if (numberFields.includes(name) && isNaN(value)) { return;}
 
     if(e.target.name == 'allowEdgeBand'){
-
       value = e.target.checked;
       currentItemNumber = i;
       this.setState({currentItem:i})
-
     } 
 
     var boards = this.state.boards;
@@ -99,7 +85,7 @@ class MaterialBoard extends Component {
     let maxId = 1;
     if(this.state.boards.length > 0){
       let item = this.state.boards.sort((a, b) => (a.boardNumber < b.boardNumber) ? 1 : -1).slice(0, 1);
-      maxId = (item[0].boardNumber) + 1;
+      maxId = parseInt((item[0].boardNumber)) + 1;
     }
     return maxId;
   }
@@ -110,22 +96,16 @@ class MaterialBoard extends Component {
     setTimeout(() => {
       let boards = this.state.boards;
       let boardToDelete = boards.find(b => b.boardNumber == id);
-      let isDelete = false;
       if(this.isUsed(id)){
         let msg = 'WARNING! This Board is used in the Material Code \n\n';
-        msg += 'Are you sure that you want to delete this Board ??\n\n';
+        msg += 'You cannot delete this Board ??\n\n';
         msg += boardToDelete.type + ' (' + boardToDelete.height + ' x ' + boardToDelete.width + ') - ' ;
         msg += boardToDelete.thickness + ' (' + boardToDelete.grains + ')'
-        if(window.confirm(msg,'Shape')){
-          isDelete = true
-        }
-      } else {
-        isDelete = true
+        notify_error(msg);
+        return;
       }
-      if(isDelete){
-        let newBoards = boards.filter(board => board.boardNumber != id);
-        this.setState({boards: newBoards, currentItem:0});
-      }
+      let newBoards = boards.filter(board => board.boardNumber != id);
+      this.setState({boards: newBoards, currentItem:0});
     },100
     )
   }
@@ -141,7 +121,7 @@ class MaterialBoard extends Component {
     return(
         <div className="row">
         <div className="col-md-12 pl-md-5">
-        <h3 style={{color:"#7ed321", float:"left"}}>Board <span style={{color:"#fff"}}>{this.state.currentItem}</span> </h3>
+        <h3 style={{color:"#7ed321", float:"left"}}>Board </h3>
         <table className="table">
           <thead>
         <tr  style={{padding:"0px"}}>
@@ -161,8 +141,8 @@ class MaterialBoard extends Component {
         {this.state.boards.sort((a,b) => a.boardNumber > b.boardNumber ? 1  : -1 ).map( (board, i) => {
         return (
 
-        <tr onClick={() => this.onItemClick(board.boardNumber)} style={{backgroundColor:this.isUsed(board.boardNumber)?'#FFB3B3':'#fff'}}>
-            <td>{i+1}</td>
+        <tr id={'mat-row-board' + board.boardNumber} onFocus={() => this.onItemClick(board.boardNumber)} onMouseDown={() => this.onItemClick(board.boardNumber)} onClick={() => this.onItemClick(board.boardNumber)} style={{backgroundColor:this.isUsed(board.boardNumber)?'yellow':'#fff'}}>
+            <td>{board.boardNumber}</td>
             <td>
                 <div className="form-group" style={{marginBottom:"0px"}}>
                     <select  onChange={this.onChange} defaultValue={board.type}  id="type" name="type" className="js-example-basic-single input-xs  w-100">

@@ -27,14 +27,13 @@ class CustomerDetails extends Component {
 
   }
 
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if(nextProps.currentCustomer != 0 && nextProps.customer.customercode != this.state.customercode){
-      const { customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address } = nextProps.customer;
-      this.setState({ customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address })
-    } 
-    return true;
-  }
+componentWillReceiveProps(newProps){
+  if(newProps.customer.customercode == "" || newProps.customer.customercode != this.state.customercode){
+    const { customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address } = newProps.customer;
+    this.setState({ customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address })
+  } 
+  return true;
+}
 
 
   onChange = (e) => {

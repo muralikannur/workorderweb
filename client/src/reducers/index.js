@@ -2,13 +2,13 @@ import { combineReducers } from 'redux';
 import itemReducer from './itemReducer';
 import errorReducer from './errorReducer';
 import authReducer from './authReducer';
-import woReducer from './woReducer';
-import woListReducer from './woListReducer';
+import woReducer from '../components/workorder/woReducer';
+import woListReducer from '../components/workorder/woListReducer';
 import configReducer from './configReducer';
 import profileReducer from './profileReducer';
-import materialReducer from './materialReducer';
-import customerReducer from './customerReducer';
-import customerListReducer from './customerListReducer';
+import materialReducer from '../components/materials/materialReducer';
+import customerReducer from '../components/customer/customerReducer';
+import customerListReducer from '../components/customer/customerListReducer';
 
 
 export default combineReducers({

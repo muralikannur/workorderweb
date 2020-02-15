@@ -8,46 +8,31 @@ class MaterialEdgeBand extends Component {
         super(props);
         this.state = {
             currentItem:0,
-            materialEdgeBands:[],
-            tabClicked:'tab-board',
-            isLoaded:false,
-            saveClicked:false
+            materialEdgeBands:[]
         };
     }
 
-  componentWillReceiveProps(newProps){
-    if(newProps.material.edgebands  && (this.state.materialEdgeBands.length == 0 & !this.state.isLoaded) ){
-      this.setState({materialEdgeBands: newProps.material.edgebands })
-      this.setState({isLoaded:true})
+    componentDidMount(){
+      window.setTimeout(() => {
+        this.setState({materialEdgeBands:this.props.material.edgebands});
+      },1000)
     }
-
-    if(newProps.isSaveClicked && !this.state.saveClicked && this.state.tabClicked == 'tab-edgeband'){
-      this.setState({saveClicked: true});
-      this.props.save('edgeband',this.state.materialEdgeBands)
-      return;
-    }
-    if(!newProps.isSaveClicked){
-      this.setState({saveClicked: false});
-    }
-
-    if(newProps.tabClicked != this.state.tabClicked){
-      if(this.state.tabClicked == 'tab-edgeband' || this.state.tabClicked == ''){
-        if(newProps.tabClicked != '' && newProps.tabClicked != 'tab-edgeband')  {
-          this.tabChanged(newProps.tabClicked);
-          return;
+  
+    componentWillReceiveProps(nextProps){
+  
+      if(nextProps.currentTab == 'edgebands' && (nextProps.nextTab != 'edgebands' && nextProps.nextTab != '')){
+        if(nextProps.material.edgebands != this.state.materialEdgeBands){
+          this.props.save(this.state.materialEdgeBands)
+        } else {
+          this.props.save('changeTab');
         }
       }
+  
+      if(this.props.isCancelClicked){
+        this.setState({materialEdgeBands:this.props.material.edgebands});
+      }
     }
-    this.setState({tabClicked: newProps.tabClicked});
-
-    
-  }
-
-  tabChanged = (tabClicked) => {
-    if(this.props.save('edgeband',this.state.materialEdgeBands)){
-      this.setState({tabClicked});
-    }
-  }
+  
 
   onItemClick = (i) => {
     this.setState({currentItem:i})
@@ -93,20 +78,14 @@ class MaterialEdgeBand extends Component {
     this.setState({currentItem:id})
     setTimeout(() => {
       let edgebands = this.state.materialEdgeBands;
-      let isDelete = false;
       if(this.isUsed(id)){
         let msg = 'WARNING! This Edge Band is used in the Items \n\n';
-        msg += 'Are you sure that you want to delete this ??\n\n';
-        if(window.confirm(msg,'Shape')){
-          isDelete = true
-        }
-      } else {
-        isDelete = true
-      }
-      if(isDelete){
+        msg += 'You cannot delete this edgeband.\n';
+        window.alert(msg);
+        return;
+      } 
         var newMaterialEdgeBands = edgebands.filter(materialEdgeBand => materialEdgeBand.materialEdgeBandNumber != id);
         this.setState({materialEdgeBands: newMaterialEdgeBands, currentItem:0});
-      }
 
     },100
     )
@@ -131,7 +110,7 @@ class MaterialEdgeBand extends Component {
         <div className="row">
         <div className="col-md-12 pl-md-5">
         <h3 style={{color:"#7ed321"}}>Edge Band <span style={{color:"#fff"}}>{this.state.currentItem}</span></h3>
-        <table className="table" style={{border:"#ccc 1px solid", width:"50%"}}>
+        <table className="table" style={{border:"#ccc 1px solid", width:"90%"}}>
         {/* <tr  style={{padding:"0px"}}>
               <th style={{width:"20%", backgroundColor:"#ddd"}}> Laminate</th>
               <th style={{width:"80%", backgroundColor:"#ddd"}}> Edge Bands</th>
@@ -143,7 +122,7 @@ class MaterialEdgeBand extends Component {
             this.props.material.laminates.sort((a,b) => a.laminateNumber > b.laminateNumber ? 1  : -1 ).map( (laminate) => {
             return (
             <tr >
-              <td style={{backgroundColor:"#eee", lineHeight:"5", fontWeight:"bold", padding:"5px", border:"#ccc 1px solid", textAlign:"center", width:"600px"}}>{laminate.code} {laminate.thickness} ({laminate.grains})</td>
+              <td style={{backgroundColor:"#eee", lineHeight:"2", padding:"5px", border:"#ccc 1px solid", textAlign:"left"}}>LAMINATE <br/>{laminate.laminateNumber}: {laminate.code} {laminate.thickness} mm ({laminate.grains})</td>
               <td>   
                   <table className="table" style={{width:"300px"}}>
                   <tr  style={{lineHeight:"1", fontWeight:"normal"}}>
@@ -154,7 +133,7 @@ class MaterialEdgeBand extends Component {
                   </tr>
                   {this.state.materialEdgeBands.filter(eb => eb.laminate == laminate.laminateNumber).sort((a,b) => a.materialEdgeBandNumber > b.materialEdgeBandNumber ? 1  : -1 ).map( (materialEdgeBand, i) => {
                   return (
-                  <tr  onClick={() => this.onItemClick(materialEdgeBand.materialEdgeBandNumber)}  style={{backgroundColor:this.isUsed(laminate.laminateNumber)?'#FFB3B3':'#fff'}}>
+                  <tr  id={'mat-row-edgeband-' + materialEdgeBand.laminate + '-' + materialEdgeBand.materialEdgeBandNumber}   onClick={() => this.onItemClick(materialEdgeBand.materialEdgeBandNumber)}  style={{backgroundColor:this.isUsed(materialEdgeBand.materialEdgeBandNumber)?'yellow':'#fff'}}>
                       <td style={{textAlign:"center"}}>{i + 1}</td>
                       <td>
                           <div className="form-group" style={{marginBottom:"0px"}}>
@@ -199,7 +178,7 @@ class MaterialEdgeBand extends Component {
             this.props.material.boards.filter(b => b.allowEdgeBand).sort((a,b) => a.boardNumber > b.boardNumber ? 1  : -1 ).map( (board) => {
             return (
             <tr >
-              <td style={{backgroundColor:"#eee", lineHeight:"5", fontWeight:"bold", padding:"5px", border:"#ccc 1px solid", textAlign:"center", width:"600px"}}>{board.type} - ( {board.height} x {board.width})</td>
+              <td style={{backgroundColor:"#eee", lineHeight:"2", padding:"5px", border:"#ccc 1px solid", textAlign:"left"}}>BOARD:<br />{board.boardNumber}: {board.type} {board.thickness} mm - ( {board.height} x {board.width}) - {board.grade} {board.company}</td>
               <td>   
                   <table className="table" style={{width:"300px"}}>
                   <tr  style={{lineHeight:"1", fontWeight:"normal"}}>
@@ -210,7 +189,7 @@ class MaterialEdgeBand extends Component {
                   </tr>
                   {this.state.materialEdgeBands.filter(eb => eb.laminate == parseInt(board.boardNumber) + EB_START_NUMBER.BOARD).sort((a,b) => a.materialEdgeBandNumber > b.materialEdgeBandNumber ? 1  : -1 ).map( (materialEdgeBand, i) => {
                   return (
-                  <tr  onClick={() => this.onItemClick(materialEdgeBand.materialEdgeBandNumber)}  style={{backgroundColor:this.isUsed(parseInt(board.boardNumber) + EB_START_NUMBER.BOARD)?'#FFB3B3':'#fff'}}>
+                  <tr  id={'mat-row-edgeband-' + materialEdgeBand.laminate + '-' + materialEdgeBand.materialEdgeBandNumber}   onClick={() => this.onItemClick(materialEdgeBand.materialEdgeBandNumber)}  style={{backgroundColor:this.isUsed(materialEdgeBand.materialEdgeBandNumber)?'yellow':'#fff'}}>
                       <td style={{textAlign:"center"}}>{i + 1}</td>
                       <td>
                           <div className="form-group" style={{marginBottom:"0px"}}>

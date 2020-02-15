@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route } from "react-router-dom";
-
 import { Provider } from 'react-redux';
+
 import store from './store';
 import Header from './components/common/Header'
 import Footer from './components/common/Footer'
 
-import ProfileMain from './components/settings/Settings'
 import WorkOrderMain from './components/workorder/WorkOrderMain'
-import DashBoardMain from './components/dashboard/DashBoardMain'
 import WorkOrderList from './components/workorder/WorkOrderList'
 import CustomerList from './components/customer/CustomerList'
 

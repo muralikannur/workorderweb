@@ -1,6 +1,6 @@
 import {
   GET_CUSTOMER_LIST, ADD_CUSTOMER_TO_LIST,UPDATE_CUSTOMER_LIST
-} from '../actions/types';
+} from '../../actions/types';
 
 const initialState = [];
 

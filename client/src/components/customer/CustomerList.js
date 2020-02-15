@@ -4,8 +4,8 @@ import { ToastContainer} from 'react-toastify';
 import $ from 'jquery';
 
 import { clearErrors } from '../../actions/errorActions';
-import { saveCustomer, getAllCustomers, setCustomer} from '../../actions/customerActions';
-import { getAllWorkOrders } from '../../actions/woActions';
+import { saveCustomer, getAllCustomers, setCustomer} from './customerActions';
+import { getAllWorkOrders } from '../workorder/woActions';
 
 import CustomerDetails from './CustomerDetails';
 
@@ -20,7 +20,7 @@ class CustomerList extends Component {
  
   componentDidMount(){
     // this.props.clearErrors();
-    this.props.getAllCustomers();
+    //this.props.getAllCustomers();
   }
 
   toLoginPage = () => {

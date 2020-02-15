@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { returnErrors } from './errorActions';
 import { getProfile } from './profileActions';
-import { getAllWorkOrders} from './woActions';
-import { getAllCustomers } from './customerActions';
+import { getAllWorkOrders} from '../components/workorder/woActions';
+import { getAllCustomers } from '../components/customer/customerActions';
 
 import {
   USER_LOADED,

@@ -6,52 +6,36 @@ class MaterialCode extends Component {
       super(props);
       this.state = {
           currentItem:0,
-          materialCodes:[],
-          tabClicked:'tab-board',
-          isLoaded:false,
-          saveClicked:false
+          materialCodes:[]
       };
   }
 
-  componentWillReceiveProps(newProps){
-    if(newProps.material.materialCodes)
-      this.setState({materialCodes: newProps.material.materialCodes })
+  componentDidMount(){
+    window.setTimeout(() => {
+      this.setState({materialCodes:this.props.material.materialCodes});
+    },1000)
   }
 
-  componentWillReceiveProps(newProps){
-    if(newProps.material.materialCodes  && (this.state.materialCodes.length == 0 & !this.state.isLoaded)){
-      this.setState({materialCodes: newProps.material.materialCodes })
-      this.setState({isLoaded:true})
-    }
+  componentWillReceiveProps(nextProps){
 
-    if(newProps.isSaveClicked && !this.state.saveClicked && this.state.tabClicked == 'tab-materialcode'){
-      this.setState({saveClicked: true});
-      this.props.save('materialcode',this.state.materialCodes)
-      return;
-    }
-    if(!newProps.isSaveClicked){
-      this.setState({saveClicked: false});
-    }
-
-    if(newProps.tabClicked != this.state.tabClicked){
-      if(this.state.tabClicked == 'tab-materialcode' || this.state.tabClicked == '')  {
-        if(newProps.tabClicked != '' && newProps.tabClicked != 'tab-materialcode')  {
-          this.tabChanged(newProps.tabClicked);
-        } 
+    if(nextProps.currentTab == 'materialCodes' && (nextProps.nextTab != 'materialCodes' && nextProps.nextTab != '')){
+      if(nextProps.material.materialCodes != this.state.materialCodes){
+        this.props.save(this.state.materialCodes)
+      } else {
+        this.props.save('changeTab');
       }
     }
-    this.setState({tabClicked: newProps.tabClicked});
+
+    if(this.props.isCancelClicked){
+      this.setState({materialCodes:this.props.material.materialCodes});
+    }
   }
 
-  tabChanged = (tabClicked) => {
-      if(this.props.save('materialcode',this.state.materialCodes)){
-        this.setState({tabClicked});
-      }
-  }
   onItemClick = (i) => {
     this.setState({currentItem:i})
   }
   onChange = (e) => {
+    if(this.state.currentItem == 0) return;
     const numberFields = ['height', 'width', 'thickness'];
     let { value, name } = e.target;
     if (numberFields.includes(name) && isNaN(value)) { return;}
@@ -95,20 +79,14 @@ class MaterialCode extends Component {
     setTimeout(() => {
 
       let materialCodes = this.state.materialCodes;
-      let isDelete = false;
       if(this.isUsed(id)){
         let msg = 'WARNING! This Material Code is used in the Items \n\n';
-        msg += 'Are you sure that you want to delete this ??\n\n';
-        if(window.confirm(msg,'Shape')){
-          isDelete = true
-        }
-      } else {
-        isDelete = true
+        msg += 'You cannot delete this code \n\n';
+        window.alert(msg);
+        return;
       }
-      if(isDelete){
-        var newMaterialCodes = materialCodes.filter(materialCode => materialCode.materialCodeNumber != id);
-        this.setState({materialCodes: newMaterialCodes, currentItem:0});
-      }
+      var newMaterialCodes = materialCodes.filter(materialCode => materialCode.materialCodeNumber != id);
+      this.setState({materialCodes: newMaterialCodes, currentItem:0});
     },100
     )
   }
@@ -138,7 +116,7 @@ class MaterialCode extends Component {
         </thead>
         {this.state.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1  : -1 ).map( (materialCode, i) => {
         return (
-        <tr  onClick={() => this.onItemClick(materialCode.materialCodeNumber)} style={{backgroundColor:this.isUsed(materialCode.materialCodeNumber)?'#FFB3B3':'#fff'}}>
+        <tr id={'mat-row-materialcode' + materialCode.materialCodeNumber}  onClick={() => this.onItemClick(materialCode.materialCodeNumber)} onMouseDown={() => this.onItemClick(materialCode.materialCodeNumber)} onKeyDown={() => this.onItemClick(materialCode.materialCodeNumber)} onFocus={() => this.onItemClick(materialCode.materialCodeNumber)} style={{backgroundColor:this.isUsed(materialCode.materialCodeNumber)?'yellow':'#fff'}}>
             <td>{materialCode.materialCodeNumber}</td>
             <td>
                 <div className="form-group" style={{marginBottom:"0px"}}>

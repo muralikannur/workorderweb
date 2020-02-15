@@ -1,6 +1,7 @@
 import React, { Component} from 'react';
 import { profileType } from '../../appConfig';
 import { PROFILE_TYPE } from '../../constants';
+import { notify_error } from '../../util';
 
 class MaterialProfile extends Component {
  
@@ -8,48 +9,45 @@ class MaterialProfile extends Component {
         super(props);
         this.state = {
             currentItem:0,
-            profiles:[],
-            tabClicked:'tab-board',
-            isLoaded:false,
-            saveClicked:false
+            profiles:[]
         };
     }
 
-  componentWillReceiveProps(newProps){
-    if(newProps.material.profiles  && (this.state.profiles.length == 0 & !this.state.isLoaded)){
-      this.setState({profiles: newProps.material.profiles })
-      this.setState({isLoaded:true})
+    componentDidMount(){
+      window.setTimeout(() => {
+        this.setState({profiles:this.props.material.profiles});
+      },1000)
     }
-
-    if(newProps.isSaveClicked && !this.state.saveClicked && this.state.tabClicked == 'tab-profile'){
-      this.setState({saveClicked: true});
-      this.props.save('profile',this.state.profiles)
-      return;
-    }
-    if(!newProps.isSaveClicked){
-      this.setState({saveClicked: false});
-    }
-
-    if(newProps.tabClicked != this.state.tabClicked){
-      if(this.state.tabClicked == 'tab-profile' || this.state.tabClicked == '')  {
-        if(newProps.tabClicked != '' && newProps.tabClicked != 'tab-profile')  {
-          this.tabChanged(newProps.tabClicked);
-        } 
+  
+    componentWillReceiveProps(nextProps){
+  
+      if(nextProps.currentTab == 'profiles' && (nextProps.nextTab != 'profiles' && nextProps.nextTab != '')){
+        if(nextProps.material.profiles != this.state.profiles){
+          this.props.save(this.state.profiles)
+        } else {
+          this.props.save('changeTab');
+        }
+      }
+  
+      if(this.props.isCancelClicked){
+        this.setState({profiles:this.props.material.profiles});
       }
     }
-    this.setState({tabClicked: newProps.tabClicked});
-  }
-
-  tabChanged = (tabClicked) => {
-      if(this.props.save('profile',this.state.profiles)){
-        this.setState({tabClicked});
-      }
-  }
-
+  
   onItemClick = (i) => {
     this.setState({currentItem:i})
   }
+
+  isUsed = (id) => {
+    if(id == 0) return false;
+    if(this.props.items && this.props.items.find(i => i.profileNumber == id)){
+      return true;
+    }
+    return false;
+  }
+
   onChange = (e) => {
+    if(this.state.currentItem == 0) return;
     const numberFields = ['height', 'width'];
     const { value, name } = e.target;
 
@@ -100,6 +98,13 @@ class MaterialProfile extends Component {
       //TODO: check whether it is already used in the material code
       if(window.confirm('Are you sure that you want to delete the Profile # ' + i +' ??','Shape')){
         var profiles = this.state.profiles;
+        if(this.isUsed(i)){
+          let msg = 'WARNING! This Profile is used in the Item \n\n';
+          msg += 'You cannot delete this Profile\n';
+          notify_error(msg);
+          return;
+        }
+
         var newProfiles = profiles.filter(profile => profile.profileNumber != i);
         this.setState({profiles: newProfiles, currentItem:0});
       }
@@ -127,7 +132,7 @@ class MaterialProfile extends Component {
         </thead>
         {this.state.profiles.sort((a,b) => a.profileNumber > b.profileNumber ? 1  : -1 ).map( (profile) => {
         return (
-        <tr  onClick={() => this.onItemClick(profile.profileNumber)} style={{backgroundColor:`${profile.profileNumber == this.state.currentItem ? "#b5d1ff" : "#fff"}`}}>
+        <tr  id={'mat-row-profile' + profile.profileNumber}  onClick={() => this.onItemClick(profile.profileNumber)} onMouseDown={() => this.onItemClick(profile.profileNumber)} onKeyDown={() => this.onItemClick(profile.profileNumber)} onFocus={() => this.onItemClick(profile.profileNumber)} style={{backgroundColor:this.isUsed(profile.profileNumber)?'yellow':'#fff'}}>
             <td>{profile.profileNumber}</td>
             <td>
                 <div className="form-group" style={{marginBottom:"0px"}}>

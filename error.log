@@ -20,3 +20,15 @@
 2020-01-24T02:38:09.908Z [workorderweb\server.js] error: read ECONNRESET - Error: read ECONNRESET
     at _errnoException (util.js:992:11)
     at TCP.onread (net.js:618:25)
+
+2020-02-01T02:15:22.181Z [api\customer.js] error: Customer Code YYY already exists. - undefined
+
+2020-02-06T03:06:56.424Z [auth\login.js] error: User Does not exist. Email:muralikannur@gmail.com - undefined
+
+2020-02-08T05:34:00.577Z [workorderweb\server.js] error: read ECONNRESET - Error: read ECONNRESET
+    at _errnoException (util.js:992:11)
+    at TCP.onread (net.js:618:25)
+
+2020-02-08T05:48:44.397Z [workorderweb\server.js] error: read ECONNRESET - Error: read ECONNRESET
+    at _errnoException (util.js:992:11)
+    at TCP.onread (net.js:618:25)

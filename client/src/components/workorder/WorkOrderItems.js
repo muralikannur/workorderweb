@@ -24,12 +24,14 @@ class WorkOrderItems extends Component {
   }
 
   componentDidMount(){
+    console.log('LIFECYCLE: Workorder Items - componentDidMount');
     this.props.clearErrors();
     this.props.setCurrentItem(null);
     this.REMOVE_REMARK_ICON_TITLE = "Remove Remark";
   }
 
   componentWillReceiveProps(newProps){
+    console.log('LIFECYCLE: Workorder Items - componentWillReceiveProps');
     this.setState({woitems: newProps.wo.woitems });
   }
 
@@ -74,8 +76,17 @@ class WorkOrderItems extends Component {
     const maxId = this.getMaxId();
     let newItem = JSON.parse(JSON.stringify(item))
     newItem.itemnumber = maxId;
-    this.setState({woitems: [...this.state.woitems, newItem]});
-    this.props.saveItems( [...this.state.woitems, newItem]);
+
+    let childItems = [];
+    items.filter(i => i.parentId == item.itemnumber).map(child => {
+      let newChild = JSON.parse(JSON.stringify(child));
+      newChild.itemNumber = maxId;
+      newChild.parentId = maxId;
+      childItems.push(newChild)
+    })
+
+    this.setState({woitems: [...this.state.woitems, ...childItems, newItem]});
+    this.props.saveItems( [...this.state.woitems, ...childItems, newItem]);
     setTimeout(() => {
       this.setState({currentItem:maxId})
     },100)
@@ -99,6 +110,8 @@ class WorkOrderItems extends Component {
     this.setState({woitems: [...nonModifiedItems, item]});
     this.props.saveItems( [...nonModifiedItems, item]);
   }  
+
+
 
   addItem = () => {
     if(this.props.material.materialCodes.length == 0){
@@ -133,7 +146,9 @@ class WorkOrderItems extends Component {
       patternType:0,
       glassWidth:0,
       patternSplits:[],
-      patternBoardCode:0
+      patternBoardCode:0,
+      doubleThickSides:'ABCD',
+      doubleThickCode:0
     }
     this.setState({woitems: [...this.state.woitems, newItem], currentItem:maxId});
     this.props.saveItems( [...this.state.woitems, newItem]);
@@ -149,6 +164,7 @@ class WorkOrderItems extends Component {
   }
 
   onChange = (e) => {
+    if(this.state.currentItem == 0) return;
     const numberFields = ['height', 'width', 'quantity'];
     const floatFields = ['eb_a','eb_b','eb_c','eb_d'];
 
@@ -292,7 +308,7 @@ class WorkOrderItems extends Component {
   }
 
   getMaterialText(m){
-
+    if(!m) return;
     if(!isEmptyOrSpaces(m.shortname)) return '[' + m.materialCodeNumber + '] ' + m.shortname;
 
     const b = (m.board != 0 ? this.props.material.boards.find(i => i.boardNumber == m.board) : null);
@@ -303,6 +319,17 @@ class WorkOrderItems extends Component {
     matText += (m.front_laminate == 0 ? '' : ', FL: ' + fl.code + ' - ' + fl.thickness + 'mm - ' + fl.grains);
     matText += (m.back_laminate == 0 ? '' : ', BL: ' + bl.code + ' - ' + bl.thickness + 'mm - ' + bl.grains);
     return matText;
+  }
+
+  onChildCodeChange = (e,cNo,iNo) =>{
+    var items = this.state.woitems;
+    var item = items.find(i => i.itemnumber == iNo && i.childNumber == cNo);
+    var newItem = { ...item, childCode: e.target.value}
+
+    items = items.filter(i => (i.itemnumber != iNo && i.childNumber != cNo))
+    items = [...items,newItem]
+    this.setState({woitems: items});
+    //this.props.saveItems(items);
   }
 
   render() {
@@ -385,7 +412,7 @@ class WorkOrderItems extends Component {
 
           return (
             <tbody>
-            <tr key={item.itemnumber}  onClick={(e) => this.onItemClick(e,item.itemnumber)} style={{backgroundColor:`${item.itemnumber == this.state.currentItem ? "#b5d1ff" : "#eee"}`}} >
+            <tr id={'item-row-' + item.itemnumber}  key={item.itemnumber}  onClick={(e) => this.onItemClick(e,item.itemnumber)} onMouseDown={(e) => this.onItemClick(e,item.itemnumber)} onKeyDown={(e) => this.onItemClick(e,item.itemnumber)} onFocus={(e) => this.onItemClick(e,item.itemnumber)} style={{backgroundColor:`${item.itemnumber == this.state.currentItem ? "#b5d1ff" : "#eee"}`}} >
                 <td style={{fontWeight:"bold", textAlign:"center"}}>{item.itemnumber}</td>
                 <td>
                   <div className="form-group" style={{marginBottom:"0px"}}>
@@ -518,21 +545,26 @@ class WorkOrderItems extends Component {
             </tr>  
             {this.state.woitems.filter(i => i.parentId == item.itemnumber).map(child => {
 
-              let childMatText = '';
-              if(item.code == '100'){
-                let childMatCode = this.props.material.materialCodes.find(mc => mc.materialCodeNumber == child.code);
-                if(childMatCode)
-                  childMatText =  this.getMaterialText(childMatCode);
-                  else{
-                    debugger;
-                    console.log(child.code);
-                  }
-              }
+
+                let dblThickMat = this.props.material.materialCodes.find(mc => mc.materialCodeNumber == item.doubleThickCode);
+
 
               return(
                 <tr style={{backgroundColor:"#ddd", color:"#555", padding:"2px"}}>
                 <td style={{fontWeight:"bold", textAlign:"center"}}>{item.itemnumber}</td>
-                <td style={{fontSize:"10px"}}>{childMatText}</td>
+                <td>
+                  <div className="form-group" style={{marginBottom:"0px"}}>
+                    <select id="code" onChange={(e) => this.onChildCodeChange(e,child.childNumber,item.itemnumber)}  value={child.code}  name="childCode" className="js-example-basic-single input-xs  w-100">
+                    <option value="0">Select the Material</option>  
+                    {
+                      this.props.material.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1 : -1).map( (m) => {
+                      let matText =  this.getMaterialText(m);
+                      return (
+                        <option value={m.materialCodeNumber} key={m.materialCodeNumber} >{matText}</option>
+                      )})}
+                    </select>
+                  </div>  
+                </td>                
                 <td></td>
                 <td>{child.height}</td>
                 <td>{child.width}</td>
@@ -557,6 +589,8 @@ class WorkOrderItems extends Component {
 
       </table>
       <span id="btnAddItem" className="btn btn-xs btn-rounded btn-outline-success mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold"}} onClick={()=>{this.addItem()}}>Add Item</span>
+      &nbsp; 
+      <span id="btnCancelItems" className="btn btn-xs btn-rounded btn-outline-danger mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold", "float":"right"}} onClick={()=>{this.props.cancelItems()}}>Cancel Changes</span>
     </div>
     )
     

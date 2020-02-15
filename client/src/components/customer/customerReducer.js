@@ -1,6 +1,6 @@
 import {
   GET_CUSTOMER
-} from '../actions/types';
+} from '../../actions/types';
 
 const initialState = {
   customercode:'',
@@ -16,7 +16,7 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case  GET_CUSTOMER:
-      return action.payload == {} ? initialState : action.payload;
+      return action.payload.customercode ? action.payload : initialState;
     default:
       return state;
   }

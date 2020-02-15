@@ -1,4 +1,4 @@
 {
-  "mongoURI": "mongodb://admin:wowdb123@139.59.58.64:27017/wow?authSource=admin",
+  "mongoURI": "mongodb://localhost:27017/test",
   "jwtSecret": "sl_myJwtSecret"
 }

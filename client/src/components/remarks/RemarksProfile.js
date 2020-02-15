@@ -9,7 +9,7 @@ class RemarksProfile extends Component {
   constructor(props){
     super(props);
     this.state = {
-      profileType:0,
+      profileNumber:0,
       profileSide:''
     }
   }
@@ -22,7 +22,7 @@ class RemarksProfile extends Component {
 
   updateState() {
     if(this.props.item != null){
-      this.setState({ profileType : this.props.item.profileType })
+      this.setState({ profileNumber : this.props.item.profileNumber })
       this.setState({ profileSide : this.props.item.profileSide })
     }
   }
@@ -38,7 +38,7 @@ class RemarksProfile extends Component {
       notify_error('Please select the Profile Side');
       return;
     }
-    var newItem = { ...this.props.item, profileType: this.state.profileType, profileSide: this.state.profileSide}
+    var newItem = { ...this.props.item, profileNumber: this.state.profileNumber, profileSide: this.state.profileSide}
     if(this.state.profileSide == 'H'){
       newItem.eb_c = 0; 
     }
@@ -66,7 +66,7 @@ class RemarksProfile extends Component {
               <tr>
                 <td>
                   <h6>Select the Profile Type</h6>
-                  <select style={{width:"300px"}}  id="profileType" name="profileType" value={this.state.profileType}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
+                  <select style={{width:"300px"}}  id="profileNumber" name="profileNumber" value={this.state.profileNumber}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
                   <option value="0" key="0" >Select...</option>
                   {this.props.material.profiles.filter(p => p.type != PROFILE_TYPE.E).map( (e) => {
                     return (

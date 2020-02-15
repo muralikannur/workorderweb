@@ -15,70 +15,113 @@ import  MaterialProfile  from './MaterialProfile';
 import  MaterialEdgeBand  from './MaterialEdgeBand';
 
 //Actions
-import { saveBoards, saveLaminates, saveMaterialEdgeBands, saveProfiles, saveMaterialCodes, saveMaterial } from '../../actions/materialActions';
+import { saveBoards, saveLaminates, saveMaterialEdgeBands, saveProfiles, saveMaterialCodes, saveMaterial } from './materialActions';
 
 class MaterialMain extends Component {
 
   constructor(props){
     super(props);
     this.state = {
-        currentTab:'tab-board',
-        tabClicked:'tab-board',
-        isSaveClicked:false
+        currentTab:'boards',
+        nextTab:'boards',
+        isSaveClicked:false,
+        isCancelClicked:false,
+        originalMaterials:{}
     };
   }
 
+  componentDidMount(){
+    setTimeout(() => {
+      this.setState({originalMaterials:this.props.material});
+    },1000);
+  }
 
   onTabChange = (e) => {
     if(this.state.currentTab == e.target.id) return;
-    this.setState({tabClicked:e.target.id})
+    this.setState({nextTab:e.target.id});
   }
 
   saveAllMaterials = () => {
-    this.setState({isSaveClicked:true})    
+    this.setState({isSaveClicked:true})
+    this.setState({nextTab:'save'});    
   }
 
-  save = (type,data) => {
+  cancelAllChanges = () => {
+    if(window.confirm('Are you sure that you want to cancel all Material Definition changes you made since last Save??')){
+      this.props.saveMaterial(this.state.originalMaterials, this.matCancelSuccess);
+    }
+  }  
 
-    //notify_success(type + ' - ' + data.length);
+  save = (data) => {
 
-    if(this.state.isSaveClicked) {
-      this.setState({isSaveClicked:false})
+    if(data == 'changeTab'){
+      if(this.state.nextTab != 'save'){
+        this.setState({currentTab:this.state.nextTab, nextTab:''});
+      }else{
+        notify_success('Materials Definition Saved.');
+        this.setState({isSaveClicked:false});
+        this.setState({nextTab:''})
+        this.setState({originalMaterials:this.props.material});
+      }
+      return;
     }
 
-    switch(type){
-      case 'board':
+    //$('[id^=mat-row-]').css("background-color","#fff");
+    $('tr').filter(function(){ return this.style && this.style.backgroundColor == 'rgb(255, 153, 153)'; }).css("background-color","#fff");
+
+    switch(this.state.currentTab){
+      case 'boards':
         if(!this.validateBoards(data)) return false;
         break;
-      case 'laminate':
+      case 'laminates':
           if(!this.validateLaminates(data)) return false;
           break;
-      case 'edgeband':
+      case 'edgebands':
           if(!this.validateEdgeBands(data)) return false;
           break;     
-      case 'profile':
+      case 'profiles':
           if(!this.validateProfiles(data)) return false;
           break;             
-      case 'materialcode':
+      case 'materialCodes':
           if(!this.validateMaterialCodes(data)) return false;
           break;           
     }
-    
-    this.setState({currentTab:this.state.tabClicked})
+    var nextTab = this.state.nextTab === 'save' ? this.state.currentTab : this.state.nextTab;
+    this.setState({currentTab:nextTab, nextTab:''})
 
-    //this.props.saveMaterial(this.props.material);
-
-    setTimeout(() => {
-      this.props.saveMaterial(this.props.material);
+    window.setTimeout(() => {
+      this.props.saveMaterial(this.props.material,this.matSaveSuccess);
     },100)
 
-    if(this.state.isSaveClicked) {
-      notify_success('Materials Definition Saved.');
-      //$('#btnCloseMaterialPopup').click();
-    }
-    return true;
+
   }
 
+  matSaveSuccess = () => {
+    
+    if(this.state.isSaveClicked) {
+      window.setTimeout(() => {
+        this.setState({originalMaterials:this.props.material});
+      },100)
+      
+      notify_success('Materials Definition Saved.');
+      this.setState({isSaveClicked:false});
+    } 
+  }
+
+  matCancelSuccess = () => {
+    this.setState({isCancelClicked:true}) 
+    notify_success('Reverted Material Definition changes made since last Save');
+    
+    window.setTimeout(() => {
+      this.setState({originalMaterials:this.props.material});
+      this.setState({isCancelClicked:false}) ;
+    },100)
+    
+  }  
+
+  highlightError = (errItems, type, idName, isEB = false ) => {
+    errItems.map(e => {$('#mat-row-' + type + (isEB? '-'+e.laminate +'-':'') + eval('e.' + idName)).css("background-color","#FF9999")});
+  }
 
   validateBoards = (boards) => {
 
@@ -94,26 +137,31 @@ class MaterialMain extends Component {
       //TYPE NOT SELECTED
       let errItems = boards.filter(i => i.type == "0");
       if(errItems.length > 0){
+        this.highlightError(errItems, 'board','boardNumber')
         notify_error("Type not selected for the board");
         return false;
+
       }
 
       //HEIGHT NOT GIVEN
-      errItems = boards.filter(i => isEmptyOrSpaces(i.height)).map(i => i.type);
+      errItems = boards.filter(i => isEmptyOrSpaces(i.height));
       if(errItems.length > 0){
-        notify_error("Height not given for the following board(s)..\n" + errItems.join());
+        this.highlightError(errItems,'board','boardNumber')
+        notify_error("Height not given for the following board(s)..\n" + errItems.map(i => i.type).join());
         return false;
       }
       //WIDTH NOT GIVEN
-      errItems = boards.filter(i => isEmptyOrSpaces(i.width)).map(i => i.type);
+      errItems = boards.filter(i => isEmptyOrSpaces(i.width));
       if(errItems.length > 0){
-        notify_error("Width not given for the following board(s)..\n" + errItems.join());
+        this.highlightError(errItems,'board','boardNumber')
+        notify_error("Width not given for the following board(s)..\n" + errItems.map(i => i.type).join());
         return false;
       }
       //THICKNESS NOT GIVEN
-      errItems = boards.filter(i => isEmptyOrSpaces(i.thickness)).map(i => i.type);
+      errItems = boards.filter(i => isEmptyOrSpaces(i.thickness));
       if(errItems.length > 0){
-        notify_error("Thickness not given for the following board(s)..\n" + errItems.join());
+        this.highlightError(errItems,'board','boardNumber')
+        notify_error("Thickness not given for the following board(s)..\n" + errItems.map(i => i.type).join());
         return false;
       }
     }
@@ -121,19 +169,21 @@ class MaterialMain extends Component {
     this.props.saveBoards(boards)
     return true;
   }
-  
+
   validateLaminates = (laminates) => {
 
     if(laminates.length > 0){
 
       //CHECK DUPLICATE ITEMS
       if (hasDuplicate(laminates, uniqueKeys.laminate)) {
+        
         notify_error("There are duplicate items. Please verify.");
         return false;
       }
       //CODE NOT GIVEN
       let errItems = laminates.filter(i => isEmptyOrSpaces(i.code));
       if(errItems.length > 0){
+        this.highlightError(errItems,'laminate','laminateNumber');
         notify_error("Please select the Code/Shade for the laminate");
         return false;
       }
@@ -141,14 +191,16 @@ class MaterialMain extends Component {
       //GRAINS NOT SELECTED
       errItems = laminates.filter(i => isEmptyOrSpaces(i.grains));
       if(errItems.length > 0){
+        this.highlightError(errItems,'laminate','laminateNumber');
         notify_error("Please select the Grains for the laminate");
         return false;
       }
 
       //THICKNESS NOT GIVEN
-      errItems = laminates.filter(i => isEmptyOrSpaces(i.thickness) || isNaN(i.thickness)).map(i => i.code);
+      errItems = laminates.filter(i => isEmptyOrSpaces(i.thickness) || isNaN(i.thickness));
       if(errItems.length > 0){
-        notify_error("Incorrect or No Thickness given for the following laminate(s)..\n" + errItems.join());
+        this.highlightError(errItems,'laminate','laminateNumber');
+        notify_error("Incorrect or No Thickness given for the following laminate(s)..\n" + errItems.map(i => i.code).join());
         return false;
       }
     }
@@ -166,23 +218,24 @@ class MaterialMain extends Component {
     }
 
     //NOTHING SELECTED
-    let errItems = materialEdgeBands.filter(i => i.laminate == '0' ||  i.eb_thickness == 0 ||  i.eb_width == 0 ).map(i => i.materialEdgeBandNumber);
+    let errItems = materialEdgeBands.filter(i => i.laminate == '0' ||  i.eb_thickness == 0 ||  i.eb_width == 0 );
     if(errItems.length > 0){
+      this.highlightError(errItems,'edgeband','materialEdgeBandNumber',true);
       notify_error("Thickness/Width not selected for the Edge Band");
       return false;
     }
 
     //EB THICKNESS .45 SHOULD HAVE ONLY 22 WIDTH
-    errItems = materialEdgeBands.filter(i => i.eb_thickness == 0.45 &&  i.eb_width != 22).map(i => i.materialEdgeBandNumber);
+    errItems = materialEdgeBands.filter(i => i.eb_thickness == 0.45 &&  i.eb_width != 22);
     if(errItems.length > 0){
-      notify_error("Edge Band with .45 thick should be of 22 width. Error in following Item.. \n" + errItems.join());
+      this.highlightError(errItems,'edgeband','materialEdgeBandNumber',true);
+      notify_error("Edge Band with .45 thick should be of 22 width. Error in following Item.. \n" + errItems.map(i => i.materialEdgeBandNumber).join());
       return false;
     }
 
     this.props.saveMaterialEdgeBands(materialEdgeBands);
     return true;
   }
-
  
   validateProfiles = (profiles) => {
 
@@ -195,7 +248,8 @@ class MaterialMain extends Component {
     //TYPE NOT SELECTED
     let errItems = profiles.filter(i => i.type == "0");
     if(errItems.length > 0){
-      notify_error("Please select the Type of the Profile" + errItems.join());
+      this.highlightError(errItems,'profile','profileNumber');
+      notify_error("Please select the Type of the Profile" );
       return false;
     }
 
@@ -228,6 +282,7 @@ class MaterialMain extends Component {
     //NOTHING SELECTED
     let errItems = materialCodes.filter(i => i.board == "0" && i.front_laminate == "0" && i.back_laminate == "0");
     if(errItems.length > 0){
+      this.highlightError(errItems,'materialcode','materialCodeNumber');
       notify_error("Select any of the Board/Laminate combination.");
       return false;
     }
@@ -271,9 +326,9 @@ class MaterialMain extends Component {
 
               <li className="nav-item">
                 <a className="nav-link" 
-                  style={{fontWeight:"bold",color:`${this.state.currentTab == "tab-board" ? "teal":"grey"}`}}  
+                  style={{fontWeight:"bold",color:`${this.state.currentTab == "boards" ? "teal":"grey"}`}}  
                   onClick={(e) => this.onTabChange(e)} 
-                  id="tab-board" 
+                  id="boards" 
                   href="#" 
                   data-toggle="tab" 
                   role="tab" 
@@ -285,9 +340,9 @@ class MaterialMain extends Component {
 
               <li className="nav-item">
                 <a className="nav-link"  
-                  style={{fontWeight:"bold",color:`${this.state.currentTab == "tab-laminate" ? "teal":"grey"}`}}  
+                  style={{fontWeight:"bold",color:`${this.state.currentTab == "laminates" ? "teal":"grey"}`}}  
                   onClick={(e) => this.onTabChange(e)}  
-                  id="tab-laminate" 
+                  id="laminates" 
                   href="#" 
                   data-toggle="tab"  
                   role="tab" 
@@ -299,9 +354,9 @@ class MaterialMain extends Component {
 
               <li className="nav-item">
                 <a  className="nav-link"  
-                style={{fontWeight:"bold",color:`${this.state.currentTab == "tab-edgeband" ? "teal":"grey"}`}}  
+                style={{fontWeight:"bold",color:`${this.state.currentTab == "edgebands" ? "teal":"grey"}`}}  
                 onClick={(e) => this.onTabChange(e)}  
-                id="tab-edgeband" 
+                id="edgebands" 
                 data-toggle="tab" 
                 href="#" 
                 role="tab" 
@@ -313,9 +368,9 @@ class MaterialMain extends Component {
 
               <li className="nav-item">
                 <a className="nav-link"  
-                style={{fontWeight:"bold",color:`${this.state.currentTab == "tab-profile" ? "teal":"grey"}`}}  
+                style={{fontWeight:"bold",color:`${this.state.currentTab == "profiles" ? "teal":"grey"}`}}  
                 onClick={(e) => this.onTabChange(e)} 
-                id="tab-profile" 
+                id="profiles" 
                 data-toggle="tab" 
                 href="#" 
                 role="tab" 
@@ -327,9 +382,9 @@ class MaterialMain extends Component {
 
               <li className="nav-item">
                 <a className="nav-link"  
-                style={{fontWeight:"bold",color:`${this.state.currentTab == "tab-materialcode" ? "teal":"grey"}`}} 
+                style={{fontWeight:"bold",color:`${this.state.currentTab == "materialCodes" ? "teal":"grey"}`}} 
                 onClick={(e) => this.onTabChange(e)}  
-                id="tab-materialcode" 
+                id="materialCodes" 
                 data-toggle="tab" 
                 href="#" 
                 role="tab" 
@@ -343,23 +398,29 @@ class MaterialMain extends Component {
                 <div>
                   <button type="button" className="btn btn-success" onClick={()=>{this.saveAllMaterials()}}>Save All Changes</button> &nbsp; 
                 </div>
+
+                <br />
+                <div>
+                  <button type="button" className="btn btn-danger" onClick={()=>{this.cancelAllChanges()}}>Cancel All Changes</button> &nbsp; 
+                </div>
+
               </li>
             </ul>
             <div className="tab-content col-md-10">
-              <div className={`tab-pane fade ${this.state.currentTab == "tab-board" && "show active"}`} id="board" role="tabpanel" aria-labelledby="board">
-                <MaterialBoard isSaveClicked={this.state.isSaveClicked} save={this.save} tabClicked={this.state.tabClicked} material={this.props.material}/>
+              <div className={`tab-pane fade ${this.state.currentTab == "boards" && "show active"}`} id="board" role="tabpanel" aria-labelledby="board">
+                <MaterialBoard material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}/>
               </div>
-              <div className={`tab-pane fade ${this.state.currentTab == "tab-laminate" && "show active"}`} id="laminate" role="tabpanel" aria-labelledby="laminate">
-                <MaterialLaminate isSaveClicked={this.state.isSaveClicked}  save={this.save} tabClicked={this.state.tabClicked} material={this.props.material}  />
+              <div className={`tab-pane fade ${this.state.currentTab == "laminates" && "show active"}`} id="laminate" role="tabpanel" aria-labelledby="laminate">
+                <MaterialLaminate material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
               </div>
-              <div className={`tab-pane fade ${this.state.currentTab == "tab-edgeband" && "show active"}`}  id="edgeband" role="tabpanel" aria-labelledby="edgeband">
-                  <MaterialEdgeBand isSaveClicked={this.state.isSaveClicked}   save={this.save} tabClicked={this.state.tabClicked} material={this.props.material} items={this.props.woitems} />
+              <div className={`tab-pane fade ${this.state.currentTab == "edgebands" && "show active"}`}  id="edgeband" role="tabpanel" aria-labelledby="edgeband">
+                  <MaterialEdgeBand  items={this.props.items} material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
               </div>  
-              <div className={`tab-pane fade ${this.state.currentTab == "tab-profile" && "show active"}`}  id="profile" role="tabpanel" aria-labelledby="profile">
-                  <MaterialProfile isSaveClicked={this.state.isSaveClicked}   save={this.save} tabClicked={this.state.tabClicked} material={this.props.material} />
+              <div className={`tab-pane fade ${this.state.currentTab == "profiles" && "show active"}`}  id="profile" role="tabpanel" aria-labelledby="profile">
+                  <MaterialProfile  items={this.props.items} material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
               </div>
-              <div className={`tab-pane fade ${this.state.currentTab == "tab-materialcode" && "show active"}`}  id="materialcode" role="tabpanel" aria-labelledby="materialcode">
-                  <MaterialCode isSaveClicked={this.state.isSaveClicked}   save={this.save} tabClicked={this.state.tabClicked} material={this.props.material} items={this.props.woitems}  />
+              <div className={`tab-pane fade ${this.state.currentTab == "materialCodes" && "show active"}`}  id="materialcode" role="tabpanel" aria-labelledby="materialcode">
+                  <MaterialCode  items={this.props.items}  material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
               </div>
             
             </div>

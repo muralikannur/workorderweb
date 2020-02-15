@@ -1,6 +1,6 @@
 import {
   GET_WO_LIST, ADD_WO_TO_LIST
-} from '../actions/types';
+} from '../../actions/types';
 
 
 export default function(state = [], action) {
