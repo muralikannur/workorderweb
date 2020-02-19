@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import $ from 'jquery';
 import { REMARKS, EB_START_NUMBER, PROFILE_TYPE} from '../../constants';
 import { stringify } from 'querystring';
-import { notify_error, notify_success, isEmptyOrSpaces }  from '../../util';
+import { notify_error, notify_success, isEmptyOrSpaces }  from '../../Utils/commonUtls';
+import { setDoubleThick }  from '../../Utils/remarksUtils';
+
 class RemarksDoubleThick extends Component {
  
   constructor(props){
@@ -39,7 +41,7 @@ class RemarksDoubleThick extends Component {
   onChange = (e) => {
     const { value, name } = e.target;
     if(isNaN(value)) return;
-    this.setState({[name]:value});
+    this.setState({[name]:parseInt(value)});
   }
 
   getEdgeBandNumber(){
@@ -97,11 +99,12 @@ class RemarksDoubleThick extends Component {
       return;
     }
 
-    var newItem = { ...this.props.item, doubleThickWidth: this.state.doubleThickWidth, doubleThickSides: dblSides}
-    let remarks = this.props.item.remarks;
+    let newItem = JSON.parse(JSON.stringify(this.props.item));
+
+    newItem = { ...newItem, doubleThickWidth: this.state.doubleThickWidth, doubleThickSides: dblSides}
+    let remarks = newItem.remarks;
     if(remarks.length == 0 || !remarks.includes(REMARKS.DBLTHICK)){
       remarks.push(REMARKS.DBLTHICK);
-      newItem = { ...newItem, remarks}
     }
 
 
@@ -110,10 +113,9 @@ class RemarksDoubleThick extends Component {
       itemnumber:0, 
       parentId:this.props.item.itemnumber, 
       remarks:[], 
-      profileType:0,
+      profileNumber:0,
       doubleThickWidth:0,
       doubleThickSides:"",
-      width:this.state.doubleThickWidth,
       eb_a:ebNumber,eb_b:0,eb_c:0,eb_d:0,
       quantity:0,
       childNumber:1
@@ -121,30 +123,12 @@ class RemarksDoubleThick extends Component {
 
 
     let newItem2 = {...newItem1, 
-      width:this.state.doubleThickWidth,
-      height:this.props.item.width - (parseInt(this.state.doubleThickWidth)*2),
+
       childNumber:2
     };
 
-    //get Width sides (BD) quantity
-    if(this.state.B || this.state.D){
-      newItem2.quantity = this.props.item.quantity;
-    } 
-    if(this.state.B && this.state.D){
-      newItem2.quantity = this.props.item.quantity * 2;
-    } 
-
-    //get Height sides (AC) quantity
-    if(this.state.A || this.state.C){
-      newItem1.quantity = this.props.item.quantity;
-
-      if(this.state.A && this.state.C){
-        newItem1.quantity = this.props.item.quantity * 2;
-      } else {
-        newItem2.height = this.props.item.width - parseInt(this.state.doubleThickWidth)
-      } 
-    } else {
-      newItem2.height = this.props.item.width;
+    if(!setDoubleThick(dblSides, this.props.item, newItem1, newItem2, this.state.doubleThickWidth)){
+      return;
     }
 
     let items = this.props.wo.woitems.filter(i => i.itemnumber != this.props.item.itemnumber)
@@ -163,6 +147,9 @@ class RemarksDoubleThick extends Component {
 
     $('#btnRemarksClose').click();
   }
+
+  
+
   getMaterialText(m){
 
     if(!isEmptyOrSpaces(m.shortname)) return '[' + m.materialCodeNumber + '] ' + m.shortname;

@@ -7,7 +7,7 @@ import * as qs from 'query-string';
 import { clearErrors } from '../../actions/errorActions';
 import { getAllWorkOrders, createWorkOrder, getWorkOrder } from './woActions';
 import { getMaterial } from '../materials/materialActions';
-import { notify_error,isEmptyOrSpaces } from '../../util';
+import { notify_error,isEmptyOrSpaces } from '../../Utils/commonUtls';
 
 class WorkOrderList extends Component {
 

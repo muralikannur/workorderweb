@@ -1,6 +1,6 @@
 import React, { Component} from 'react';
 import { boardType } from '../../appConfig';
-import { notify_error } from '../../util';
+import { notify_error } from '../../Utils/commonUtls';
 
 class MaterialBoard extends Component {
   constructor(props){

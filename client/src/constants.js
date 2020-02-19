@@ -36,4 +36,4 @@ export const WO_STATUS = {
     SUBMITTED:'SUBMITTED'
 }
 
-export const PATTERN_CODE = "100";
+export const PATTERN_CODE = "1000";

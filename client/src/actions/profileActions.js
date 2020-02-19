@@ -2,7 +2,7 @@ import axios from 'axios';
 import { GET_PROFILE, SAVE_PROFILE } from './types';
 import { tokenConfig } from './authActions';
 import { returnErrors } from './errorActions';
-import { notify_error, notify_success } from '../util';
+import { notify_error, notify_success } from '../Utils/commonUtls';
 
 export const saveProfile = profile => (dispatch, getState) => {
   axios

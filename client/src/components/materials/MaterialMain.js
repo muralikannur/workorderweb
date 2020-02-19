@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import $ from 'jquery';
 
-import { hasDuplicate, isEmptyOrSpaces, notify_error, notify_success } from '../../util';
+import { hasDuplicate, isEmptyOrSpaces, notify_error, notify_success } from '../../Utils/commonUtls';
 import { uniqueKeys } from '../../appConfig';
 import { PROFILE_TYPE, EB_START_NUMBER } from '../../constants';
 
@@ -33,7 +33,14 @@ class MaterialMain extends Component {
   componentDidMount(){
     setTimeout(() => {
       this.setState({originalMaterials:this.props.material});
+      if(this.props.materialTab != '')
+        this.setState({nextTab:this.props.materialTab});
     },1000);
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.materialTab != '' && nextProps.materialTab != this.state.currentTab)
+      this.onTabChange({target:{id:nextProps.materialTab}})
   }
 
   onTabChange = (e) => {

@@ -2,7 +2,7 @@ import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 import { REMARKS, PATTERN_TYPE} from '../../constants';
-import { notify_error } from '../../util';
+import { notify_error } from '../../Utils/commonUtls';
 
 class RemarksPattern extends Component {
  
@@ -115,11 +115,12 @@ class RemarksPattern extends Component {
       return;
     }
 
-    var newItem = { ...this.props.item, patternType: this.state.patternType, patternSplits: this.state.patternSplits}
-    let remarks = this.props.item.remarks;
+
+    let newItem = JSON.parse(JSON.stringify(this.props.item));
+    newItem = { ...newItem, patternType: this.state.patternType, patternSplits: this.state.patternSplits}
+    let remarks = newItem.remarks;
     if(remarks.length == 0 || !remarks.includes(REMARKS.PATTERN)){
       remarks.push(REMARKS.PATTERN);
-      newItem = { ...newItem, remarks}
     }
 
     const patternBoard = {
@@ -135,7 +136,7 @@ class RemarksPattern extends Component {
       eb_d:0,
       code:this.state.patternBoardCode,
       remarks:[],
-      profileType:0,
+      profileNumber:0,
       doubleThickWidth:0,
       ledgeType:0,
       shapeDetails:'',

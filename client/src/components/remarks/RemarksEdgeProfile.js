@@ -30,11 +30,10 @@ class RemarksEdgeProfile extends Component {
   }
   
   UpdateRemark(){
-    var newItem = { ...this.props.item}
-    let remarks = this.props.item.remarks;
+    let newItem = JSON.parse(JSON.stringify(this.props.item));
+    let remarks = newItem.remarks;
     if(remarks.length == 0 || !remarks.includes(REMARKS.E_PROFILE)){
       remarks.push(REMARKS.E_PROFILE);
-      newItem = { ...newItem, remarks}
     }
 
     //If E-Profile selected, update the Item's EB sides as E-Profile's thickness
@@ -56,10 +55,13 @@ class RemarksEdgeProfile extends Component {
     //this.props.setCurrentItem(newItem);
     $('#btnRemarksClose').click();
   }
+
+
+
   render() {
     return(
       <div>
-          {(this.props.material.profiles && this.props.material.profiles.length > 0) ? 
+          {(this.props.material.profiles && this.props.material.profiles.filter(p => p.type == PROFILE_TYPE.E).length > 0) ? 
           <div>
             <h5>Select the Profile Type</h5>
             <select style={{width:"300px"}}  id="profileNumber" name="profileNumber" value={this.state.profileNumber}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
@@ -74,9 +76,9 @@ class RemarksEdgeProfile extends Component {
             <button type="button" class="btn btn-success" onClick={() => {this.UpdateRemark()}}>Update</button>
             </div>   
           </div>
-          : <div><h5>No Profiles defined</h5> <p>Define the Profiles in the Define Material section.</p> </div>    
+          : <div><h5>No Edge Profiles defined</h5> <p>Define the Profiles in the Define Material section.</p> 
+          </div>    
           }      
-         <br />
 
       </div>          
 

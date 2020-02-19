@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { edgeBandThickness } from '../../appConfig';
-import { numberWithCommas } from '../../util';
+import { numberWithCommas } from '../../Utils/commonUtls';
 
 class WorkOrderPreview extends Component {
 

@@ -5,9 +5,10 @@ import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { WO_STATUS,PATTERN_CODE } from './../../constants';
-import XLSX from 'xlsx';
+
 import { REMARKS, PROFILE_TYPE, EB_START_NUMBER} from './../../constants';
-import { notify_error, notify_success, isEmptyOrSpaces }  from '../../util';
+import { notify_error, notify_success, isEmptyOrSpaces }  from '../../Utils/commonUtls';
+import { setDoubleThick }  from '../../Utils/remarksUtils';
 
 //Components
 import WorkOrderItems from './WorkOrderItems';
@@ -19,8 +20,8 @@ import { clearErrors } from '../../actions/errorActions';
 import { saveWorkOrder } from './woActions';
 import { getMaterial } from '../materials/materialActions';
 import { saveItems } from './woActions';
-import { setCurrentItem, setCurrentRemark } from '../../actions/configActions';
-import { isNull } from 'util';
+import { setCurrentItem, setCurrentRemark, setMaterialTab } from '../../actions/configActions';
+import { downloadCuttingList } from '../../Utils/ExcelUtils';
 
 class WorkOrderMain extends Component {
 
@@ -33,9 +34,9 @@ class WorkOrderMain extends Component {
   }
 
   componentDidMount(){
-
-    console.log('LIFECYCLE: Workorder Main - componentDidUpdate');
     this.props.clearErrors();
+
+    console.log('workorder main mount');
 
     //CONFIRM EXIT WHEN THERE ARE UNSAVED CHANGES
     this.unblock = this.props.history.block(targetLocation => {
@@ -64,13 +65,11 @@ class WorkOrderMain extends Component {
   }
 
   submitWorkOrder = () => {
-    
     //NO ITEMS ADDED
     if(this.props.wo.woitems.length == 0){
       notify_error('No items added');
       return false;
     }
-    
     if(!this.validate()){return;}
     if(window.confirm('Are you sure that you have entered all the items and ready to Submit the Work Order?')){
       this.props.saveWorkOrder({...this.props.wo,status:WO_STATUS.SUBMITTED});
@@ -79,12 +78,23 @@ class WorkOrderMain extends Component {
   }
 
   saveWorkOrder = (resetOriginalItems = false) => {
-    if(!this.validate()){return;}
+    if(!this.validate()){return false;}
     this.props.saveWorkOrder(this.props.wo, resetOriginalItems);
     if(resetOriginalItems){
       this.setState({originalItems:this.props.wo.woitems});
     }
+    return true;
   }
+
+  saveToExcel = () => {
+    //NO ITEMS ADDED
+    if(this.props.wo.woitems.length == 0){
+      notify_error('No items added');
+      return false;
+    }
+    if(!this.validate()){return false;}
+    downloadCuttingList(this.props.wo, this.props.material);
+  }  
 
   cancelItems = () => {
     if(window.confirm('Are you sure that you want to cancel all the changes made in Work Order Items since last Save?')){
@@ -116,22 +126,9 @@ class WorkOrderMain extends Component {
   validate = () => {
 
 
-    // let remarkItems = this.props.wo.woitems.filter(i => i.code == 100 && !i.remarks.includes(REMARKS.PATTERN)).map(i => i.itemnumber);;
-    // if(remarkItems.length > 0){
-    //   notify_error("Pattern not defined for the PATTERN item.\n" + remarkItems.join());
-    //   return false;
-    // }
-
-    // remarkItems = this.props.wo.woitems.filter(i => i.code != 100 && i.remarks.includes(REMARKS.PATTERN)).map(i => i.itemnumber);;
-    // if(remarkItems.length > 0){
-    //   notify_error("Pattern defined for a non-PATTERN item.\n" + remarkItems.join());
-    //   return false;
-    // }
-
-
 
     //Exclude Pattern Main item (code=100) in validaton
-    let items = this.props.wo.woitems.filter(i => i.itemnumber != 0 && i.code != 100);
+    let items = this.props.wo.woitems;
 
     items.map(e => {$('#item-row-' + e.itemnumber).css("background-color","#fff")});
 
@@ -175,8 +172,6 @@ class WorkOrderMain extends Component {
       return false;
     }
 
-
-
     //INCORRECT QUANTITY
     errItems = items.filter(i => (i.quantity == '' || isNaN(i.quantity) || i.quantity < 1 )).map(i => i.itemnumber);
     if(errItems.length > 0){
@@ -184,312 +179,26 @@ class WorkOrderMain extends Component {
       notify_error("Incorrect Quantity for the following items..\n" + errItems.join());
       return false;
     }
+
+    //UPDATE REMARKS - DOUBLE THICK
     
+    let itemsWithDblThick = items.filter(i => ( i.parentId == 0 && i.doubleThickWidth != 0 ));
+    if(itemsWithDblThick.length > 0){
+      let isValid = true;
+        itemsWithDblThick.map(i => {
+          let child1 = items.find(c => ( c.parentId == i.itemnumber && c.childNumber == 1 ));
+          let child2 = items.find(c => ( c.parentId == i.itemnumber && c.childNumber == 2 ));
+          if(!setDoubleThick(i.doubleThickSides,i,child1,child2,i.doubleThickWidth)) 
+            isValid = false;
+        })
+      if(!isValid) return false;
+    }
+    
+
     return true;
   }
 
 
-  downloadCuttingList = () => {
-
-    let wb =  {
-      SheetNames : [],
-      Sheets : {}
-    }
-
-    let items = this.props.wo.woitems;
-
-    if(items.length == 0){
-      alert('No Items entered');
-      return
-    }
-
-    let cutting_list = [];
-    let printItems = [];
-    let eb_list = [];
-
-
-    this.props.material.edgebands.map(eb => {
-      let laminateName = '';
-      let count = 0;
-
-      if(eb.laminate > EB_START_NUMBER.PROFILE){ //200
-        laminateName = 'E-Profile';
-      } else if(eb.laminate > EB_START_NUMBER.BOARD){ //100
-        let board = this.props.material.boards.find(b => b.boardNumber ==  (parseInt(eb.laminate) - EB_START_NUMBER.BOARD) )
-        laminateName = board.type;
-      }else { 
-        let laminate = this.props.material.laminates.find(l => l.laminateNumber ==  eb.laminate )
-        laminateName = laminate.code;
-      }
-
-      let eb_a_items = this.props.wo.woitems.filter(i => !isNaN(i.eb_a) && i.eb_a == eb.materialEdgeBandNumber);
-      eb_a_items.map(i => {
-        count += parseInt(i.height) * parseInt(i.quantity)
-      })
-
-      let eb_b_items = this.props.wo.woitems.filter(i => !isNaN(i.eb_b) && i.eb_b == eb.materialEdgeBandNumber);
-      eb_b_items.map(i => {
-        count += parseInt(i.width) * parseInt(i.quantity)
-      })      
-
-      let eb_c_items = this.props.wo.woitems.filter(i => !isNaN(i.eb_c) && i.eb_c == eb.materialEdgeBandNumber);
-      eb_c_items.map(i => {
-        count += parseInt(i.height) * parseInt(i.quantity)
-      })
-
-      let eb_d_items = this.props.wo.woitems.filter(i => !isNaN(i.eb_d) && i.eb_d == eb.materialEdgeBandNumber);
-      eb_d_items.map(i => {
-        count += parseInt(i.width) * parseInt(i.quantity)
-      })    
-
-
-      eb_list.push({
-        LAM_BOARD:laminateName,
-        THICK:  parseFloat(eb.eb_thickness),
-        WIDTH:  parseInt(eb.eb_width),
-        LENGTH:count
-      })
-    })
-
-
-    items.map(i => {
-
-      let refNo = i.parentId == 0 ? i.itemnumber : i.parentId;
-
-      let matText = this.getMaterialCode(i);
-
-      let qty = parseInt(i.quantity);
-      if(i.ledgeType != 0){
-        qty *= 2;
-      }
-
-      let cutting_Height = parseInt(i.height);
-      let cutting_Width = parseInt(i.width);
-
-
-
-      if(i.doubleThickWidth == 0 && i.ledgeType == 0){
-        if(this.props.material.edgebands && this.props.material.edgebands.length > 0){
-          
-          if(i.eb_a && !isNaN(i.eb_a) &&  i.eb_a != 0) cutting_Width -= parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_a).eb_thickness);
-          if(i.eb_b && !isNaN(i.eb_b) &&  i.eb_b != 0) cutting_Height -= parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber ==  i.eb_b).eb_thickness);
-          if(i.eb_c && !isNaN(i.eb_c) &&  i.eb_c != 0) cutting_Width -= parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_c).eb_thickness);
-          if(i.eb_d && !isNaN(i.eb_d) &&  i.eb_d != 0) cutting_Height -= parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_d).eb_thickness);
-        }
-      }
-
-
-      if(i.profileType != 0){
-        if(this.props.material.profiles){
-          let profile = this.props.material.profiles.find(p => p.profileNumber == i.profileType)
-          if(profile && i.profileSide == 'H')
-            cutting_Width -= parseInt(profile.height);
-          if(profile && i.profileSide == 'W')
-            cutting_Height -= parseInt(profile.height);
-        }
-      }
-
-      let remarkData = this.getRemarkData(i);
-
-      let grains = "";
-
-      if(i.code != PATTERN_CODE){
-        let mCode = this.props.material.materialCodes.find(m => m.materialCodeNumber == i.code);
-        let board = this.props.material.boards.find(b => b.boardNumber == mCode.board);
-        let laminate = this.props.material.laminates.find(l => l.laminateNumber == mCode.front_laminate);
-        
-        if(laminate && laminate.grains != "N"){
-          grains = laminate.grains;
-        } else if(board){
-          grains = board.grains;
-        }
-      }
-
-
-
-      const customerCode = this.props.wo.wonumber.substring(0,3);
-
-      cutting_list.push({
-        RefNo:customerCode + refNo,
-        Delivery:'',
-        ItemType:i.itemtype,
-        A_Height: parseInt(i.height),
-        A_Width:parseInt(i.width),
-        C_Height: Math.round(cutting_Height),
-        C_Width:  Math.round(cutting_Width),
-        Qty:qty,
-        Code:i.code,
-        Grains: (grains == "H" || grains == "V" ? 'yes':'no'),
-        EB_A:(i.eb_a != undefined && !isNaN(i.eb_a) && i.eb_a != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_a).eb_thickness : 0,
-        EB_B:(i.eb_b != undefined && !isNaN(i.eb_b) &&  i.eb_b != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_b).eb_thickness : 0,
-        EB_C:(i.eb_c != undefined && !isNaN(i.eb_c) &&  i.eb_c != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_c).eb_thickness : 0,
-        EB_D:(i.eb_d != undefined && !isNaN(i.eb_d) && i.eb_d != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_d).eb_thickness : 0,
-        Remark:remarkData,
-        Material:matText,
-        Comments:i.comments
-      })
-
-      //Items
-
-      printItems.push({
-        itemnumber: refNo,
-        MaterialCode: '[' + i.code + '] ' + matText,
-        ItemType:i.itemtype,
-        Height: parseInt(i.height),
-        Width:parseInt(i.width),
-        Qty:qty,
-        EB_A:(i.eb_a != undefined && !isNaN(i.eb_a) &&  i.eb_a != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_a).eb_thickness : 0,
-        EB_B:(i.eb_b != undefined && !isNaN(i.eb_b) &&  i.eb_b != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_b).eb_thickness : 0,
-        EB_C:(i.eb_c != undefined && !isNaN(i.eb_c) &&  i.eb_c != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_c).eb_thickness : 0,
-        EB_D:(i.eb_d != undefined && !isNaN(i.eb_d) &&  i.eb_d != 0) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_d).eb_thickness : 0,
-        Remark:remarkData,
-        Comments:i.comments
-      })
-
-    })
-
-    console.log(eb_list);
-    cutting_list = cutting_list.sort((a,b) => a.RefNo > b.RefNo ? 1  : -1 );
-    const wsCuttingList = XLSX.utils.json_to_sheet(cutting_list);
-
-
-    printItems = printItems.sort((a,b) => a.itemnumber > b.itemnumber ? 1  : -1 );
-    const wsItems = XLSX.utils.json_to_sheet(printItems);
-
-    const wsEBList = XLSX.utils.json_to_sheet(eb_list);
-
-
-    wb.SheetNames.push('cutting_list')
-    wb.Sheets['cutting_list'] = wsCuttingList
-
-    wb.SheetNames.push('items')
-    wb.Sheets['items'] =  wsItems
-
-    wb.SheetNames.push('EdgeBands')
-    wb.Sheets['EdgeBands'] =  wsEBList
-    
-    //https://github.com/protobi/js-xlsx
-
-    wb["Sheets"]["cutting_list"]["!cols"] = [
-      { wpx : 50 },
-      { wpx : 100 },
-      { wpx : 100 },
-      { wpx : 50 },
-      { wpx : 50 },
-      { wpx : 50 },
-      { wpx : 50 },
-      { wpx : 50 },   
-      { wpx : 50 },
-      { wpx : 50 },
-      { wpx : 50 },
-      { wpx : 50 },
-      { wpx : 50 },      
-      { wpx : 50 }, 
-      { wpx : 100 },      
-      { wpx : 150 },     
-      { wpx : 150 }     
-    ];
-
-    wb["Sheets"]["EdgeBands"]["!cols"] = [
-      { wpx : 150 },
-      { wpx : 100 },
-      { wpx : 100 },
-      { wpx : 100 } 
-    ];
-
-    // wb["Sheets"]["cutting_list"]["A1"].s = {
-    //       border: {
-    //         bottom: { style: "thin", color: { auto: 1} }
-    //       },
-    //       font: { sz: 16, bold: true, color: '#FF00FF' }
-    //     };
-
-        //var cell_address = {c:1, r:1};
-        /* if an A1-style address is needed, encode the address */
-        //var cell_ref = XLSX.utils.encode_cell(cell_address);
-        //console.log(wb["Sheets"]["cutting_list"]["A1"]);
-
-
-    const wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary', cellStyles: true})
-
-
-    let url = window.URL.createObjectURL(new Blob([this.s2ab(wbout)], {type:'application/octet-stream'}))
-
-    this.download(url, this.props.wo.wonumber + '.xlsx')
-  }
-
-  download = (url, name) => {
-    let a = document.createElement('a')
-    a.href = url
-    a.download = name
-    a.click()
-
-    window.URL.revokeObjectURL(url)
-}
-
-
-  s2ab = (s) => {
-    const buf = new ArrayBuffer(s.length)
-
-    const view = new Uint8Array(buf)
-
-    for (let i=0; i !== s.length; ++i)
-        view[i] = s.charCodeAt(i) & 0xFF
-
-    return buf
-}
-
-getMaterialCode(i){
-  if(i.code == PATTERN_CODE) return "PATTERN";
-  
-
-  const m = this.props.material.materialCodes.find(m => m.materialCodeNumber == i.code);
-  if(!isEmptyOrSpaces(m.shortname)) return '[' + m.materialCodeNumber + '] ' + m.shortname;
-
-  const b = this.props.material.boards.find(i => i.boardNumber == m.board);
-  const fl = this.props.material.laminates.find(i => i.laminateNumber == m.front_laminate);
-  const bl = this.props.material.laminates.find(i => i.laminateNumber == m.back_laminate);
-
-  let matText =  (m.board == 0 ? 'No Board' : 'B: ' + b.type + ' - ' + b.thickness + 'mm (' + b.height + ' x ' +  b.width + ') - ' + b.grains);
-  matText += (m.front_laminate == 0 ? '' : ', FL: ' + fl.code + ' - ' + fl.thickness + 'mm - ' + fl.grains);
-  matText += (m.back_laminate == 0 ? '' : ', BL: ' + bl.code + ' - ' + bl.thickness + 'mm - ' + bl.grains);
-  return matText;
-}
-
-getRemarkData(i){
-
-  let remarkData = '';
-  (i.remarks && i.remarks.length > 0) ?
-  i.remarks.map( (id, index) => {
-
-    switch(id){
-      case REMARKS.PROFILE:
-          const profile = this.props.material.profiles.find(p => p.profileNumber == i.profileType)
-          remarkData = profile.type + ' - H: ' + profile.height + ' - W: ' + profile.width;
-          break;
-      case REMARKS.E_PROFILE:
-          const eProfile = this.props.material.profiles.find(p => p.type == PROFILE_TYPE.E)
-          if(eProfile)
-            remarkData = eProfile.type + ' - H: ' + eProfile.height + ' - W: ' + eProfile.width;
-          break;
-      case REMARKS.DBLTHICK:
-          remarkData = 'DBL THICK - ' + i.doubleThickWidth;
-          break;       
-      case REMARKS.SHAPE:
-            remarkData = 'SHAPE - ' + i.shapeDetails.substring(0,15);
-            break;                                
-      case REMARKS.LEDGE:
-            remarkData = i.ledgeType == "1" ? 'LEDGE' : 'C-LEDGE'
-            break;   
-          
-
-    }
-  }):
-  remarkData = 'None';
-
-  return remarkData;
-    
-}
 
 
   toLoginPage = () => {
@@ -511,26 +220,14 @@ getRemarkData(i){
 
         <div className="modal fade" id="materialModal" tabIndex="-1" role="dialog" aria-labelledby="materialModalLabel"  data-backdrop="static" data-keyboard="false">
           <div className="modal-dialog modal-lg mt-0" >
-            <div className="modal-content" style={{marginTop:"10px"}}>
+            <div className="modal-content" style={{marginTop:"10px", zIndex:2}} >
               <div className="modal-header" style={{paddingTop:"2px",paddingBottom:"0px"}}>
                 <h5 className="modal-title">Material Definition for Work Order {this.props.wo.wonumber}</h5>
                   <button id="btnCloseMaterialPopup" type="button" class="btn btn-light" data-dismiss="modal"> Back to Items <i class="icon-login"></i> </button>
               </div>
               <div className="modal-body" style={{paddingBottom:"0px"}}>
-                <MaterialMain items={this.props.wo.woitems} material={this.props.material} />
+                <MaterialMain materialTab={this.props.materialTab} items={this.props.wo.woitems} material={this.props.material} />
               </div>
-              {/* <div className="modal-footer" style={{paddingTop:"0px",paddingBottom:"5px",display:"block"}}>
-                <div style={{float:"left"}}>
-                  <i>
-                  <ol>
-                    <li>Any modification or deletion of items will be saved only when <b>SAVE</b> button is clicked</li>
-                    <li>Click on <b>Undo Changes</b> to cancel any modificaton/deletion made since last SAVE</li>
-                    <li> <span style={{backgroundColor:"yellow"}}> &nbsp; This color &nbsp; </span>  indicats that the item is being reffered elsewhere. Be cautious while editing/deleting that item</li>
-                  </ol>
-                  </i>
-                </div>
-                    <div style={{cursor:"pointer", color:"#aaa", float:"right"}} onClick={()=>{this.resetMaterialChanges()}}><i className="icon-action-undo"></i> Undo Changes</div> &nbsp; 
-              </div> */}
             </div>
           </div>
         </div>
@@ -550,13 +247,13 @@ getRemarkData(i){
                     &nbsp; &nbsp;
                     <button id="btnSubmitWO" type="button" className="btn btn-secondary"  style={{lineHeight:"1px"}} onClick={() => {this.submitWorkOrder();}}><i className="icon-notebook" ></i>Submit</button>
                     &nbsp; &nbsp;
-                    <button id="btnExport" type="button" className="btn btn-primary"  style={{lineHeight:"1px"}} onClick={() => {this.downloadCuttingList();}}><i className="icon-grid" ></i>Download</button>
+                    <button id="btnExport" type="button" className="btn btn-primary"  style={{lineHeight:"1px"}} onClick={() => {this.saveToExcel();}}><i className="icon-grid" ></i>Download</button>
                     &nbsp; &nbsp;                    
                   </td>
                 </tr>
                 </tbody>
               </table>
-              <WorkOrderItems {...woItemsProps} validate={this.validate} cancelItems={this.cancelItems} saveWorkOrder={this.saveWorkOrder} />
+              <WorkOrderItems {...woItemsProps} setMaterialTab={this.props.setMaterialTab} validate={this.validate} cancelItems={this.cancelItems} saveWorkOrder={this.saveWorkOrder} />
             </div>
           </div>
           <div className="col-md-3 grid-margin">
@@ -573,11 +270,12 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
   wo: state.wo,
   material: state.material,
-  item: state.config.currentItem
+  item: state.config.currentItem,
+  materialTab:state.config.materialTab
 
 });
 
 export default connect(
   mapStateToProps,
-  {clearErrors, saveWorkOrder, getMaterial, saveItems, setCurrentItem, setCurrentRemark}
+  {clearErrors, saveWorkOrder, getMaterial, saveItems, setCurrentItem, setCurrentRemark, setMaterialTab}
 )(WorkOrderMain);

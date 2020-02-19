@@ -1,4 +1,4 @@
-import { SET_CURRENT_ITEM,  SET_CURRENT_REMARK, SET_CURRENT_CUSTOMER } from './types';
+import { SET_CURRENT_ITEM,  SET_CURRENT_REMARK, SET_CURRENT_CUSTOMER, SET_CURRENT_MATERIAL_TAB } from './types';
 
 // SET CURRENT ITEM
 export const setCurrentItem = (i) => {
@@ -21,5 +21,13 @@ export const setCurrentCustomer = (customer) => {
   return {
     type: SET_CURRENT_CUSTOMER,
     payload: customer
+  };
+};
+
+// SET CURRENT CUSTOMER
+export const setMaterialTab = (matTab) => {
+  return {
+    type: SET_CURRENT_MATERIAL_TAB,
+    payload: matTab
   };
 };

@@ -8,7 +8,7 @@ import { saveMaterial, saveItems } from '../../actions/woActions';
 import { threshold } from '../../appConfig';
 import { edgeBandThickness } from '../../appConfig';
 import $ from 'jquery';
-import { hasDuplicate } from '../../util';
+import { hasDuplicate } from '../../Utils/commonUtls';
 import { uniqueKeys } from '../../appConfig';
 
 class ExcelReader extends Component {

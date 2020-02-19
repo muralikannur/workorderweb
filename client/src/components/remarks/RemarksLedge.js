@@ -30,11 +30,11 @@ class RemarksLedge extends Component {
   }
   
   UpdateRemark(){
-    var newItem = { ...this.props.item, ledgeType: this.state.ledgeType}
-    let remarks = this.props.item.remarks;
+    let newItem = JSON.parse(JSON.stringify(this.props.item));
+    newItem.ledgeType = this.state.ledgeType;
+    let remarks = newItem.remarks;
     if(remarks.length == 0 || !remarks.includes(REMARKS.LEDGE)){
       remarks.push(REMARKS.LEDGE);
-      newItem = { ...newItem, remarks}
     }
 
 

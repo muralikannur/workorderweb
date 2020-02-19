@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 import { profileType } from '../../appConfig';
 import { PROFILE_TYPE } from '../../constants';
-import { notify_error } from '../../util';
+import { notify_error } from '../../Utils/commonUtls';
 
 class MaterialProfile extends Component {
  

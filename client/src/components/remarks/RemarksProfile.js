@@ -2,7 +2,7 @@ import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 import { REMARKS, PROFILE_TYPE} from './../../constants';
-import { notify_error } from '../../util';
+import { notify_error } from '../../Utils/commonUtls';
 
 class RemarksProfile extends Component {
  
@@ -38,17 +38,18 @@ class RemarksProfile extends Component {
       notify_error('Please select the Profile Side');
       return;
     }
-    var newItem = { ...this.props.item, profileNumber: this.state.profileNumber, profileSide: this.state.profileSide}
+
+    let newItem = JSON.parse(JSON.stringify(this.props.item));
+    newItem = { ...newItem, profileNumber: this.state.profileNumber, profileSide: this.state.profileSide}
     if(this.state.profileSide == 'H'){
       newItem.eb_c = 0; 
     }
     if(this.state.profileSide == 'W'){
       newItem.eb_d = 0; 
     }
-    let remarks = this.props.item.remarks;
+    let remarks = newItem.remarks;
     if(remarks.length == 0 || !remarks.includes(REMARKS.PROFILE)){
       remarks.push(REMARKS.PROFILE);
-      newItem = { ...newItem, remarks}
     }
 
     let items = this.props.wo.woitems.filter(i => i.itemnumber != this.props.item.itemnumber)
@@ -60,7 +61,7 @@ class RemarksProfile extends Component {
   render() {
     return(
       <div>
-          {(this.props.material.profiles && this.props.material.profiles.length > 0) ? 
+          {(this.props.material.profiles && this.props.material.profiles.filter(p => p.type == PROFILE_TYPE.H).length > 0) ? 
           <div>
             <table style={{width:"100%"}}>
               <tr>
@@ -90,7 +91,7 @@ class RemarksProfile extends Component {
             <button type="button" class="btn btn-success" onClick={() => {this.UpdateRemark()}}>Update</button>
             </div>   
           </div>
-          : <div><h5>No Profiles defined</h5> <p>Define the Profiles in the Define Material section.</p> </div>    
+          : <div><h5>No Hand Profiles defined</h5> <p>Define the Profiles in the Define Material section.</p> </div>    
           }      
          <br />
 

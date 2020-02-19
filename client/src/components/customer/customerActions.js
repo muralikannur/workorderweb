@@ -2,7 +2,7 @@ import axios from 'axios';
 import { GET_CUSTOMER, SAVE_CUSTOMER, GET_CUSTOMER_LIST, ADD_CUSTOMER_TO_LIST, UPDATE_CUSTOMER_LIST } from '../../actions/types';
 import { tokenConfig } from '../../actions/authActions';
 import { returnErrors } from '../../actions/errorActions';
-import { notify_error, notify_success } from '../../util';
+import { notify_error, notify_success } from '../../Utils/commonUtls';
 
 export const saveCustomer = (customer,id) => (dispatch, getState) => {
   if(id == 0) 
@@ -25,12 +25,12 @@ export const saveCustomer = (customer,id) => (dispatch, getState) => {
           if(customer.action == 'create'){
             dispatch({
               type: ADD_CUSTOMER_TO_LIST,
-              payload: customer
+              payload: res.data
             });   
           } else {
             dispatch({
               type: UPDATE_CUSTOMER_LIST,
-              payload: customer
+              payload: res.data
             });   
           }
        

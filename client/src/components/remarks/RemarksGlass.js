@@ -2,7 +2,7 @@ import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 import { REMARKS, EB_START_NUMBER, PROFILE_TYPE} from '../../constants';
-import { notify_error, notify_success }  from '../../util';
+import { notify_error, notify_success }  from '../../Utils/commonUtls';
 
 class RemarksGlass extends Component {
  
@@ -37,12 +37,11 @@ class RemarksGlass extends Component {
       return;
     }
     
-
-    var newItem = { ...this.props.item, glassWidth: this.state.glassWidth}
-    let remarks = this.props.item.remarks;
+    let newItem = JSON.parse(JSON.stringify(this.props.item));
+    newItem.glassWidth = this.state.glassWidth;
+    let remarks = newItem.remarks;
     if(remarks.length == 0 || !remarks.includes(REMARKS.GLASS)){
       remarks.push(REMARKS.GLASS);
-      newItem = { ...newItem, remarks}
     }
 
     let items = this.props.wo.woitems.filter(i => i.itemnumber != this.props.item.itemnumber)

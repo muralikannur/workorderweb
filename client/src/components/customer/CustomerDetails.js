@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { notify_error } from '../../util';
+import { notify_error } from '../../Utils/commonUtls';
 import $ from 'jquery';
 
 

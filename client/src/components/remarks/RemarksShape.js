@@ -31,12 +31,12 @@ class RemarksShape extends Component {
 
  
   UpdateRemark(){
-       
-    var newItem = { ...this.props.item, shapeDetails: this.state.shapeDetails}
-    let remarks = this.props.item.remarks;
+    
+    let newItem = JSON.parse(JSON.stringify(this.props.item));
+    newItem.shapeDetails = this.state.shapeDetails;
+    let remarks = newItem.remarks;
     if(remarks.length == 0 || !remarks.includes(REMARKS.SHAPE)){
       remarks.push(REMARKS.SHAPE);
-      newItem = { ...newItem, remarks}
     }
 
 

@@ -1,11 +1,12 @@
 import {
-  SET_CURRENT_ITEM, SET_CURRENT_REMARK
+  SET_CURRENT_ITEM, SET_CURRENT_REMARK, SET_CURRENT_MATERIAL_TAB
 } from '../actions/types';
 
 const initValue = {
   currentItem:{},
   currentRemark:0,
-  currentCustomer:{}
+  currentCustomer:{},
+  materialTab:''
 }
 
 export default function(state = initValue, action) {
@@ -14,6 +15,8 @@ export default function(state = initValue, action) {
       return {...state, currentItem : action.payload};
     case  SET_CURRENT_REMARK:
       return {...state, currentRemark : action.payload};     
+    case  SET_CURRENT_MATERIAL_TAB:
+      return {...state, materialTab : action.payload};           
     default:
       return state;
   }

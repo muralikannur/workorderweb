@@ -2,12 +2,15 @@ import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
-import { remarks } from '../../appConfig';
 import { REMARKS, PROFILE_TYPE, EB_START_NUMBER} from '../../constants';
-import { notify_error, notify_success, isEmptyOrSpaces }  from '../../util';
+import { notify_error}  from '../../Utils/commonUtls';
+import { getMaterialText, getNewWoItem }  from '../../Utils/woUtils';
+
 
 //Components
 import RemarksMain from '../remarks/RemarksMain';
+import WorkOrderRemarks from './WorkOrderRemarks';
+import WorkOrderEdgeBand from './WorkOrderEdgeBand';
 
 
 class WorkOrderItems extends Component {
@@ -35,18 +38,9 @@ class WorkOrderItems extends Component {
     this.setState({woitems: newProps.wo.woitems });
   }
 
-  // headerClick = (col) => {
-  //   if(this.state.sortCol == col){
-  //     this.setState({sortOrder:this.state.sortOrder * -1})
-  //   }else {
-  //     this.setState({sortOrder:1, sortCol:col})
-  //   }
-  // }
-
   onItemClick = (e, i) => {
 
     if(e.target.title == this.REMOVE_REMARK_ICON_TITLE) return;
-
 
     this.setState({currentItem:i});
     let items = this.state.woitems;
@@ -120,36 +114,13 @@ class WorkOrderItems extends Component {
     }
 
     if(this.state.currentItem != 0){
-      if(!this.props.saveWorkOrder());
+      if(!this.props.saveWorkOrder()){
+        return;
+      }
     }
 
     const maxId = this.getMaxId();
-    const newItem = {
-      itemnumber:maxId,
-      parentId:0,
-      itemtype:'',
-      height:'',
-      width:'',
-      quantity:'',
-      eb_a:0,
-      eb_b:0,
-      eb_c:0,
-      eb_d:0,
-      code:0,
-      remarks:[],
-      comments:'',
-      profileType:0,
-      profileSide:'',
-      doubleThickWidth:0,
-      ledgeType:0,
-      shapeDetails:'',
-      patternType:0,
-      glassWidth:0,
-      patternSplits:[],
-      patternBoardCode:0,
-      doubleThickSides:'ABCD',
-      doubleThickCode:0
-    }
+    const newItem = getNewWoItem(maxId);
     this.setState({woitems: [...this.state.woitems, newItem], currentItem:maxId});
     this.props.saveItems( [...this.state.woitems, newItem]);
   }
@@ -170,14 +141,18 @@ class WorkOrderItems extends Component {
 
     let { value, name } = e.target;
 
+    if (floatFields.includes(name) && value == 'New...') {
+      this.props.setMaterialTab('edgebands');
+      $('#materialModal').appendTo("body");
+      $('#btnMaterial').click();
+      return;
+    }
+
     if (numberFields.includes(name) && isNaN(value)) { return;}
 
     if (floatFields.includes(name)) {
       value = Math.round(parseFloat(value));
     }
-    
-    
-    
 
     var items = this.state.woitems;
     var item = items.find(i => i.itemnumber == this.state.currentItem);
@@ -193,33 +168,6 @@ class WorkOrderItems extends Component {
     const so = this.state.sortOrder;
     let items = this.state.woitems.filter(i => i.itemnumber != 0);
     items = items.sort((a,b) => a.itemnumber > b.itemnumber ? 1 : -1);
-
-    // switch(this.state.sortCol){
-    //   case 'itemnumber':{
-    //     items = items.sort((a,b) => a.itemnumber > b.itemnumber ? 1 * so : -1 * so);
-    //     break;
-    //   }
-    //   case 'code':{
-    //     items = items.sort((a,b) => a.code > b.code ? 1 * so : -1 * so);
-    //     break;
-    //   }
-    //   case 'itemtype':{
-    //     items = items.sort((a,b) => a.itemtype > b.itemtype ? 1 * so : -1 * so);
-    //     break;
-    //   }
-    //   case 'height':{
-    //     items = items.sort((a,b) => a.height > b.height ? 1 * so : -1 * so);
-    //     break;
-    //   }
-    //   case 'width':{
-    //     items = items.sort((a,b) => a.width > b.width ? 1 * so : -1 * so);
-    //     break;
-    //   }
-    //   case 'quantity':{
-    //     items = items.sort((a,b) => a.quantity > b.quantity ? 1 * so : -1 * so);
-    //     break;
-    //   }
-    // }
     return items;
   }
 
@@ -236,7 +184,7 @@ class WorkOrderItems extends Component {
       let unModifiedItems = items.filter(item => item.itemnumber != itemNumber);
       switch(remarkId){
         case REMARKS.PROFILE:
-          modifiedItem.profileType = 0;
+          modifiedItem.profileNumber = 0;
           modifiedItem.profileSide= '';
           break;
         case REMARKS.E_PROFILE:
@@ -264,8 +212,6 @@ class WorkOrderItems extends Component {
         case REMARKS.GLASS:
             modifiedItem.glassWidth = 0;
           break;
-
-
       }
 
       let newItems = [modifiedItem];
@@ -307,26 +253,12 @@ class WorkOrderItems extends Component {
     $('#btnRemarks').click();
   }
 
-  getMaterialText(m){
-    if(!m) return;
-    if(!isEmptyOrSpaces(m.shortname)) return '[' + m.materialCodeNumber + '] ' + m.shortname;
-
-    const b = (m.board != 0 ? this.props.material.boards.find(i => i.boardNumber == m.board) : null);
-    const fl =(m.front_laminate != 0 ?  this.props.material.laminates.find(i => i.laminateNumber == m.front_laminate): null);
-    const bl = (m.back_laminate != 0 ? this.props.material.laminates.find(i => i.laminateNumber == m.back_laminate): null);
-
-    let matText = '[' + m.materialCodeNumber + '] ' + (m.board == 0 ? 'No Board' : 'B: ' + b.type + ' - ' + b.thickness + 'mm (' + b.height + ' x ' +  b.width + ') - ' + b.grains);
-    matText += (m.front_laminate == 0 ? '' : ', FL: ' + fl.code + ' - ' + fl.thickness + 'mm - ' + fl.grains);
-    matText += (m.back_laminate == 0 ? '' : ', BL: ' + bl.code + ' - ' + bl.thickness + 'mm - ' + bl.grains);
-    return matText;
-  }
-
   onChildCodeChange = (e,cNo,iNo) =>{
     var items = this.state.woitems;
-    var item = items.find(i => i.itemnumber == iNo && i.childNumber == cNo);
-    var newItem = { ...item, childCode: e.target.value}
+    var item = items.find(i => i.parentId == iNo && i.childNumber == cNo);
+    var newItem = { ...item, code: e.target.value}
 
-    items = items.filter(i => (i.itemnumber != iNo && i.childNumber != cNo))
+    items = items.filter(i => (i.parentId != iNo || i.childNumber != cNo))
     items = [...items,newItem]
     this.setState({woitems: items});
     //this.props.saveItems(items);
@@ -355,7 +287,7 @@ class WorkOrderItems extends Component {
 
     return(
       <div>
-        <RemarksMain item={this.state.item} currentRemark={this.state.currentRemark} wo={this.props.wo} material={this.props.material} saveItems={this.props.saveItems}/>
+        <RemarksMain setMaterialTab={this.props.setMaterialTab} item={this.state.item} currentRemark={this.state.currentRemark} wo={this.props.wo} material={this.props.material} saveItems={this.props.saveItems}/>
         <button type="button" id="btnRemarks"  data-toggle="modal" data-target="#remarksModal" style={{visibility:"hidden"}}></button>
         <table id="order-listing" className="table stripped" >
           <thead>
@@ -408,7 +340,7 @@ class WorkOrderItems extends Component {
             }
           }
 
-          let handleProfile = this.props.material.profiles.find(p => p.profileNumber == item.profileType)
+          let handleProfile = this.props.material.profiles.find(p => p.profileNumber == item.profileNumber)
 
           return (
             <tbody>
@@ -420,7 +352,7 @@ class WorkOrderItems extends Component {
                     <option value="0">Select the Material</option>  
                     {
                       this.props.material.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1 : -1).map( (m) => {
-                      let matText =  this.getMaterialText(m);
+                      let matText =  getMaterialText(m, this.props.material);
                       return (
                         <option value={m.materialCodeNumber} key={m.materialCodeNumber} >{matText}</option>
                       )})}
@@ -434,117 +366,21 @@ class WorkOrderItems extends Component {
                 <td><input type="text" className="form-control input-xs" maxLength="4" value={item.height}  id="height"  name="height" onChange={this.onChange}  /></td>
                 <td><input type="text" className="form-control input-xs" maxLength="4" value={item.width}  id="width"  name="width" onChange={this.onChange}  /></td>
                 <td><input type="text" className="form-control input-xs" maxLength="4" value={item.quantity}  id="quantity"  name="quantity" onChange={this.onChange}  /></td>
-                <td>
-                  {
-                    (item.remarks && item.remarks.length > 0) ?
-                    item.remarks.map( (id, index) => {
-                      let remarkName = remarks.find(r => r.id == id).name;
-                      let remarkData = '';
-
-                      switch(id){
-                        case REMARKS.PROFILE:
-                            const profile = this.props.material.profiles.find(p => p.profileNumber == item.profileType)
-                            if(profile)
-                              remarkData = profile.type + ' - H: ' + profile.height + ' - W: ' + profile.width + '(' + item.profileSide + ')';
-                            break;
-                        case REMARKS.E_PROFILE:
-                            const eProfile = this.props.material.profiles.find(p => p.type == PROFILE_TYPE.E)
-                            if(eProfile)
-                              remarkData = eProfile.type + ' - H: ' + eProfile.height + ' - W: ' + eProfile.width;
-                            break;
-                        case REMARKS.DBLTHICK:
-                            remarkData = 'DBL THICK - ' + item.doubleThickWidth;
-                            break;    
-                        case REMARKS.SHAPE:
-                            remarkData = 'SHAPE - ' + item.shapeDetails.substring(0,15);
-                            break;                                
-                        case REMARKS.LEDGE:
-                            remarkData = item.ledgeType == "1" ? 'LEDGE' : 'C-LEDGE'
-                            break;  
-                        case REMARKS.GLASS:
-                            remarkData = 'GLASS - ' + item.glassWidth;
-                            break;                              
-                        case REMARKS.PATTERN:
-                            remarkData = 'PATTERN ' + item.patternSplits.length;
-                            break;   
-                      }
-
-                      return (
-                        <div key={index} style={{padding:"2px",margin:"2px",fontSize:"11px", display:"inline"}}>{(index != 0?<br />:null)}<span style={{cursor:"pointer", color:"navy"}} onClick={()=>{this.showRemarkData(id)}}>{remarkData}</span> &nbsp; <i className="remove icon-close" title={this.REMOVE_REMARK_ICON_TITLE} style={{color:"red", cursor:"pointer", display:"inine", fontSize:"11px"}} onClick={()=>{this.deleteRemark(id, remarkName, item.itemnumber)}}></i></div>
-                  )})
-                :
-                <span> &nbsp; None</span>
-                }
-                  &nbsp; <i className="remove icon-plus" title="Add Remark" style={{color:"green", cursor:"pointer", display:"inline"}} onClick={()=>{this.addRemarkData()}}></i>
-
-                </td>
-                
-                <td>
-                  <div className="form-group" style={{marginBottom:"0px"}}>
-                    <select  onChange={this.onChange} value={item.eb_a}  id="eb_a" name="eb_a" className="js-example-basic-single input-xs w-100" > 
-                    {
-                      ebOptions.map( (e) => {
-                        return (
-                          <option value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} >{e.eb_thickness} - {e.eb_width}</option>
-                        )})
-                    }
-                    </select>
-                    
-                  </div>
-                </td>
+                <td><WorkOrderRemarks  item={item} material={this.props.material} deleteRemark={this.deleteRemark} addRemarkData={this.addRemarkData} showRemarkData={this.showRemarkData} /></td>
+                <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_a} EBname="eb_a" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
                 <td><i className="icon icon-arrow-right-circle" title="Copy to BCD" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyAtoBCD(item.itemnumber)}}></i> </td>
-                <td>
-                  <div className="form-group" style={{marginBottom:"0px"}}>
-                    <select id="eb_b"  onChange={this.onChange} value={item.eb_b}  name="eb_b" className="js-example-basic-single input-xs  w-100">
-                    {
-                      ebOptions.map( (e) => {
-                        return (
-                          <option value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} >{e.eb_thickness} - {e.eb_width}</option>
-                        )})
-                    }
-                    </select>
-                  </div>
-                </td>
-                <td>
-                  <div className="form-group" style={{marginBottom:"0px"}}>
-                    {
-                      (handleProfile && item.profileSide == 'H') ? <input type="text" className="form-control input-xs" maxLength="4" value={' HP  ' + handleProfile.height}  disabled /> :
-                      <select id="eb_c"  onChange={this.onChange}  value={item.eb_c} name="eb_c" className="js-example-basic-single input-xs  w-100">
-                      {
-                        ebOptions.map( (e) => {
-                          return (
-                            <option value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} >{e.eb_thickness} - {e.eb_width}</option>
-                          )})
-                      }
-                      </select>
-                    }
-
-                  </div>
-                </td>
-                <td>
-                  <div className="form-group" style={{marginBottom:"0px"}}>
-                    {
-                      (handleProfile && item.profileSide == 'W') ? <input type="text" className="form-control input-xs" maxLength="4" value={' HP  ' + handleProfile.height}  disabled /> :
-
-                      <select id="eb_d"  onChange={this.onChange}  value={item.eb_d} name="eb_d" className="js-example-basic-single input-xs  w-100">
-                        {
-                          ebOptions.map( (e) => {
-                            return (
-                              <option value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} >{e.eb_thickness} - {e.eb_width}</option>
-                            )})
-                        }
-                      </select>
-                    }
-                  </div>
-                </td>
+                <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_b} EBname="eb_b" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
+                <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_c} EBname="eb_c" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
+                <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_d} EBname="eb_d" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
                 <td><input type="text" className="form-control input-xs" value={item.comments}  id="comments"  name="comments" onChange={this.onChange}  /></td>
                 <td>
                 <i className="icon icon-layers" title="Make a Copy" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyItem(item.itemnumber)}}></i> &nbsp; 
                 <i className="remove icon-close" title="Remove" style={{color:"red", cursor:"pointer",paddingTop:"4px", display:"block", float:"right"}} onClick={()=>{this.deleteItem(item.itemnumber)}}></i>
                 </td>
             </tr>  
-            {this.state.woitems.filter(i => i.parentId == item.itemnumber).map(child => {
-
+            {this.state.woitems.filter(i => i.parentId == item.itemnumber)
+              .sort((a,b) => a.childNumber > b.childNumber ? 1 : -1)
+              .map(child => {
 
                 let dblThickMat = this.props.material.materialCodes.find(mc => mc.materialCodeNumber == item.doubleThickCode);
 
@@ -555,10 +391,9 @@ class WorkOrderItems extends Component {
                 <td>
                   <div className="form-group" style={{marginBottom:"0px"}}>
                     <select id="code" onChange={(e) => this.onChildCodeChange(e,child.childNumber,item.itemnumber)}  value={child.code}  name="childCode" className="js-example-basic-single input-xs  w-100">
-                    <option value="0">Select the Material</option>  
                     {
                       this.props.material.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1 : -1).map( (m) => {
-                      let matText =  this.getMaterialText(m);
+                      let matText = getMaterialText(m, this.props.material);
                       return (
                         <option value={m.materialCodeNumber} key={m.materialCodeNumber} >{matText}</option>
                       )})}
