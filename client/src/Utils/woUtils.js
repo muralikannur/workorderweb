@@ -82,6 +82,7 @@ export const getRemarkData = (id, item, material) =>{
       patternSplits:[],
       patternBoardCode:0,
       doubleThickSides:'ABCD',
-      doubleThickCode:0
+      doubleThickCode:0,
+      ebCopied:false
     }
   }

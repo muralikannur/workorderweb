@@ -18,11 +18,14 @@ class RemarksMain extends Component {
     this.state = {
       currentRemark:0
     }
+
+    window.setTimeout(() => {
+      this.updateCurrentRemarkId();
+    },100)
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState({ currentRemark: newProps.currentRemark })
-    return true;
+  updateCurrentRemarkId() {
+    this.setState({ currentRemark: this.props.currentRemark })
   }
 
   onRemarkChange = (e) => {
@@ -46,11 +49,11 @@ showMaterialDefinition = () => {
     if(!this.props.item) return null;
 
     this.availableRemarks = remarks.map(x => x.id);
-    if(this.props.item && this.props.item.remarks){
-      let usedRemarks = new Set(this.props.item.remarks);
-      if(this.props.item.code !== "100") usedRemarks.add(REMARKS.PATTERN);
-      this.availableRemarks = this.availableRemarks.filter(x => !usedRemarks.has(x));
-    }
+    // if(this.props.item && this.props.item.remarks){
+    //   let usedRemarks = new Set(this.props.item.remarks);
+    //   if(this.props.item.code !== "100") usedRemarks.add(REMARKS.PATTERN);
+    //   this.availableRemarks = this.availableRemarks.filter(x => !usedRemarks.has(x));
+    // }
 
 
 

@@ -31,6 +31,7 @@
         laminateName = 'E-Profile';
       } else if(eb.laminate > EB_START_NUMBER.BOARD){ //100
         let board = material.boards.find(b => b.boardNumber ==  (parseInt(eb.laminate) - EB_START_NUMBER.BOARD) )
+        if(board)
         laminateName = board.type;
       }else { 
         let laminate = material.laminates.find(l => l.laminateNumber ==  eb.laminate )

@@ -56,3 +56,18 @@
 {
     opacity:0.5 !important;
 }
+
+#optiTable tbody tr td {
+  border:#555 1px solid;
+  cursor: pointer;
+}
+
+#optiTable thead tr th {
+  border:#555 1px solid;
+  background-color: #ccc;
+}
+
+
+.table-hover tbody tr:hover td {
+  background: #fab958;
+}

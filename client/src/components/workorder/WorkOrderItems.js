@@ -86,23 +86,32 @@ class WorkOrderItems extends Component {
     },100)
   }  
 
-  copyAtoBCD = (i) => {
-    let items = this.state.woitems;
-    let item = items.find(item => item.itemnumber == i);
+  copyAtoBCD = (item) => {
 
-    if(item.eb_a == 0){
-      notify_error('Select EdgeBand for A side');
-      return;
+    
+
+    let items = this.state.woitems;
+
+    if(!item.ebCopied){
+      if(item.eb_a == 0){
+        notify_error('Select EdgeBand for A side');
+        return;
+      }
+  
+      item.eb_b = item.eb_a;
+      if(item.profileSide != "H") item.eb_c = item.eb_a;
+      if(item.profileSide != "W") item.eb_d = item.eb_a;
+    } else {
+      item.eb_b = 0;
+      if(item.profileSide != "H") item.eb_c = 0;
+      if(item.profileSide != "W") item.eb_d = 0;
     }
 
-    item.eb_b = item.eb_a;
-    if(item.profileSide != "H") item.eb_c = item.eb_a;
-    if(item.profileSide != "W") item.eb_d = item.eb_a;
-
-    let nonModifiedItems = items.filter(item => item.itemnumber != i);
-
+    let nonModifiedItems = items.filter(i => i.itemnumber != item.itemnumber);
     this.setState({woitems: [...nonModifiedItems, item]});
     this.props.saveItems( [...nonModifiedItems, item]);
+
+    item.ebCopied = !item.ebCopied;
   }  
 
 
@@ -368,7 +377,7 @@ class WorkOrderItems extends Component {
                 <td><input type="text" className="form-control input-xs" maxLength="4" value={item.quantity}  id="quantity"  name="quantity" onChange={this.onChange}  /></td>
                 <td><WorkOrderRemarks  item={item} material={this.props.material} deleteRemark={this.deleteRemark} addRemarkData={this.addRemarkData} showRemarkData={this.showRemarkData} /></td>
                 <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_a} EBname="eb_a" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
-                <td><i className="icon icon-arrow-right-circle" title="Copy to BCD" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyAtoBCD(item.itemnumber)}}></i> </td>
+                <td><i className={item.ebCopied?"icon icon-arrow-left-circle":"icon icon-arrow-right-circle"} title="Copy to BCD" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyAtoBCD(item)}}></i> </td>
                 <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_b} EBname="eb_b" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
                 <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_c} EBname="eb_c" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
                 <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_d} EBname="eb_d" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>

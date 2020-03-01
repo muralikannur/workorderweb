@@ -18,6 +18,8 @@ import Verification from './components/auth/Verification';
 import ResetPassword from './components/auth/ResetPassword';
 import ForgotPassword from './components/auth/ForgotPassword';
 
+import Optimization from './components/Optimization';
+
 class App extends Component {
 
   render() {
@@ -34,7 +36,7 @@ class App extends Component {
                 <Route path="/wolist" component={WorkOrderList}></Route>
                 <Route path="/customerlist" component={CustomerList}></Route>                
                 <Route path="/settings" component={Settings}></Route>
-
+                <Route path="/opt" component={Optimization}></Route>
               </div>
             </div>
           </div>
