@@ -36,9 +36,14 @@ class MaterialLaminate extends Component {
 
   onChange = (e) => {
     if(this.state.currentItem == 0) return;
-    const numberFields = ['height', 'width'];
+    const numberFields = ['laminateNumber','height', 'width'];
     let { value, name } = e.target;
-    if (numberFields.includes(name) && isNaN(value)) { return;}
+    if (numberFields.includes(name)) { 
+      if(isNaN(value))
+        return;
+      if(value != '')
+        value = parseInt(value);
+    }
 
     if(name=="eb_thickness") value = parseFloat(e.target.value);
 

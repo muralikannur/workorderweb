@@ -260,6 +260,22 @@ class MaterialMain extends Component {
       return false;
     }
 
+    //INVALID HEIGHT
+    errItems = profiles.filter(i => i.height == 0);
+    if(errItems.length > 0){
+      this.highlightError(errItems,'profile','profileNumber');
+      notify_error("Profile Height cannot be Zero" );
+      return false;
+    }
+
+    //INVALID THICKNESS
+    errItems = profiles.filter(i => i.width == 0);
+    if(errItems.length > 0){
+      this.highlightError(errItems,'profile','profileNumber');
+      notify_error("Width cannot be Zero" );
+      return false;
+    }
+
     this.props.saveProfiles(profiles);
 
     //If Edge Profile Save it in EdgeBands as well

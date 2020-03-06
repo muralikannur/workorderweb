@@ -43,11 +43,16 @@ class MaterialBoard extends Component {
   onChange = (e,i) => {
 
     if(this.state.currentItem == 0) return;
-    const numberFields = ['height', 'width', 'thickness'];
+    const numberFields = ['boardNumber','height', 'width', 'thickness'];
     let { value, name } = e.target;
     let currentItemNumber = this.state.currentItem;
 
-    if (numberFields.includes(name) && isNaN(value)) { return;}
+    if (numberFields.includes(name)) {
+      if(isNaN(value))
+       return;
+      if(value != '')
+        value = parseInt(value);
+    }
 
     if(e.target.name == 'allowEdgeBand'){
       value = e.target.checked;
@@ -69,11 +74,11 @@ class MaterialBoard extends Component {
     const maxId = this.getMaxId();
     const newBoard = {
       boardNumber:maxId,
-      type:'0',
+      type:0,
       height:2420,
       width:1210,
       thickness:6,
-      grains:'0',
+      grains:0,
       grade:'',
       company:'',
       allowEdgeBand:false

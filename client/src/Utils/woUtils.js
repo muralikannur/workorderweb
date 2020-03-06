@@ -10,7 +10,7 @@ export const getMaterialText = (m, material) =>{
   const fl = material.laminates.find(i => i.laminateNumber == m.front_laminate);
   const bl = material.laminates.find(i => i.laminateNumber == m.back_laminate);
 
-  let matText =  (m.board == 0 ? 'No Board' : 'B: ' + b.type + ' - ' + b.thickness + 'mm (' + b.height + ' x ' +  b.width + ') - ' + b.grains);
+  let matText = '[' + m.materialCodeNumber + '] ' + (m.board == 0 ? 'No Board' : 'B: ' + b.type + ' - ' + b.thickness + 'mm (' + b.height + ' x ' +  b.width + ') - ' + b.grains);
   matText += (m.front_laminate == 0 ? '' : ', FL: ' + fl.code + ' - ' + fl.thickness + 'mm - ' + fl.grains);
   matText += (m.back_laminate == 0 ? '' : ', BL: ' + bl.code + ' - ' + bl.thickness + 'mm - ' + bl.grains);
   return matText;

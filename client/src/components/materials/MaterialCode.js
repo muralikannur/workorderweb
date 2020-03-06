@@ -36,9 +36,15 @@ class MaterialCode extends Component {
   }
   onChange = (e) => {
     if(this.state.currentItem == 0) return;
-    const numberFields = ['height', 'width', 'thickness'];
+
+    const numberFields = ['materialCodeNumber', 'board', 'front_laminate','back_laminate'];
     let { value, name } = e.target;
-    if (numberFields.includes(name) && isNaN(value)) { return;}
+    if (numberFields.includes(name)) { 
+      if(isNaN(value))
+        return;
+      if(value != '')
+        value = parseInt(value);
+    }
 
     if(name=="eb_thickness") value = parseFloat(e.target.value);
 
@@ -56,9 +62,9 @@ class MaterialCode extends Component {
     const maxId = this.getMaxId();
     const newMaterialCode = {
       materialCodeNumber:maxId,
-      board:'0',
-      front_laminate:'0',
-      back_laminate:'0',
+      board:0,
+      front_laminate:0,
+      back_laminate:0,
       shortname:''
     }
     this.setState({materialCodes: [...this.state.materialCodes, newMaterialCode], currentItem:maxId});

@@ -49,19 +49,28 @@ class MaterialProfile extends Component {
   onChange = (e) => {
     if(this.state.currentItem == 0) return;
     const numberFields = ['height', 'width'];
-    const { value, name } = e.target;
+    let { value, name } = e.target;
 
-    if (numberFields.includes(name) && isNaN(value)) { return;}
+    if (numberFields.includes(name)) { 
+      if(isNaN(value))
+        return;
+      if(value != '')
+        value = parseInt(value);
+    }
 
     var profiles = this.state.profiles;
     var profile = profiles.find(i => i.profileNumber == this.state.currentItem);
     var newProfile = { ...profile, [name]: value}
 
-    if(value == PROFILE_TYPE.E){
-      newProfile.height = 1.3;
-    } else {
-      newProfile.height = 35;
+    if(name == 'type'){
+      if(value == PROFILE_TYPE.E){
+        newProfile.height = 1.3;
+      } 
+      if(value == PROFILE_TYPE.H){
+        newProfile.height = 35;
+      }
     }
+
 
     profiles = profiles.filter(i => i.profileNumber != this.state.currentItem)
     profiles = [...profiles,newProfile]
@@ -73,9 +82,9 @@ class MaterialProfile extends Component {
     const maxId = this.getMaxId();
     const newProfile = {
       profileNumber:maxId,
-      type:'0',
-      height:'',
-      width:'22'
+      type:"0",
+      height:0,
+      width:22
     }
     this.setState({profiles: [...this.state.profiles, newProfile], currentItem:maxId});
     //this.props.saveItems( [...this.state.woitems, newItem]);

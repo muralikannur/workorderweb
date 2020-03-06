@@ -1,8 +1,9 @@
 import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
-import { REMARKS, PATTERN_TYPE} from '../../constants';
+import { REMARKS, PATTERN_TYPE, PATTERN_CODE} from '../../constants';
 import { notify_error } from '../../Utils/commonUtls';
+import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
 
 class RemarksPattern extends Component {
  
@@ -35,6 +36,10 @@ class RemarksPattern extends Component {
     }
   }
 
+  onPatternBoardCodeChange = (e) => {
+    this.setState({patternBoardCode:e.target.value});
+  }
+
   onChange = (e,splitId) => {
     const { value, name } = e.target;
 
@@ -65,14 +70,16 @@ class RemarksPattern extends Component {
       this.setState({patternSplits:[...splitUnModified, splitToModify]});
     }
 
-    if(name == 'patternBoardCode'){
-      this.setState({patternBoardCode:value});
-    }
+    // if(name == 'patternBoardCode'){
+    //   this.setState({patternBoardCode:value});
+    // }
     
     if(name == 'height'){
 
       if(isNaN(value)) return;
-      let height = parseInt(value);
+      if(value != '')
+        value = parseInt(value);
+      let height = value;
       if(isNaN(height) || height < 0) return;
 
       // if(height >= parseInt(this.props.item.height)) {
@@ -228,7 +235,10 @@ class RemarksPattern extends Component {
             <span style={{fontSize:"12px", float:"right"}}><b>Cutting Size:</b> Height: {this.boardHeight} &nbsp;  Width: {this.boardWidth}</span>
             <div className="form-group" style={{marginBottom:"0px"}}>
               <b>Material: </b>
-              <select id="code" onChange={this.onChange}  name="patternBoardCode" value={this.state.patternBoardCode} className="js-example-basic-single input-xs  w-100">
+              <MaterialCodeDropDown onChange={this.onPatternBoardCodeChange} item={this.props.item} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} />
+
+              
+              {/* <select id="code" onChange={this.onChange}  name="patternBoardCode" value={this.state.patternBoardCode} className="js-example-basic-single input-xs  w-100">
               <option value="0">Select the Material</option>  
               {
                 this.props.material.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1 : -1).map( (m) => {
@@ -243,8 +253,9 @@ class RemarksPattern extends Component {
                 return (
                   <option value={m.materialCodeNumber} key={m.materialCodeNumber} >{matText}</option>
                 )})}
-                <option value="100">PATTERN</option>
-              </select>
+                <option value="{PATTERN_CODE}">PATTERN</option>
+              </select> */}
+
             </div>
 
 
@@ -298,7 +309,9 @@ class RemarksPattern extends Component {
                       return <tr>
                         <td>{pattern.id}</td>
                         <td>
-                          <select  onChange={(e) => this.onChange(e,pattern.id)} value={pattern.code}  id="code" name="code" className="js-example-basic-single input-xs  w-100">
+                        <MaterialCodeDropDown onChange={this.onPatternBoardCodeChange} item={this.props.item} material={this.props.material} onlyLaminate={true} />
+
+                          {/* <select  onChange={(e) => this.onChange(e,pattern.id)} value={pattern.code}  id="code" name="code" className="js-example-basic-single input-xs  w-100">
                             <option value="0">Select the Code</option>
                             {
                             mCodes.map( (mc) => {
@@ -306,7 +319,7 @@ class RemarksPattern extends Component {
                               <option value={mc.materialCodeNumber}  key={mc.materialCodeNumber} >{this.props.material.laminates.find(l => l.laminateNumber == mc.front_laminate).code}</option>
                             )})
                             }
-                          </select>
+                          </select> */}
                         </td>
                         <td>
                           <input type="text"  onChange={(e) => this.onChange(e,pattern.id)} className="form-control input-xs" maxLength="4" value={pattern.height}  id="height"  name="height"  />

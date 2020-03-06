@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
-import { REMARKS } from './../../constants';
+import { REMARKS, PATTERN_CODE } from './../../constants';
 import { remarks } from '../../appConfig';
 import RemarksProfile from './RemarksProfile';
 import RemarksEdgeProfile from './RemarksEdgeProfile';
@@ -18,10 +18,11 @@ class RemarksMain extends Component {
     this.state = {
       currentRemark:0
     }
+  }
 
-    window.setTimeout(() => {
-      this.updateCurrentRemarkId();
-    },100)
+  componentWillReceiveProps(newProps){
+    if(newProps.currentRemark != this.state.currentRemark)
+      this.setState({currentRemark: newProps.currentRemark });
   }
 
   updateCurrentRemarkId() {
@@ -49,11 +50,11 @@ showMaterialDefinition = () => {
     if(!this.props.item) return null;
 
     this.availableRemarks = remarks.map(x => x.id);
-    // if(this.props.item && this.props.item.remarks){
-    //   let usedRemarks = new Set(this.props.item.remarks);
-    //   if(this.props.item.code !== "100") usedRemarks.add(REMARKS.PATTERN);
-    //   this.availableRemarks = this.availableRemarks.filter(x => !usedRemarks.has(x));
-    // }
+    if(this.props.item && this.props.item.remarks){
+      let usedRemarks = new Set(this.props.item.remarks);
+      if(this.props.item.code !== PATTERN_CODE) usedRemarks.add(REMARKS.PATTERN);
+      this.availableRemarks = this.availableRemarks.filter(x => !usedRemarks.has(x));
+    }
 
 
 

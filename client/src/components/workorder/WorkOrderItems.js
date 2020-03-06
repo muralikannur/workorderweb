@@ -2,7 +2,7 @@ import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
-import { REMARKS, PROFILE_TYPE, EB_START_NUMBER} from '../../constants';
+import { REMARKS, PROFILE_TYPE, EB_START_NUMBER,PATTERN_CODE} from '../../constants';
 import { notify_error}  from '../../Utils/commonUtls';
 import { getMaterialText, getNewWoItem }  from '../../Utils/woUtils';
 
@@ -11,6 +11,7 @@ import { getMaterialText, getNewWoItem }  from '../../Utils/woUtils';
 import RemarksMain from '../remarks/RemarksMain';
 import WorkOrderRemarks from './WorkOrderRemarks';
 import WorkOrderEdgeBand from './WorkOrderEdgeBand';
+import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
 
 
 class WorkOrderItems extends Component {
@@ -145,7 +146,7 @@ class WorkOrderItems extends Component {
 
   onChange = (e) => {
     if(this.state.currentItem == 0) return;
-    const numberFields = ['height', 'width', 'quantity'];
+    const numberFields = ['height', 'width', 'quantity', 'code'];
     const floatFields = ['eb_a','eb_b','eb_c','eb_d'];
 
     let { value, name } = e.target;
@@ -157,7 +158,12 @@ class WorkOrderItems extends Component {
       return;
     }
 
-    if (numberFields.includes(name) && isNaN(value)) { return;}
+    if (numberFields.includes(name)) {
+      if(isNaN(value))
+       return;
+      if(value != '')
+       value = parseInt(value);
+    }
 
     if (floatFields.includes(name)) {
       value = Math.round(parseFloat(value));
@@ -270,7 +276,7 @@ class WorkOrderItems extends Component {
     items = items.filter(i => (i.parentId != iNo || i.childNumber != cNo))
     items = [...items,newItem]
     this.setState({woitems: items});
-    //this.props.saveItems(items);
+    this.props.saveItems(items);
   }
 
   render() {
@@ -343,7 +349,7 @@ class WorkOrderItems extends Component {
                 if(laminate || board){
                   ebOptions = [ebOptions, ...laminate, ...board];
                 }
-              } else if(item.code == "100"){
+              } else if(item.code == PATTERN_CODE){
                 ebOptions = [ebOptions, ...this.props.material.edgebands];
               }
             }
@@ -356,7 +362,7 @@ class WorkOrderItems extends Component {
             <tr id={'item-row-' + item.itemnumber}  key={item.itemnumber}  onClick={(e) => this.onItemClick(e,item.itemnumber)} onMouseDown={(e) => this.onItemClick(e,item.itemnumber)} onKeyDown={(e) => this.onItemClick(e,item.itemnumber)} onFocus={(e) => this.onItemClick(e,item.itemnumber)} style={{backgroundColor:`${item.itemnumber == this.state.currentItem ? "#b5d1ff" : "#eee"}`}} >
                 <td style={{fontWeight:"bold", textAlign:"center"}}>{item.itemnumber}</td>
                 <td>
-                  <div className="form-group" style={{marginBottom:"0px"}}>
+                  {/* <div className="form-group" style={{marginBottom:"0px"}}>
                     <select id="code" onChange={this.onChange}  value={item.code}  name="code" className="js-example-basic-single input-xs  w-100">
                     <option value="0">Select the Material</option>  
                     {
@@ -365,9 +371,11 @@ class WorkOrderItems extends Component {
                       return (
                         <option value={m.materialCodeNumber} key={m.materialCodeNumber} >{matText}</option>
                       )})}
-                      <option value="100">PATTERN</option>
+                      <option value="{PATTERN_CODE}">PATTERN</option>
                     </select>
-                  </div>
+                  </div> */}
+
+                  <MaterialCodeDropDown onChange={this.onChange} item={item} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} />
 
 
                 </td>
@@ -398,7 +406,7 @@ class WorkOrderItems extends Component {
                 <tr style={{backgroundColor:"#ddd", color:"#555", padding:"2px"}}>
                 <td style={{fontWeight:"bold", textAlign:"center"}}>{item.itemnumber}</td>
                 <td>
-                  <div className="form-group" style={{marginBottom:"0px"}}>
+                  {/* <div className="form-group" style={{marginBottom:"0px"}}>
                     <select id="code" onChange={(e) => this.onChildCodeChange(e,child.childNumber,item.itemnumber)}  value={child.code}  name="childCode" className="js-example-basic-single input-xs  w-100">
                     {
                       this.props.material.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1 : -1).map( (m) => {
@@ -407,7 +415,9 @@ class WorkOrderItems extends Component {
                         <option value={m.materialCodeNumber} key={m.materialCodeNumber} >{matText}</option>
                       )})}
                     </select>
-                  </div>  
+                  </div>   */}
+
+                    <MaterialCodeDropDown onChange={this.onChildCodeChange} item={child} material={this.props.material}  excludeOnlyLaminate={true} /> 
                 </td>                
                 <td></td>
                 <td>{child.height}</td>

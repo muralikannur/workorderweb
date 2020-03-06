@@ -5,6 +5,7 @@ import { REMARKS, EB_START_NUMBER, PROFILE_TYPE} from '../../constants';
 import { stringify } from 'querystring';
 import { notify_error, notify_success, isEmptyOrSpaces }  from '../../Utils/commonUtls';
 import { setDoubleThick }  from '../../Utils/remarksUtils';
+import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
 
 class RemarksDoubleThick extends Component {
  
@@ -39,9 +40,10 @@ class RemarksDoubleThick extends Component {
   }
 
   onChange = (e) => {
-    const { value, name } = e.target;
+    let { value, name } = e.target;
     if(isNaN(value)) return;
-    this.setState({[name]:parseInt(value)});
+    if(value != '') value = parseInt(value);
+    this.setState({[name]:value});
   }
 
   getEdgeBandNumber(){
@@ -107,10 +109,11 @@ class RemarksDoubleThick extends Component {
       remarks.push(REMARKS.DBLTHICK);
     }
 
+    let newItem1 = JSON.parse(JSON.stringify(newItem));
 
-
-    let newItem1 = {...this.props.item, 
+    newItem1 = {...newItem1, 
       itemnumber:0, 
+      code:this.state.doubleThickCode,
       parentId:this.props.item.itemnumber, 
       remarks:[], 
       profileNumber:0,
@@ -121,9 +124,8 @@ class RemarksDoubleThick extends Component {
       childNumber:1
     };
 
-
-    let newItem2 = {...newItem1, 
-
+    let newItem2 = JSON.parse(JSON.stringify(newItem1));
+    newItem2 = {...newItem2, 
       childNumber:2
     };
 

@@ -39,6 +39,22 @@ class MaterialEdgeBand extends Component {
   }
   onChange = (e) => {
     let { value, name } = e.target;
+    const numberFields = ['materialEdgeBandNumber','eb_width', 'laminate'];
+    const floatFields = ['eb_thickness']
+
+    if (numberFields.includes(name)) {
+      if(isNaN(value))
+       return;
+      if(value != '')
+        value = parseInt(value);
+    }
+
+    if (floatFields.includes(name)) {
+      if(isNaN(value))
+       return;
+      if(value != '')
+       value = parseInt(value);
+    }
 
     if(name=="eb_thickness") value = parseFloat(e.target.value);
     if(name=="eb_width") value = parseInt(e.target.value);
