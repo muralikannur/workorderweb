@@ -89,9 +89,8 @@ class WorkOrderItems extends Component {
 
   copyAtoBCD = (item) => {
 
-    
-
     let items = this.state.woitems;
+    let parentItem = items.find(i => i.itemnumber == item.parentId)
 
     if(!item.ebCopied){
       if(item.eb_a == 0){
@@ -99,16 +98,28 @@ class WorkOrderItems extends Component {
         return;
       }
   
-      item.eb_b = item.eb_a;
-      if(item.profileSide != "H") item.eb_c = item.eb_a;
-      if(item.profileSide != "W") item.eb_d = item.eb_a;
+      if(item.childNumber == 0){
+        item.eb_b = item.eb_a;
+        if(item.profileSide != "H") item.eb_c = item.eb_a;
+        if(item.profileSide != "W") item.eb_d = item.eb_a;
+      } else {
+        if(parentItem){
+          let sides = parentItem.doubleThickSides
+          if(sides.includes('B')) item.eb_b = item.eb_a;
+          if(sides.includes('C')) item.eb_c = item.eb_a;
+          if(sides.includes('D')) item.eb_d = item.eb_a;
+        }
+      }
+
+
     } else {
       item.eb_b = 0;
       if(item.profileSide != "H") item.eb_c = 0;
       if(item.profileSide != "W") item.eb_d = 0;
     }
 
-    let nonModifiedItems = items.filter(i => i.itemnumber != item.itemnumber);
+    let nonModifiedItems = items.filter(i => i != item);
+
     this.setState({woitems: [...nonModifiedItems, item]});
     this.props.saveItems( [...nonModifiedItems, item]);
 
@@ -268,16 +279,26 @@ class WorkOrderItems extends Component {
     $('#btnRemarks').click();
   }
 
-  onChildCodeChange = (e,cNo,iNo) =>{
+  onChildValueChange = (e,cNo,iNo) =>{
+
+    if (e.target.value == 'New...') {
+      this.props.setMaterialTab('edgebands');
+      $('#materialModal').appendTo("body");
+      $('#btnMaterial').click();
+      return;
+    }
+
     var items = this.state.woitems;
     var item = items.find(i => i.parentId == iNo && i.childNumber == cNo);
-    var newItem = { ...item, code: e.target.value}
+    var newItem = { ...item, [e.target.name]: e.target.value}
 
     items = items.filter(i => (i.parentId != iNo || i.childNumber != cNo))
     items = [...items,newItem]
     this.setState({woitems: items});
     this.props.saveItems(items);
   }
+
+  
 
   render() {
 
@@ -324,6 +345,9 @@ class WorkOrderItems extends Component {
             eb_thickness:'',
             eb_width:'',
           }];
+
+          let ebWithoutProfiles = this.props.material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
+          let childEBOptions = [...ebOptions, ...ebWithoutProfiles];
 
           let hasEProfile = false;
 
@@ -404,7 +428,7 @@ class WorkOrderItems extends Component {
 
               return(
                 <tr style={{backgroundColor:"#ddd", color:"#555", padding:"2px"}}>
-                <td style={{fontWeight:"bold", textAlign:"center"}}>{item.itemnumber}</td>
+                <td style={{backgroundColor:"#fff"}}></td>
                 <td>
                   {/* <div className="form-group" style={{marginBottom:"0px"}}>
                     <select id="code" onChange={(e) => this.onChildCodeChange(e,child.childNumber,item.itemnumber)}  value={child.code}  name="childCode" className="js-example-basic-single input-xs  w-100">
@@ -417,17 +441,66 @@ class WorkOrderItems extends Component {
                     </select>
                   </div>   */}
 
-                    <MaterialCodeDropDown onChange={this.onChildCodeChange} item={child} material={this.props.material}  excludeOnlyLaminate={true} /> 
+                    <MaterialCodeDropDown onChange={this.onChildValueChange} item={child} material={this.props.material}  excludeOnlyLaminate={true} /> 
                 </td>                
                 <td></td>
                 <td>{child.height}</td>
                 <td>{child.width}</td>
                 <td>{child.quantity}</td>
                 <td></td>
-                <td>{this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == child.eb_a) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == child.eb_a).eb_thickness : 0}</td>
-                <td>{this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == child.eb_b) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == child.eb_b).eb_thickness : 0}</td>
-                <td>{this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == child.eb_c) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == child.eb_c).eb_thickness : 0}</td>
-                <td>{this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == child.eb_d) ? this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == child.eb_d).eb_thickness : 0}</td>
+                <td>
+                  {(item.remarks.includes(REMARKS.DBLTHICK) ?
+                      (item.doubleThickSides.includes('A') ? 
+                      <WorkOrderEdgeBand item={child} material={this.props.material} setMaterialTab={this.props.setMaterialTab} ebOptions={childEBOptions} EBvalue={child.eb_a} EBname="eb_a" onChange={this.onChildValueChange} />
+                      : 0
+                      )
+                    :0
+                  
+                  )}
+                </td>
+                <td>
+                {(item.remarks.includes(REMARKS.DBLTHICK) ?
+                      (item.doubleThickSides.includes('A') ? 
+                      <i className={item.ebCopied?"icon icon-arrow-left-circle":"icon icon-arrow-right-circle"} title="Copy to BCD" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyAtoBCD(child)}}></i>
+                      : null
+                      )
+                    :null
+                  
+                  )}
+
+
+                </td>
+                <td>
+                  {(item.remarks.includes(REMARKS.DBLTHICK) ?
+                      (item.doubleThickSides.includes('B') ? 
+                      <WorkOrderEdgeBand item={child} material={this.props.material} setMaterialTab={this.props.setMaterialTab} ebOptions={childEBOptions} EBvalue={child.eb_b} EBname="eb_b" onChange={this.onChildValueChange} />
+                      : 0
+                      )
+                    :0
+                  
+                  )}
+                </td>
+                <td>
+                  {(item.remarks.includes(REMARKS.DBLTHICK) ?
+                      (item.doubleThickSides.includes('C') ? 
+                      <WorkOrderEdgeBand item={child} material={this.props.material} setMaterialTab={this.props.setMaterialTab} ebOptions={childEBOptions} EBvalue={child.eb_c} EBname="eb_c" onChange={this.onChildValueChange} />
+                      : 0
+                      )
+                    :0
+                  
+                  )}
+                </td>
+                <td>
+                  {(item.remarks.includes(REMARKS.DBLTHICK) ?
+                      (item.doubleThickSides.includes('D') ? 
+                      <WorkOrderEdgeBand item={child} material={this.props.material} setMaterialTab={this.props.setMaterialTab} ebOptions={childEBOptions} EBvalue={child.eb_d} EBname="eb_d" onChange={this.onChildValueChange} />
+                      : 0
+                      )
+                    :0
+                  
+                  )}
+                </td>
+                <td><input type="text" className="form-control input-xs" value={child.comments}  id="comments"  name="comments" onChange={(e) => {this.onChildValueChange(e,child.childNumber, item.itemnumber)}}  /></td>
                 <td></td>
               </tr>
               );

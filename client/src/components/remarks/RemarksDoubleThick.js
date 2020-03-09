@@ -6,6 +6,7 @@ import { stringify } from 'querystring';
 import { notify_error, notify_success, isEmptyOrSpaces }  from '../../Utils/commonUtls';
 import { setDoubleThick }  from '../../Utils/remarksUtils';
 import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
+import { getNewWoItem }  from '../../Utils/woUtils';
 
 class RemarksDoubleThick extends Component {
  
@@ -46,33 +47,31 @@ class RemarksDoubleThick extends Component {
     this.setState({[name]:value});
   }
 
-  getEdgeBandNumber(){
+  // getEdgeBandNumber(){
 
-    let mat = this.props.material.materialCodes.find(m => m.materialCodeNumber == this.state.doubleThickCode );
-    if(mat){
+  //   let mat = this.props.material.materialCodes.find(m => m.materialCodeNumber == this.state.doubleThickCode );
+  //   if(mat){
 
-      let lam = this.props.material.laminates.find(l => l.laminateNumber == mat.front_laminate);
-      if(lam){
-        let edgeband = this.props.material.edgebands.find(eb => eb.laminate == lam.laminateNumber && eb.eb_thickness == 0.45);
-        if(edgeband) return edgeband.materialEdgeBandNumber;
-      }
-      let board = this.props.material.boards.find(b => b.boardNumber == mat.board);
-      if(board){
-        let edgeband = this.props.material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.BOARD + parseInt(board.boardNumber)  && eb.eb_thickness == 0.45);
-        if(edgeband) return edgeband.materialEdgeBandNumber;
-      }  
+  //     let lam = this.props.material.laminates.find(l => l.laminateNumber == mat.front_laminate);
+  //     if(lam){
+  //       let edgeband = this.props.material.edgebands.find(eb => eb.laminate == lam.laminateNumber && eb.eb_thickness == 0.45);
+  //       if(edgeband) return edgeband.materialEdgeBandNumber;
+  //     }
+  //     let board = this.props.material.boards.find(b => b.boardNumber == mat.board);
+  //     if(board){
+  //       let edgeband = this.props.material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.BOARD + parseInt(board.boardNumber)  && eb.eb_thickness == 0.45);
+  //       if(edgeband) return edgeband.materialEdgeBandNumber;
+  //     }  
 
-
-
-      let eProfile = this.props.material.profiles.find(p => p.type == PROFILE_TYPE.E);
-      if(eProfile){
-        let edgeband = this.props.material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(eProfile.profileNumber)  && eb.eb_thickness == 0.45);
-        if(edgeband) return edgeband.materialEdgeBandNumber;
-      }      
+  //     let eProfile = this.props.material.profiles.find(p => p.type == PROFILE_TYPE.E);
+  //     if(eProfile){
+  //       let edgeband = this.props.material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(eProfile.profileNumber)  && eb.eb_thickness == 0.45);
+  //       if(edgeband) return edgeband.materialEdgeBandNumber;
+  //     }      
       
      
-    }
-  }
+  //   }
+  // }
  
   UpdateRemark(){
     if(parseInt(this.state.doubleThickWidth) < 50){
@@ -84,11 +83,11 @@ class RemarksDoubleThick extends Component {
       return;
     }
     
-     let ebNumber = this.getEdgeBandNumber();
-    if(ebNumber == 0){
-      notify_error('No Edge Band defined with 0.45 thickness');
-      return;
-    }
+    //  let ebNumber = this.getEdgeBandNumber();
+    // if(ebNumber == 0){
+    //   notify_error('No Edge Band defined with 0.45 thickness');
+    //   return;
+    // }
 
     let dblSides = "";
     if(this.state.A) dblSides += "A";
@@ -109,19 +108,14 @@ class RemarksDoubleThick extends Component {
       remarks.push(REMARKS.DBLTHICK);
     }
 
-    let newItem1 = JSON.parse(JSON.stringify(newItem));
-
+    let newItem1 = getNewWoItem() //JSON.parse(JSON.stringify(newItem));
+    const {eb_a, eb_b, eb_c, eb_d, height, width, quantity} = newItem;
     newItem1 = {...newItem1, 
       itemnumber:0, 
       code:this.state.doubleThickCode,
-      parentId:this.props.item.itemnumber, 
-      remarks:[], 
-      profileNumber:0,
-      doubleThickWidth:0,
-      doubleThickSides:"",
-      eb_a:ebNumber,eb_b:0,eb_c:0,eb_d:0,
-      quantity:0,
-      childNumber:1
+      parentId:this.props.item.itemnumber,
+      eb_a, eb_b, eb_c, eb_d, height, width, quantity
+
     };
 
     let newItem2 = JSON.parse(JSON.stringify(newItem1));

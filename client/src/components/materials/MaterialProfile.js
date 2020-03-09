@@ -48,7 +48,8 @@ class MaterialProfile extends Component {
 
   onChange = (e) => {
     if(this.state.currentItem == 0) return;
-    const numberFields = ['height', 'width'];
+    const numberFields = ['width'];
+    const floatFields = ['height'];
     let { value, name } = e.target;
 
     if (numberFields.includes(name)) { 
@@ -57,6 +58,14 @@ class MaterialProfile extends Component {
       if(value != '')
         value = parseInt(value);
     }
+
+    if (floatFields.includes(name)) { 
+      if(isNaN(value) && !value.includes("."))
+        return;
+      if(value != '' && !value.endsWith('.'))
+        value = parseFloat(value);
+    }
+
 
     var profiles = this.state.profiles;
     var profile = profiles.find(i => i.profileNumber == this.state.currentItem);

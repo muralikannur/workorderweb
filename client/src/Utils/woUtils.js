@@ -83,6 +83,7 @@ export const getRemarkData = (id, item, material) =>{
       patternBoardCode:0,
       doubleThickSides:'ABCD',
       doubleThickCode:0,
-      ebCopied:false
+      ebCopied:false,
+      childNumber:0
     }
   }
