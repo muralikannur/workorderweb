@@ -20,7 +20,7 @@ export const SAVE_WO = 'SAVE_WO';
 export const CREATE_WO = 'CREATE_WO';
 export const SAVE_MAIN = 'SAVE_MAIN';
 export const SAVE_ITEMS = 'SAVE_ITEMS';
-
+export const CLEAR_WO = 'CLEAR_WO';
 
 export const GET_PROFILE = 'GET_PROFILE';
 export const SAVE_PROFILE = 'SAVE_PROFILE';
@@ -38,6 +38,7 @@ export const SAVE_LAMINATES = 'SAVE_LAMINATES';
 export const SAVE_MATERIALCODES = 'SAVE_MATERIALCODES';
 export const SAVE_PROFILES = 'SAVE_PROFILES';
 export const SAVE_EDGEBANDS = 'SAVE_EDGEBANDS';
+export const CLEAR_MATERIAL = 'CLEAR_MATERIAL';    
 
 //REMARKS
 export const SAVE_REM_PROFILES = 'SAVE_REM_PROFILES';      

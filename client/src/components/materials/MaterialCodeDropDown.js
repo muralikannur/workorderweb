@@ -19,8 +19,8 @@ class MaterialCodeDropDown extends Component {
 
     return (
       <div className="form-group" style={{marginBottom:"0px"}}>
-      <select id="code" onChange={(e) => {this.props.onChange(e,this.props.item.childNumber,this.props.item.parentId)}}  value={this.props.item.code}  name="code" className="js-example-basic-single input-xs  w-100">
-      <option value="0">Select the Material</option>  
+      <select id="code" onChange={(e) => {this.props.onChange(e,this.props.item.childNumber,this.props.item.parentId)}}  value={this.props.codeValue?this.props.codeValue:this.props.item.code}  name={this.props.codeName?this.props.codeName:"code"} className="js-example-basic-single input-xs  w-100">
+      <option value="0">Select</option>  
       {
         mCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1 : -1).map( (m) => {
         let matText =  getMaterialText(m, this.props.material);

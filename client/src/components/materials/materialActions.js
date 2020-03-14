@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SAVE_EDGEBANDS,  SAVE_BOARDS,  SAVE_LAMINATES,  SAVE_MATERIALCODES,  SAVE_PROFILES, GET_MATERIAL } from '../../actions/types';
+import { SAVE_EDGEBANDS,  SAVE_BOARDS,  SAVE_LAMINATES,  SAVE_MATERIALCODES,  SAVE_PROFILES, GET_MATERIAL, CLEAR_MATERIAL } from '../../actions/types';
 import { tokenConfig } from '../../actions/authActions';
 import { returnErrors } from '../../actions/errorActions';
 import { notify_error, notify_success } from '../../Utils/commonUtls';
@@ -77,3 +77,10 @@ export const saveMaterialEdgeBands = (edgebands) => dispatch => {
     payload: edgebands
   })
 };
+
+export const clearMaterial = () => dispatch => {
+  dispatch({
+    type: CLEAR_MATERIAL
+  })
+};
+

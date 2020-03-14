@@ -5,8 +5,8 @@ import { ToastContainer} from 'react-toastify';
 import * as qs from 'query-string';
 
 import { clearErrors } from '../../actions/errorActions';
-import { getAllWorkOrders, createWorkOrder, getWorkOrder } from './woActions';
-import { getMaterial } from '../materials/materialActions';
+import { getAllWorkOrders, createWorkOrder, getWorkOrder, clearWorkOrder } from './woActions';
+import { getMaterial, clearMaterial } from '../materials/materialActions';
 import { notify_error,isEmptyOrSpaces } from '../../Utils/commonUtls';
 
 class WorkOrderList extends Component {
@@ -25,6 +25,8 @@ class WorkOrderList extends Component {
   componentDidMount(){
     console.log('LIFECYCLE: Workorder List - componentDidMount');
     this.props.clearErrors();
+    this.props.clearMaterial();
+    this.props.clearWorkOrder();
     let customer = this.props.customer;
     if(customer){
       this.setState({billing_address:customer.billing_address});
@@ -264,5 +266,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {clearErrors,getAllWorkOrders, createWorkOrder, getWorkOrder, getMaterial}
+  {clearErrors,getAllWorkOrders, createWorkOrder, getWorkOrder, getMaterial, clearMaterial, clearWorkOrder}
 )(WorkOrderList);

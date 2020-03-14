@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { edgeBandThickness } from '../../appConfig';
 import { numberWithCommas } from '../../Utils/commonUtls';
+import { getEBThickness }  from '../../Utils/woUtils';
 
 class WorkOrderPreview extends Component {
 
@@ -13,21 +14,13 @@ class WorkOrderPreview extends Component {
   render() {
 
     if(!this.props.item) return null;
+    if(this.props.item.code == 1000) return null;
 
-    this.marginL = 0;
-    this.marginT = 0;
-    this.marginR = 0;
-    this.marginB = 0;
 
-    if(this.props.material.edgebands && this.props.material.edgebands.length > 0){
-
-        if(this.props.item.eb_a) this.marginL = parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_a).eb_thickness || 0);
-        if(this.props.item.eb_b) this.marginT =parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_b).eb_thickness || 0);
-        if(this.props.item.eb_c) this.marginR = parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_c).eb_thickness || 0);
-        if(this.props.item.eb_d) this.marginB = parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_d).eb_thickness || 0);
-
-    }
-
+    this.marginL = getEBThickness(this.props.item.eb_a,this.props.material.edgebands);
+    this.marginT = getEBThickness(this.props.item.eb_b,this.props.material.edgebands);
+    this.marginR = getEBThickness(this.props.item.eb_c,this.props.material.edgebands);
+    this.marginB = getEBThickness(this.props.item.eb_d,this.props.material.edgebands);
 
     this.height = 0
     this.width = 0;

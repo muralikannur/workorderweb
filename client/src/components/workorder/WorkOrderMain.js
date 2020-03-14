@@ -18,8 +18,8 @@ import MaterialMain from '../materials/MaterialMain';
 //Actions
 import { clearErrors } from '../../actions/errorActions';
 import { saveWorkOrder } from './woActions';
-import { getMaterial } from '../materials/materialActions';
-import { saveItems } from './woActions';
+import { getMaterial, clearMaterial } from '../materials/materialActions';
+import { saveItems, clearWorkOrder } from './woActions';
 import { setCurrentItem, setCurrentRemark, setMaterialTab } from '../../actions/configActions';
 import { downloadCuttingList } from '../../Utils/ExcelUtils';
 
@@ -45,7 +45,10 @@ class WorkOrderMain extends Component {
           return false;
         }
       }
+
+
       return true;
+
     });
 
     setTimeout(() => {
@@ -141,7 +144,7 @@ class WorkOrderMain extends Component {
     }
 
     //INCORRECT HEIGHT
-    errItems = items.filter(i => (i.height == '' || isNaN(i.height) || i.height < 1 )).map(i => i.itemnumber);
+    errItems = items.filter(i => ( i.code != PATTERN_CODE &&  (i.height == '' || isNaN(i.height) || i.height < 1 ))).map(i => i.itemnumber);
     if(errItems.length > 0){
       this.highlightError(errItems);
       notify_error("Incorrect Height for the following items..\n" + errItems.join());
@@ -157,7 +160,7 @@ class WorkOrderMain extends Component {
     }
 
     //HEIGHT exceeds the limit
-    errItems = items.filter(i => ( i.code != PATTERN_CODE && i.height > this.props.material.boards.find(b => b.boardNumber = (this.props.material.materialCodes.find(mc => mc.materialCodeNumber == i.code).board)).height)).map(i => i.itemnumber);
+    errItems = items.filter(i => ( i.code != PATTERN_CODE && i.parentId == 0 && i.height > this.props.material.boards.find(b => b.boardNumber = (this.props.material.materialCodes.find(mc => mc.materialCodeNumber == i.code).board)).height)).map(i => i.itemnumber);
     if(errItems.length > 0){
       this.highlightError(errItems);
       notify_error("Item Height is more than the Board Height for the following items..\n" + errItems.join());
@@ -165,7 +168,7 @@ class WorkOrderMain extends Component {
     }
 
     //WIDTH exceeds the limit
-    errItems = items.filter(i => (i.code != PATTERN_CODE && i.width > this.props.material.boards.find(b => b.boardNumber = (this.props.material.materialCodes.find(mc => mc.materialCodeNumber == i.code).board)).width)).map(i => i.itemnumber);
+    errItems = items.filter(i => (i.code != PATTERN_CODE && i.parentId == 0 && i.width > this.props.material.boards.find(b => b.boardNumber = (this.props.material.materialCodes.find(mc => mc.materialCodeNumber == i.code).board)).width)).map(i => i.itemnumber);
     if(errItems.length > 0){
       this.highlightError(errItems);
       notify_error("Item Width is more than the Board Board for the following items..\n" + errItems.join());
@@ -271,7 +274,8 @@ const mapStateToProps = state => ({
   wo: state.wo,
   material: state.material,
   item: state.config.currentItem,
-  materialTab:state.config.materialTab
+  materialTab:state.config.materialTab,
+  currentRemark:state.config.currentRemark
 
 });
 

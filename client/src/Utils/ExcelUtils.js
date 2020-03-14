@@ -1,7 +1,7 @@
 
   import XLSX from 'xlsx';
   import { EB_START_NUMBER ,PATTERN_CODE} from '../constants';
-  import { getMaterialText, getRemarkData } from './woUtils';
+  import { getMaterialText, getRemarkData, getEBThickness } from './woUtils';
 
 
   export const downloadCuttingList = (wo, material) => {
@@ -87,10 +87,11 @@
       if(i.doubleThickWidth == 0 && i.ledgeType == 0){
         if(material.edgebands && material.edgebands.length > 0){
           
-          if(i.eb_a && !isNaN(i.eb_a) &&  i.eb_a != 0) cutting_Width -= parseFloat(material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_a).eb_thickness);
-          if(i.eb_b && !isNaN(i.eb_b) &&  i.eb_b != 0) cutting_Height -= parseFloat(material.edgebands.find(eb => eb.materialEdgeBandNumber ==  i.eb_b).eb_thickness);
-          if(i.eb_c && !isNaN(i.eb_c) &&  i.eb_c != 0) cutting_Width -= parseFloat(material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_c).eb_thickness);
-          if(i.eb_d && !isNaN(i.eb_d) &&  i.eb_d != 0) cutting_Height -= parseFloat(material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_d).eb_thickness);
+          cutting_Width -=  getEBThickness(i.eb_a,material.edgebands);
+          cutting_Height -= getEBThickness(i.eb_b,material.edgebands);
+          cutting_Width -=  getEBThickness(i.eb_c,material.edgebands);
+          cutting_Height -= getEBThickness(i.eb_d,material.edgebands);
+        
         }
       }
 
@@ -142,10 +143,10 @@
         Qty:qty,
         Code:i.code,
         Grains: (grains == "H" || grains == "V" ? 'yes':'no'),
-        EB_A:(i.eb_a != undefined && !isNaN(i.eb_a) && i.eb_a != 0) ? material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_a).eb_thickness : 0,
-        EB_B:(i.eb_b != undefined && !isNaN(i.eb_b) &&  i.eb_b != 0) ? material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_b).eb_thickness : 0,
-        EB_C:(i.eb_c != undefined && !isNaN(i.eb_c) &&  i.eb_c != 0) ? material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_c).eb_thickness : 0,
-        EB_D:(i.eb_d != undefined && !isNaN(i.eb_d) && i.eb_d != 0) ? material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_d).eb_thickness : 0,
+        EB_A:getEBThickness(i.eb_a,material.edgebands),
+        EB_B:getEBThickness(i.eb_b,material.edgebands),
+        EB_C:getEBThickness(i.eb_c,material.edgebands),
+        EB_D:getEBThickness(i.eb_d,material.edgebands),
         Remark:remarkData,
         Material:matText,
         Comments:i.comments
@@ -160,10 +161,10 @@
         Height: parseInt(i.height),
         Width:parseInt(i.width),
         Qty:qty,
-        EB_A:(i.eb_a != undefined && !isNaN(i.eb_a) &&  i.eb_a != 0) ? material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_a).eb_thickness : 0,
-        EB_B:(i.eb_b != undefined && !isNaN(i.eb_b) &&  i.eb_b != 0) ? material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_b).eb_thickness : 0,
-        EB_C:(i.eb_c != undefined && !isNaN(i.eb_c) &&  i.eb_c != 0) ? material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_c).eb_thickness : 0,
-        EB_D:(i.eb_d != undefined && !isNaN(i.eb_d) &&  i.eb_d != 0) ? material.edgebands.find(eb => eb.materialEdgeBandNumber == i.eb_d).eb_thickness : 0,
+        EB_A:getEBThickness(i.eb_a,material.edgebands),
+        EB_B:getEBThickness(i.eb_b,material.edgebands),
+        EB_C:getEBThickness(i.eb_c,material.edgebands),
+        EB_D:getEBThickness(i.eb_d,material.edgebands),
         Remark:remarkData,
         Comments:i.comments
       })

@@ -2,7 +2,8 @@ import {
   GET_WO,
   SAVE_MAIN,
   SAVE_ITEMS,
-  CREATE_WO
+  CREATE_WO,
+  CLEAR_WO
 } from '../../actions/types';
 
 const initialState = {
@@ -24,8 +25,10 @@ export default function(state = initialState, action) {
       let woWithNewItems = {...state,woitems:action.payload}
       return woWithNewItems;  
     case  SAVE_MAIN:
-        let woWithMainModified = {...state,status:action.status}
-        return woWithMainModified;       
+      let woWithMainModified = {...state,status:action.status}
+      return woWithMainModified;      
+    case  CLEAR_WO:
+      return initialState; 
     default:
       return state;
   }

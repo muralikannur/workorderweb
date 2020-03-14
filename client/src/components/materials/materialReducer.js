@@ -4,10 +4,19 @@ import {
   SAVE_BOARDS,
   SAVE_LAMINATES,
   SAVE_MATERIALCODES,
-  SAVE_PROFILES
+  SAVE_PROFILES,
+  CLEAR_MATERIAL
 } from '../../actions/types';
 
-export default function(state = {}, action) {
+const initialState = {
+  boards: [],
+  laminates: [],
+  materialCodes: [],
+  profiles: [],
+  edgebands: []
+};
+
+export default function(state = initialState, action) {
   switch (action.type) {
     case  GET_MATERIAL:
       return action.payload;
@@ -25,7 +34,9 @@ export default function(state = {}, action) {
       return materialWithUpdatedProfiles;   
     case  SAVE_EDGEBANDS:
       let materialWithUpdatedEdgebands = {...state,edgebands:action.payload}
-      return materialWithUpdatedEdgebands;              
+      return materialWithUpdatedEdgebands;   
+    case  CLEAR_MATERIAL:
+      return initialState;            
     default:
       return state;
   }

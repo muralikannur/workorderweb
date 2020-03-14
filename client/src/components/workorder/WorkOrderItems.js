@@ -11,6 +11,7 @@ import { getMaterialText, getNewWoItem }  from '../../Utils/woUtils';
 import RemarksMain from '../remarks/RemarksMain';
 import WorkOrderRemarks from './WorkOrderRemarks';
 import WorkOrderEdgeBand from './WorkOrderEdgeBand';
+import WorkOrderChild from './WorkOrderChild';
 import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
 
 
@@ -19,7 +20,6 @@ class WorkOrderItems extends Component {
     super(props);
     this.state = {
       currentItem:0,
-      currentRemark:0,
       sortCol:'itemnumber',
       sortOrder:1,
       woitems:[],
@@ -93,10 +93,10 @@ class WorkOrderItems extends Component {
     let parentItem = items.find(i => i.itemnumber == item.parentId)
 
     if(!item.ebCopied){
-      if(item.eb_a == 0){
-        notify_error('Select EdgeBand for A side');
-        return;
-      }
+      // if(item.eb_a == 0){
+      //   notify_error('Select EdgeBand for A side');
+      //   return;
+      // }
   
       if(item.childNumber == 0){
         item.eb_b = item.eb_a;
@@ -118,12 +118,14 @@ class WorkOrderItems extends Component {
       if(item.profileSide != "W") item.eb_d = 0;
     }
 
+    item.ebCopied = !item.ebCopied;
+
     let nonModifiedItems = items.filter(i => i != item);
 
     this.setState({woitems: [...nonModifiedItems, item]});
     this.props.saveItems( [...nonModifiedItems, item]);
 
-    item.ebCopied = !item.ebCopied;
+    
   }  
 
 
@@ -263,7 +265,6 @@ class WorkOrderItems extends Component {
   }
 
   showRemarkData = (id) => {
-    this.setState({currentRemark:id});
     this.props.setCurrentRemark(id);
     $('#btnRemarks').click();
     
@@ -273,10 +274,12 @@ class WorkOrderItems extends Component {
     if(!this.props.validate()){
       return;
     }
-    this.setState({currentRemark:0});
     this.props.setCurrentRemark(0);
     $("#currentRemark").val("0").attr("selected","selected");
-    $('#btnRemarks').click();
+    window.setTimeout(() => {
+      $('#btnRemarks').click();
+    },100)
+    
   }
 
   onChildValueChange = (e,cNo,iNo) =>{
@@ -311,19 +314,19 @@ class WorkOrderItems extends Component {
       {n:'height',t:'Height',c:'pointer',w:5},
       {n:'width',t:'Width',c:'pointer',w:5},
       {n:'quantity',t:'Qty',c:'pointer',w:4},
-      {n:'remark',t:'Remarks',c:'',w:16},
-      {n:'eb_a',t:'EB-A',c:'',w:7},
+      {n:'remark',t:'Remarks',c:'',w:12},
+      {n:'eb_a',t:'EB-A',c:'',w:8},
       {n:'',t:'',c:'',w:2},
-      {n:'eb_b',t:'EB-B',c:'',w:7},
-      {n:'eb_c',t:'EB-C',c:'',w:7},
-      {n:'eb_d',t:'EB-D',c:'',w:7},
+      {n:'eb_b',t:'EB-B',c:'',w:8},
+      {n:'eb_c',t:'EB-C',c:'',w:8},
+      {n:'eb_d',t:'EB-D',c:'',w:8},
       {n:'comments',t:'Comments',c:'',w:7}
 
       ];
 
     return(
       <div>
-        <RemarksMain setMaterialTab={this.props.setMaterialTab} item={this.state.item} currentRemark={this.state.currentRemark} wo={this.props.wo} material={this.props.material} saveItems={this.props.saveItems}/>
+        <RemarksMain setMaterialTab={this.props.setMaterialTab} item={this.state.item} currentRemark={this.props.currentRemark} setCurrentRemark={this.props.setCurrentRemark} wo={this.props.wo} material={this.props.material} saveItems={this.props.saveItems}/>
         <button type="button" id="btnRemarks"  data-toggle="modal" data-target="#remarksModal" style={{visibility:"hidden"}}></button>
         <table id="order-listing" className="table stripped" >
           <thead>
@@ -380,28 +383,15 @@ class WorkOrderItems extends Component {
           }
 
           let handleProfile = this.props.material.profiles.find(p => p.profileNumber == item.profileNumber)
+          let childitems = this.state.woitems.filter(i => i.parentId == item.itemnumber)
+           
 
           return (
             <tbody>
             <tr id={'item-row-' + item.itemnumber}  key={item.itemnumber}  onClick={(e) => this.onItemClick(e,item.itemnumber)} onMouseDown={(e) => this.onItemClick(e,item.itemnumber)} onKeyDown={(e) => this.onItemClick(e,item.itemnumber)} onFocus={(e) => this.onItemClick(e,item.itemnumber)} style={{backgroundColor:`${item.itemnumber == this.state.currentItem ? "#b5d1ff" : "#eee"}`}} >
                 <td style={{fontWeight:"bold", textAlign:"center"}}>{item.itemnumber}</td>
                 <td>
-                  {/* <div className="form-group" style={{marginBottom:"0px"}}>
-                    <select id="code" onChange={this.onChange}  value={item.code}  name="code" className="js-example-basic-single input-xs  w-100">
-                    <option value="0">Select the Material</option>  
-                    {
-                      this.props.material.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1 : -1).map( (m) => {
-                      let matText =  getMaterialText(m, this.props.material);
-                      return (
-                        <option value={m.materialCodeNumber} key={m.materialCodeNumber} >{matText}</option>
-                      )})}
-                      <option value="{PATTERN_CODE}">PATTERN</option>
-                    </select>
-                  </div> */}
-
                   <MaterialCodeDropDown onChange={this.onChange} item={item} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} />
-
-
                 </td>
                 <td><input type="text" className="form-control input-xs" value={item.itemtype}  id="itemtype"  name="itemtype" onChange={this.onChange}  /></td>
                 <td><input type="text" className="form-control input-xs" maxLength="4" value={item.height}  id="height"  name="height" onChange={this.onChange}  /></td>
@@ -419,92 +409,18 @@ class WorkOrderItems extends Component {
                 <i className="remove icon-close" title="Remove" style={{color:"red", cursor:"pointer",paddingTop:"4px", display:"block", float:"right"}} onClick={()=>{this.deleteItem(item.itemnumber)}}></i>
                 </td>
             </tr>  
-            {this.state.woitems.filter(i => i.parentId == item.itemnumber)
-              .sort((a,b) => a.childNumber > b.childNumber ? 1 : -1)
-              .map(child => {
 
-                let dblThickMat = this.props.material.materialCodes.find(mc => mc.materialCodeNumber == item.doubleThickCode);
+            {childitems && childitems.length > 0 ?
+              <WorkOrderChild 
+                item={item} 
+                childitems={childitems} 
+                material={this.props.material} 
+                onChange={this.onChildValueChange} 
+                copyAtoBCD={this.copyAtoBCD}
+              />
+            : null }
 
-
-              return(
-                <tr style={{backgroundColor:"#ddd", color:"#555", padding:"2px"}}>
-                <td style={{backgroundColor:"#fff"}}></td>
-                <td>
-                  {/* <div className="form-group" style={{marginBottom:"0px"}}>
-                    <select id="code" onChange={(e) => this.onChildCodeChange(e,child.childNumber,item.itemnumber)}  value={child.code}  name="childCode" className="js-example-basic-single input-xs  w-100">
-                    {
-                      this.props.material.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1 : -1).map( (m) => {
-                      let matText = getMaterialText(m, this.props.material);
-                      return (
-                        <option value={m.materialCodeNumber} key={m.materialCodeNumber} >{matText}</option>
-                      )})}
-                    </select>
-                  </div>   */}
-
-                    <MaterialCodeDropDown onChange={this.onChildValueChange} item={child} material={this.props.material}  excludeOnlyLaminate={true} /> 
-                </td>                
-                <td></td>
-                <td>{child.height}</td>
-                <td>{child.width}</td>
-                <td>{child.quantity}</td>
-                <td></td>
-                <td>
-                  {(item.remarks.includes(REMARKS.DBLTHICK) ?
-                      (item.doubleThickSides.includes('A') ? 
-                      <WorkOrderEdgeBand item={child} material={this.props.material} setMaterialTab={this.props.setMaterialTab} ebOptions={childEBOptions} EBvalue={child.eb_a} EBname="eb_a" onChange={this.onChildValueChange} />
-                      : 0
-                      )
-                    :0
-                  
-                  )}
-                </td>
-                <td>
-                {(item.remarks.includes(REMARKS.DBLTHICK) ?
-                      (item.doubleThickSides.includes('A') ? 
-                      <i className={item.ebCopied?"icon icon-arrow-left-circle":"icon icon-arrow-right-circle"} title="Copy to BCD" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyAtoBCD(child)}}></i>
-                      : null
-                      )
-                    :null
-                  
-                  )}
-
-
-                </td>
-                <td>
-                  {(item.remarks.includes(REMARKS.DBLTHICK) ?
-                      (item.doubleThickSides.includes('B') ? 
-                      <WorkOrderEdgeBand item={child} material={this.props.material} setMaterialTab={this.props.setMaterialTab} ebOptions={childEBOptions} EBvalue={child.eb_b} EBname="eb_b" onChange={this.onChildValueChange} />
-                      : 0
-                      )
-                    :0
-                  
-                  )}
-                </td>
-                <td>
-                  {(item.remarks.includes(REMARKS.DBLTHICK) ?
-                      (item.doubleThickSides.includes('C') ? 
-                      <WorkOrderEdgeBand item={child} material={this.props.material} setMaterialTab={this.props.setMaterialTab} ebOptions={childEBOptions} EBvalue={child.eb_c} EBname="eb_c" onChange={this.onChildValueChange} />
-                      : 0
-                      )
-                    :0
-                  
-                  )}
-                </td>
-                <td>
-                  {(item.remarks.includes(REMARKS.DBLTHICK) ?
-                      (item.doubleThickSides.includes('D') ? 
-                      <WorkOrderEdgeBand item={child} material={this.props.material} setMaterialTab={this.props.setMaterialTab} ebOptions={childEBOptions} EBvalue={child.eb_d} EBname="eb_d" onChange={this.onChildValueChange} />
-                      : 0
-                      )
-                    :0
-                  
-                  )}
-                </td>
-                <td><input type="text" className="form-control input-xs" value={child.comments}  id="comments"  name="comments" onChange={(e) => {this.onChildValueChange(e,child.childNumber, item.itemnumber)}}  /></td>
-                <td></td>
-              </tr>
-              );
-            })}
+            
 
           </tbody>
             )   

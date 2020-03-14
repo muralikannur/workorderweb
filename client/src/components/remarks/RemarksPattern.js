@@ -4,7 +4,7 @@ import $ from 'jquery';
 import { REMARKS, PATTERN_TYPE, PATTERN_CODE} from '../../constants';
 import { notify_error } from '../../Utils/commonUtls';
 import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
-
+import { getNewWoItem, getEBThickness }  from '../../Utils/woUtils';
 class RemarksPattern extends Component {
  
   constructor(props){
@@ -13,7 +13,8 @@ class RemarksPattern extends Component {
       patternBoardCode:0,
       patternType:0,
       splitsCount:0,
-      patternSplits:[]
+      patternSplits:[],
+      eb_a:0,eb_b:0,eb_c:0,eb_d:0
 
 
     }
@@ -21,6 +22,7 @@ class RemarksPattern extends Component {
     this.boardWidth = 0;
   }
   componentDidMount(){
+    console.log('Patern - mount');
     setTimeout(() => {
       this.updateState();
     },200
@@ -28,10 +30,19 @@ class RemarksPattern extends Component {
   }
 
   updateState() {
-    if(this.props.item != null){
-      this.setState({ patternType : this.props.item.patternType })
-      this.setState({ patternSplits : this.props.item.patternSplits })
-      this.setState({ splitsCount : this.props.item.patternSplits.length })
+    if(this.props.item){
+      const item = this.props.item;
+      this.setState({ patternType : item.patternType })
+      this.setState({ patternSplits : item.patternSplits })
+      this.setState({ splitsCount : item.patternSplits.length })
+
+      if(this.props.material.edgebands){
+        const edgebands = this.props.material.edgebands;
+        this.setState({ eb_a : getEBThickness(item.eb_a,edgebands)});
+        this.setState({ eb_b : getEBThickness(item.eb_b,edgebands)});
+        this.setState({ eb_c : getEBThickness(item.eb_c,edgebands)});
+        this.setState({ eb_d : getEBThickness(item.eb_d,edgebands)});
+      }
       
     }
   }
@@ -40,8 +51,15 @@ class RemarksPattern extends Component {
     this.setState({patternBoardCode:e.target.value});
   }
 
+  onPatternLaminateCodeChange = (e,splitId) => {
+    let splitToModify = this.state.patternSplits.find(s => s.id == splitId);
+    let splitUnModified = this.state.patternSplits.filter(s => s.id != splitId);
+    splitToModify.code = e.target.value;
+    this.setState({patternSplits:[...splitUnModified, splitToModify]});
+  }
+
   onChange = (e,splitId) => {
-    const { value, name } = e.target;
+    let { value, name } = e.target;
 
     if(name == 'patternType'){
       this.setState({patternType:value});
@@ -54,25 +72,14 @@ class RemarksPattern extends Component {
         }
       } 
 
-      let itemHeight = parseInt(this.props.item.height);
-      let splitHeight = Math.floor(itemHeight / value)
-      let splits = new Array(parseInt(value)).fill(null).map((a,i)=> ({id: i+1,code:0,height:splitHeight}))
+      let splits = new Array(parseInt(value)).fill(null).map((a,i)=> ({id: i+1,code:0,height:0}))
 
       this.setState({patternSplits:splits});
       this.setState({ splitsCount : splits.length })
       
     }
 
-    if(name == 'code'){
-      let splitToModify = this.state.patternSplits.find(s => s.id == splitId);
-      let splitUnModified = this.state.patternSplits.filter(s => s.id != splitId);
-      splitToModify.code = value;
-      this.setState({patternSplits:[...splitUnModified, splitToModify]});
-    }
 
-    // if(name == 'patternBoardCode'){
-    //   this.setState({patternBoardCode:value});
-    // }
     
     if(name == 'height'){
 
@@ -130,42 +137,25 @@ class RemarksPattern extends Component {
       remarks.push(REMARKS.PATTERN);
     }
 
-    const patternBoard = {
+    let patternBoard = getNewWoItem(); 
+
+    patternBoard = {...patternBoard,
       itemnumber:0,
       parentId:this.props.item.itemnumber,
-      itemtype:'',
       height:this.boardHeight,
       width:this.boardWidth,
       quantity:this.props.item.quantity,
-      eb_a:0,
-      eb_b:0,
-      eb_c:0,
-      eb_d:0,
       code:this.state.patternBoardCode,
-      remarks:[],
-      profileNumber:0,
-      doubleThickWidth:0,
-      ledgeType:0,
-      shapeDetails:'',
-      patternType:0,
-      glassWidth:0,
-      patternSplits:[],
-      patternBoardCode:0
+      childNumber:1
     }
 
-    let eb_a = 0;
-    let eb_b = 0;
-    let eb_c = 0;
-    let eb_d = 0;
-
-    if(this.props.item.eb_a) eb_a = parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_a).eb_thickness || 0);
-    if(this.props.item.eb_b) eb_b =parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_b).eb_thickness || 0);
-    if(this.props.item.eb_c) eb_c = parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_c).eb_thickness || 0);
-    if(this.props.item.eb_d) eb_d = parseFloat(this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_d).eb_thickness || 0);
-
+    let eb_a = this.state.eb_a;
+    let eb_b = this.state.eb_b;
+    let eb_c = this.state.eb_c;
+    let eb_d = this.state.eb_d;
 
     let splitItems = [];
-    this.state.patternSplits.map(p => {
+    this.state.patternSplits.map((p,index) => {
 
       let height = parseInt(p.height);
       if(p.id == 1){
@@ -175,7 +165,9 @@ class RemarksPattern extends Component {
         height = Math.ceil(height + 5 - eb_d);
       }
 
-      let splitItem = {...patternBoard,code:p.code, height, width:this.boardWidth} ;
+      let splitItem = JSON.parse(JSON.stringify(patternBoard));
+
+      splitItem = {...splitItem,code:p.code, height, width:this.boardWidth, childNumber: index+2} ;
       splitItems.push(splitItem);
     })
 
@@ -186,6 +178,7 @@ class RemarksPattern extends Component {
     this.props.saveItems(items);
     //this.props.setCurrentItem(newItem);
     $('#btnRemarksClose').click();
+
   }
   render() {
 
@@ -195,22 +188,10 @@ class RemarksPattern extends Component {
     let heightEB = 0;
     let widthEB = 0;
 
-    let eb_a = this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_a);
-    if(eb_a){
-      widthEB += Math.round(eb_a.eb_thickness);
-    }
-    let eb_c = this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_c);
-    if(eb_c){
-      widthEB += Math.round(eb_c.eb_thickness);
-    }
-    let eb_b = this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_b);
-    if(eb_b){
-      heightEB += Math.round(eb_b.eb_thickness);
-    } 
-    let eb_d = this.props.material.edgebands.find(eb => eb.materialEdgeBandNumber == this.props.item.eb_d);
-    if(eb_d){
-      heightEB += Math.round(eb_d.eb_thickness);
-    } 
+    widthEB += Math.round(this.state.eb_a);
+    widthEB += Math.round(this.state.eb_c);
+    heightEB += Math.round(this.state.eb_b);
+    heightEB += Math.round(this.state.eb_d);
 
     this.boardHeight = itemHeight + 10 - heightEB;
     this.boardWidth = itemWidth + 10 - widthEB;
@@ -232,56 +213,26 @@ class RemarksPattern extends Component {
     return(
       <div>
           <div>
-            <span style={{fontSize:"12px", float:"right"}}><b>Cutting Size:</b> Height: {this.boardHeight} &nbsp;  Width: {this.boardWidth}</span>
-            <div className="form-group" style={{marginBottom:"0px"}}>
-              <b>Material: </b>
-              <MaterialCodeDropDown onChange={this.onPatternBoardCodeChange} item={this.props.item} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} />
-
-              
-              {/* <select id="code" onChange={this.onChange}  name="patternBoardCode" value={this.state.patternBoardCode} className="js-example-basic-single input-xs  w-100">
-              <option value="0">Select the Material</option>  
-              {
-                this.props.material.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1 : -1).map( (m) => {
-                const b = this.props.material.boards.find(i => i.boardNumber == m.board);
-                const fl = this.props.material.laminates.find(i => i.laminateNumber == m.front_laminate);
-                const bl = this.props.material.laminates.find(i => i.laminateNumber == m.back_laminate);
-
-                let matText = '[' + m.materialCodeNumber + '] ' + (m.board == 0 ? 'No Board' : 'B: ' + b.type + ' - ' + b.thickness + 'mm (' + b.height + ' x ' +  b.width + ') - ' + b.grains);
-                matText += (m.front_laminate == 0 ? '' : ', FL: ' + fl.code + ' - ' + fl.thickness + 'mm - ' + fl.grains);
-                matText += (m.back_laminate == 0 ? '' : ', BL: ' + bl.code + ' - ' + bl.thickness + 'mm - ' + bl.grains);
-
-                return (
-                  <option value={m.materialCodeNumber} key={m.materialCodeNumber} >{matText}</option>
-                )})}
-                <option value="{PATTERN_CODE}">PATTERN</option>
-              </select> */}
-
-            </div>
+            {/* <span style={{fontSize:"12px", float:"right"}}><b>Cutting Size:</b> Height: {this.boardHeight} &nbsp;  Width: {this.boardWidth}</span> */}
 
 
-            <table>
-            <tr>
-                <td>
-                </td>
-                <td>
-
-                </td>
-              </tr>
-            </table>
-
-            <table>
+            <table style={{fontSize:"11px"}}>
 
               <tr>
-                <td>
-                  <b>Pattern Type</b>
+                <td  style={{width:"30%"}}>
+                  Board
+                  <MaterialCodeDropDown onChange={this.onPatternBoardCodeChange} codeValue={this.state.patternBoardCode} item={this.props.item} material={this.props.material} excludeOnlyLaminate={true} />
+                </td>
+                <td style={{width:"30%"}}>
+                  Pattern Type
                   <select style={{width:"150px"}}  id="patternType" name="patternType" value={this.state.patternType}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
                   <option value="0"  >Select</option>
                   <option value={PATTERN_TYPE.HORIZONTAL} >HORIZONTAL</option>
                   <option value={PATTERN_TYPE.VERTICAL} >VERTICAL</option>
                   </select>  
                 </td>
-                <td>
-                  <b>Number of Splits</b>
+                <td style={{width:"30%"}}>
+                  Number of Laminates
                   <select style={{width:"150px"}}  id="splitsCount" name="splitsCount" value={this.state.splitsCount}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
                   <option value="0">Select</option>
                   {
@@ -299,8 +250,9 @@ class RemarksPattern extends Component {
 
               <tr>
                 <td  style={{width:"40%"}}>
-                  <table className="table  table-striped"  style={{width:"100%", fontSize:"10px"}}>
-                    <tr style={{fontWeight:"bold"}}>
+
+                  <table  className="table  table-striped"  style={{ width:"100%", fontSize:"10px", border:"#ccc 1px solid", display:`${this.state.patternSplits.length > 0 ? "block" : "none"}`}}>
+                    <tr style={{backgroundColor:"#ccc"}}>
                       <td>#</td><td>Laminate</td><td style={{width:"10px"}}>Height</td>
                     </tr>
                   
@@ -309,17 +261,8 @@ class RemarksPattern extends Component {
                       return <tr>
                         <td>{pattern.id}</td>
                         <td>
-                        <MaterialCodeDropDown onChange={this.onPatternBoardCodeChange} item={this.props.item} material={this.props.material} onlyLaminate={true} />
+                        <MaterialCodeDropDown codeValue={pattern.code} onChange={(e) => this.onPatternLaminateCodeChange(e,pattern.id)} item={this.props.item} material={this.props.material} onlyLaminate={true} />
 
-                          {/* <select  onChange={(e) => this.onChange(e,pattern.id)} value={pattern.code}  id="code" name="code" className="js-example-basic-single input-xs  w-100">
-                            <option value="0">Select the Code</option>
-                            {
-                            mCodes.map( (mc) => {
-                            return (
-                              <option value={mc.materialCodeNumber}  key={mc.materialCodeNumber} >{this.props.material.laminates.find(l => l.laminateNumber == mc.front_laminate).code}</option>
-                            )})
-                            }
-                          </select> */}
                         </td>
                         <td>
                           <input type="text"  onChange={(e) => this.onChange(e,pattern.id)} className="form-control input-xs" maxLength="4" value={pattern.height}  id="height"  name="height"  />
@@ -327,22 +270,39 @@ class RemarksPattern extends Component {
                       </tr>
                     })
                   }
-                    <tr>
-                      <td></td><td>Total</td><td>{totalSliptHeight}</td>
+                    <tr  style={{backgroundColor:"#ccc"}}>
+                      <td></td><td >Balance</td><td>{parseInt(this.props.item.height) - totalSliptHeight}</td>
                     </tr>
                   </table>
 
                 </td>
-                <td style={{width:"60%", textAlign:"center"}}>
-                <div style={{border:"maroon 1px solid",borderBottom:"#eee 0px solid", margin:"0 auto",width:`${previewWidth}px`, height:`${previewHeight}px`}}>
-                  {
-                    this.state.patternSplits.filter(s => s.height > 0).map(split => {
-                      let sHeight = Math.ceil(parseInt(split.height) / 10)
-                      let color = split.code == "0" ? '#fff' : colors[mCodes.findIndex(mc => mc.materialCodeNumber == split.code)];
-                      return <div style={{borderBottom:"maroon 1px solid",width:"100%", height:`${sHeight}px`, backgroundColor:`${color}`}}></div>
-                    })
-                  }
-                </div>
+                <td style={{width:"60%"}}>
+                  <table style={{float:"right"}}>
+                    <tr>
+                      <td style={{textAlign:"center"}}><span style={{fontSize:'10px'}}>{this.props.item.width}</span></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div style={{border:"maroon 1px solid", margin:"0 auto",width:`${previewWidth}px`, height:`${previewHeight}px`}}>
+                          {
+                            this.state.patternSplits.filter(s => s.height > 0).map(split => {
+                              let sHeight = Math.ceil(parseInt(split.height) / 10)
+                              let color = split.code == "0" ? '#fff' : colors[mCodes.findIndex(mc => mc.materialCodeNumber == split.code)];
+                              return <div style={{borderBottom:"maroon 1px solid",width:"100%", height:`${sHeight}px`, backgroundColor:`${color}`}}></div>
+                            })
+                          }
+                        </div>
+
+                      </td>
+                      <td> <span style={{fontSize:'10px'}}>{this.props.item.height}</span></td>
+                    </tr>
+                  </table>
+
+
+
+
+
                 </td>
 
               </tr>

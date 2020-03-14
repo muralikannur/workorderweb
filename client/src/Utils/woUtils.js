@@ -10,11 +10,28 @@ export const getMaterialText = (m, material) =>{
   const fl = material.laminates.find(i => i.laminateNumber == m.front_laminate);
   const bl = material.laminates.find(i => i.laminateNumber == m.back_laminate);
 
-  let matText = '[' + m.materialCodeNumber + '] ' + (m.board == 0 ? 'No Board' : 'B: ' + b.type + ' - ' + b.thickness + 'mm (' + b.height + ' x ' +  b.width + ') - ' + b.grains);
-  matText += (m.front_laminate == 0 ? '' : ', FL: ' + fl.code + ' - ' + fl.thickness + 'mm - ' + fl.grains);
-  matText += (m.back_laminate == 0 ? '' : ', BL: ' + bl.code + ' - ' + bl.thickness + 'mm - ' + bl.grains);
+  let matText = '[' + m.materialCodeNumber + '] ' + (m.board == 0 || !b ? 'No Board' : 'B: ' + b.type + ' - ' + b.thickness + 'mm (' + b.height + ' x ' +  b.width + ') - ' + b.grains);
+  matText += (m.front_laminate == 0 || !fl ? '' : ', FL: ' + fl.code + ' - ' + fl.thickness + 'mm - ' + fl.grains);
+  matText += (m.back_laminate == 0 || !bl ? '' : ', BL: ' + bl.code + ' - ' + bl.thickness + 'mm - ' + bl.grains);
   return matText;
 }
+
+export const getEBText = (id, edgebands) => {
+  const eb = edgebands.find(e => e.materialEdgeBandNumber = id);
+  if(eb){
+    return eb.eb_thickness + ' - ' + eb.eb_width;
+  }
+  return '';
+}
+export const getEBThickness = (id, edgebands) => {
+  const eb = edgebands.find(e => e.materialEdgeBandNumber = id);
+  if(eb){
+    return parseFloat(eb.eb_thickness);
+  }
+  return 0;
+}
+
+
 
 export const getRemarkData = (id, item, material) =>{
     let remarkData = '';

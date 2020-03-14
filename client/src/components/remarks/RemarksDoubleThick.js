@@ -2,7 +2,6 @@ import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 import { REMARKS, EB_START_NUMBER, PROFILE_TYPE} from '../../constants';
-import { stringify } from 'querystring';
 import { notify_error, notify_success, isEmptyOrSpaces }  from '../../Utils/commonUtls';
 import { setDoubleThick }  from '../../Utils/remarksUtils';
 import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
@@ -47,32 +46,6 @@ class RemarksDoubleThick extends Component {
     this.setState({[name]:value});
   }
 
-  // getEdgeBandNumber(){
-
-  //   let mat = this.props.material.materialCodes.find(m => m.materialCodeNumber == this.state.doubleThickCode );
-  //   if(mat){
-
-  //     let lam = this.props.material.laminates.find(l => l.laminateNumber == mat.front_laminate);
-  //     if(lam){
-  //       let edgeband = this.props.material.edgebands.find(eb => eb.laminate == lam.laminateNumber && eb.eb_thickness == 0.45);
-  //       if(edgeband) return edgeband.materialEdgeBandNumber;
-  //     }
-  //     let board = this.props.material.boards.find(b => b.boardNumber == mat.board);
-  //     if(board){
-  //       let edgeband = this.props.material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.BOARD + parseInt(board.boardNumber)  && eb.eb_thickness == 0.45);
-  //       if(edgeband) return edgeband.materialEdgeBandNumber;
-  //     }  
-
-  //     let eProfile = this.props.material.profiles.find(p => p.type == PROFILE_TYPE.E);
-  //     if(eProfile){
-  //       let edgeband = this.props.material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(eProfile.profileNumber)  && eb.eb_thickness == 0.45);
-  //       if(edgeband) return edgeband.materialEdgeBandNumber;
-  //     }      
-      
-     
-  //   }
-  // }
- 
   UpdateRemark(){
     if(parseInt(this.state.doubleThickWidth) < 50){
       notify_error('Width cannot be less than 50');
@@ -82,12 +55,6 @@ class RemarksDoubleThick extends Component {
       notify_error('Select the Material for the Double Thick');
       return;
     }
-    
-    //  let ebNumber = this.getEdgeBandNumber();
-    // if(ebNumber == 0){
-    //   notify_error('No Edge Band defined with 0.45 thickness');
-    //   return;
-    // }
 
     let dblSides = "";
     if(this.state.A) dblSides += "A";
@@ -112,6 +79,7 @@ class RemarksDoubleThick extends Component {
     const {eb_a, eb_b, eb_c, eb_d, height, width, quantity} = newItem;
     newItem1 = {...newItem1, 
       itemnumber:0, 
+      childNumber:1,
       code:this.state.doubleThickCode,
       parentId:this.props.item.itemnumber,
       eb_a, eb_b, eb_c, eb_d, height, width, quantity
@@ -144,23 +112,6 @@ class RemarksDoubleThick extends Component {
     $('#btnRemarksClose').click();
   }
 
-  
-
-  getMaterialText(m){
-
-    if(!isEmptyOrSpaces(m.shortname)) return '[' + m.materialCodeNumber + '] ' + m.shortname;
-
-    const b = (m.board != 0 ? this.props.material.boards.find(i => i.boardNumber == m.board) : null);
-    const fl =(m.front_laminate != 0 ?  this.props.material.laminates.find(i => i.laminateNumber == m.front_laminate): null);
-    const bl = (m.back_laminate != 0 ? this.props.material.laminates.find(i => i.laminateNumber == m.back_laminate): null);
-
-    let matText = '[' + m.materialCodeNumber + '] ' + (m.board == 0 ? 'No Board' : 'B: ' + b.type + ' - ' + b.thickness + 'mm (' + b.height + ' x ' +  b.width + ') - ' + b.grains);
-    matText += (m.front_laminate == 0 ? '' : ', FL: ' + fl.code + ' - ' + fl.thickness + 'mm - ' + fl.grains);
-    matText += (m.back_laminate == 0 ? '' : ', BL: ' + bl.code + ' - ' + bl.thickness + 'mm - ' + bl.grains);
-    return matText;
-  }
-
-
   render() {
 
     
@@ -181,16 +132,7 @@ class RemarksDoubleThick extends Component {
               <tr>
                 <td>
                   <h5>Material</h5>
-                  <div className="form-group" style={{marginBottom:"0px"}}>
-                      <select id="childcode" onChange={this.onChange}  value={this.state.doubleThickCode}  name="doubleThickCode" className="js-example-basic-single input-xs  w-100">
-                      {
-                        this.props.material.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1 : -1).map( (m) => {
-                        let matText =  this.getMaterialText(m);
-                        return (
-                          <option value={m.materialCodeNumber} key={m.materialCodeNumber} >{matText}</option>
-                        )})}
-                      </select>
-                    </div>
+                  <MaterialCodeDropDown onChange={this.onChange} codeName="doubleThickCode" codeValue={this.state.doubleThickCode} item={this.props.item} material={this.props.material}  excludeOnlyLaminate={true} /> 
                 </td>
                 <td>
                   <h5>Width</h5>
@@ -204,31 +146,31 @@ class RemarksDoubleThick extends Component {
             <hr />
             
             <table>
-                        <tbody>
-                          <tr>
-                            <td></td>
-                            <td style={{ textAlign: "center", verticalAlign: "bottom" }}><b>B</b> - {this.width} <input type="checkbox" id = "dblB" checked={this.state.B} onClick={() => {this.setState({ B : !this.state.B })}} /></td>
-                            <td></td>
-                          </tr>
-                          <tr>
-                            <td style={{ textAlign: "right", verticalAlign: "middle" }}><b>A</b> - {this.height} <input type="checkbox" id = "dblA" checked={this.state.A} onClick={() => {this.setState({ A : !this.state.A })}} /></td>
-                            <td>
-                              <div style={{
-                                margin: "0 auto",
-                                width: `${Math.round(this.width / 10)}px`,
-                                height: `${Math.round(this.height / 10)}px`,
-                                border: '#555 1px solid'
-                              }}></div>
-                            </td>
-                            <td style={{ textAlign: "left", verticalAlign: "middle" }}><b>C</b> - {this.height} <input type="checkbox" id = "dblC" checked={this.state.C} onClick={() => {this.setState({ C : !this.state.C })}} /></td>
-                          </tr>
-                          <tr>
-                            <td></td>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}><b>D</b> - {this.width} <input type="checkbox" id = "dblD" checked={this.state.D} onClick={() => {this.setState({ D : !this.state.D })}} /></td>
-                            <td></td>
-                          </tr>
-                        </tbody>
-                      </table>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td style={{ textAlign: "center", verticalAlign: "bottom" }}><b>B</b> - {this.width} <input type="checkbox" id = "dblB" checked={this.state.B} onClick={() => {this.setState({ B : !this.state.B })}} /></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td style={{ textAlign: "right", verticalAlign: "middle" }}><b>A</b> - {this.height} <input type="checkbox" id = "dblA" checked={this.state.A} onClick={() => {this.setState({ A : !this.state.A })}} /></td>
+                  <td>
+                    <div style={{
+                      margin: "0 auto",
+                      width: `${Math.round(this.width / 10)}px`,
+                      height: `${Math.round(this.height / 10)}px`,
+                      border: '#555 1px solid'
+                    }}></div>
+                  </td>
+                  <td style={{ textAlign: "left", verticalAlign: "middle" }}><b>C</b> - {this.height} <input type="checkbox" id = "dblC" checked={this.state.C} onClick={() => {this.setState({ C : !this.state.C })}} /></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td style={{ textAlign: "center", verticalAlign: "top" }}><b>D</b> - {this.width} <input type="checkbox" id = "dblD" checked={this.state.D} onClick={() => {this.setState({ D : !this.state.D })}} /></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
             
             <br />
             <div className="modal-footer" style={{paddingTop:"0px",paddingBottom:"5px",display:"block", textAlign:"right"}}>
