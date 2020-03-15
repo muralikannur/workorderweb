@@ -90,7 +90,7 @@ showWorkOrders = (customer) => {
                       <td onClick={() => {this.showWorkOrders(cl)}}  >{cl.customercode}</td>
                       <td onClick={() => {this.showWorkOrders(cl)}}>{cl.contactperson}</td>
                       <td onClick={() => {this.showWorkOrders(cl)}}>{cl.phone}</td>
-                      <td onClick={() => {this.editCustomer(cl)}}><i class="icon-doc" ></i></td>
+                      <td onClick={() => {this.editCustomer(cl)}}><i className="icon-doc" ></i></td>
                     </tr>
                   )})}
                 </tbody>

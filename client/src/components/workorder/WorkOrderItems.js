@@ -339,7 +339,7 @@ class WorkOrderItems extends Component {
                 <th> &nbsp; </th>
             </tr>
           </thead>
-          {this.getSortedItems().map( (item) => {
+          {this.getSortedItems().map( (item, i) => {
 
           //EDGE BAND OPTIONS----------------------------------------------------------------  
           let ebOptions = [{
@@ -372,23 +372,27 @@ class WorkOrderItems extends Component {
               if(mat){
                 const laminate = this.props.material.edgebands.filter(eb => eb.laminate == mat.front_laminate );
                 const board = this.props.material.edgebands.filter(eb => eb.laminate == parseInt(mat.board) + EB_START_NUMBER.BOARD);
+                console.log(board)
                 
                 if(laminate || board){
-                  ebOptions = [ebOptions, ...laminate, ...board];
+                  ebOptions = [...ebOptions, ...laminate, ...board];
                 }
               } else if(item.code == PATTERN_CODE){
-                ebOptions = [ebOptions, ...this.props.material.edgebands];
+                ebOptions = [...ebOptions, ...this.props.material.edgebands];
               }
             }
           }
+
+          
+          console.log(ebOptions);
 
           let handleProfile = this.props.material.profiles.find(p => p.profileNumber == item.profileNumber)
           let childitems = this.state.woitems.filter(i => i.parentId == item.itemnumber)
            
 
           return (
-            <tbody>
-            <tr id={'item-row-' + item.itemnumber}  key={item.itemnumber}  onClick={(e) => this.onItemClick(e,item.itemnumber)} onMouseDown={(e) => this.onItemClick(e,item.itemnumber)} onKeyDown={(e) => this.onItemClick(e,item.itemnumber)} onFocus={(e) => this.onItemClick(e,item.itemnumber)} style={{backgroundColor:`${item.itemnumber == this.state.currentItem ? "#b5d1ff" : "#eee"}`}} >
+            <tbody key={item.itemnumber}>
+            <tr id={'item-row-' + item.itemnumber}    onClick={(e) => this.onItemClick(e,item.itemnumber)} onMouseDown={(e) => this.onItemClick(e,item.itemnumber)} onKeyDown={(e) => this.onItemClick(e,item.itemnumber)} onFocus={(e) => this.onItemClick(e,item.itemnumber)} style={{backgroundColor:`${item.itemnumber == this.state.currentItem ? "#b5d1ff" : "#eee"}`}} >
                 <td style={{fontWeight:"bold", textAlign:"center"}}>{item.itemnumber}</td>
                 <td>
                   <MaterialCodeDropDown onChange={this.onChange} item={item} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} />

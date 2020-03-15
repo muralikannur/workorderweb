@@ -17,14 +17,14 @@ export const getMaterialText = (m, material) =>{
 }
 
 export const getEBText = (id, edgebands) => {
-  const eb = edgebands.find(e => e.materialEdgeBandNumber = id);
+  const eb = edgebands.find(e => e.materialEdgeBandNumber == id);
   if(eb){
     return eb.eb_thickness + ' - ' + eb.eb_width;
   }
   return '';
 }
 export const getEBThickness = (id, edgebands) => {
-  const eb = edgebands.find(e => e.materialEdgeBandNumber = id);
+  const eb = edgebands.find(e => e.materialEdgeBandNumber == id);
   if(eb){
     return parseFloat(eb.eb_thickness);
   }

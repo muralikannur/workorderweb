@@ -1,5 +1,7 @@
 
 import { notify_error }  from './commonUtls';
+import { getEBThickness }  from '../Utils/woUtils';
+
 export const setDoubleThick = (dblThkSides, item, newItem1, newItem2, doubleThickWidth) => {
 
     var A = dblThkSides.includes("A")|| false;
@@ -50,4 +52,27 @@ export const setDoubleThick = (dblThkSides, item, newItem1, newItem2, doubleThic
 
     return true;
 
+  }
+
+  export const getPatternBoardSize = (item,edgebands) => {
+    let itemHeight =parseInt(item.height);
+    let itemWidth = parseInt(item.width);
+
+    let eb_a = getEBThickness(item.eb_a,edgebands);
+    let eb_b = getEBThickness(item.eb_b,edgebands);
+    let eb_c = getEBThickness(item.eb_c,edgebands);
+    let eb_d = getEBThickness(item.eb_d,edgebands);
+
+    let heightEB = 0;
+    let widthEB = 0;
+
+    widthEB += Math.round(eb_a);
+    widthEB += Math.round(eb_c);
+    heightEB += Math.round(eb_b);
+    heightEB += Math.round(eb_d);
+
+    let height = itemHeight + 10 - heightEB;
+    let width = itemWidth + 10 - widthEB;
+
+    return {height, width}
   }

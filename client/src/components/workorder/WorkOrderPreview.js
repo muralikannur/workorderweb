@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { edgeBandThickness } from '../../appConfig';
 import { numberWithCommas } from '../../Utils/commonUtls';
 import { getEBThickness }  from '../../Utils/woUtils';
+import { PATTERN_CODE} from '../../constants';
 
 class WorkOrderPreview extends Component {
 
@@ -14,7 +15,7 @@ class WorkOrderPreview extends Component {
   render() {
 
     if(!this.props.item) return null;
-    if(this.props.item.code == 1000) return null;
+    if(this.props.item.code == PATTERN_CODE) return null;
 
 
     this.marginL = getEBThickness(this.props.item.eb_a,this.props.material.edgebands);
@@ -48,7 +49,7 @@ class WorkOrderPreview extends Component {
     this.eb.set(this.marginB, this.eb.get(this.marginB) + (this.width * this.qty));
 
     this.bg = ''
-    if(this.props.item && this.props.item.code != 0 && this.props.item.code != 100 && this.props.material.materialCodes && this.props.material.materialCodes.length > 0){
+    if(this.props.item && this.props.item.code != 0 && this.props.item.code != PATTERN_CODE && this.props.material.materialCodes && this.props.material.materialCodes.length > 0){
       let mCode = this.props.material.materialCodes.find(m => m.materialCodeNumber == this.props.item.code);
       let board = this.props.material.boards.find(b => b.boardNumber == mCode.board);
       let laminate = this.props.material.laminates.find(l => l.laminateNumber == mCode.front_laminate);
@@ -81,14 +82,14 @@ class WorkOrderPreview extends Component {
             <div className="card-body" style={{ padding: "0px" }}>
               <div className="w-100 mx-auto">
                 <div className="card-body d-flex py-0" style={{ padding: "0px" }}>
-                  {(!this.props.item || this.props.item.itemnumber == 0 || this.props.item.code == 100) ? <div style={{ margin: "30px", color: "#ccc" }}>NO PREVIEW</div> :
+                  {(!this.props.item || this.props.item.itemnumber == 0 || this.props.item.code == PATTERN_CODE) ? <div style={{ margin: "30px", color: "#ccc" }}>NO PREVIEW</div> :
                     <div className="previewItem">
 
                       <span style={{ fontSize:"12px", color:"maroon" }}>  &nbsp; 
                         <b>H</b>: {this.height - (this.marginT + this.marginB)} &nbsp; 
                         <b>W</b>: {this.width - (this.marginL + this.marginR)}  &nbsp;  &nbsp;
-                        <b>EB</b>: {Array.from(this.eb).map((k) => {
-                          return (k[0] == 0 || k[1] == 0 ? null : <span>&nbsp;{numberWithCommas(k[1])}(<b>{k[0]}</b>), &nbsp;</span> ) })} 
+                        <b>EB</b>: {Array.from(this.eb).map((k,i) => {
+                          return (k[0] == 0 || k[1] == 0 ? null : <span key={i}>&nbsp;{numberWithCommas(k[1])}(<b>{k[0]}</b>), &nbsp;</span> ) })} 
 
                       </span>
 

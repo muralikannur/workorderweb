@@ -132,15 +132,16 @@ class MaterialEdgeBand extends Component {
               <th style={{width:"80%", backgroundColor:"#ddd"}}> Edge Bands</th>
         </tr> */}
 
-        
+        <tbody>
 
         {
-            this.props.material.laminates.sort((a,b) => a.laminateNumber > b.laminateNumber ? 1  : -1 ).map( (laminate) => {
+            this.props.material.laminates.sort((a,b) => a.laminateNumber > b.laminateNumber ? 1  : -1 ).map( (laminate, lNo) => {
             return (
-            <tr >
+            <tr key={lNo}>
               <td style={{backgroundColor:"#eee", lineHeight:"2", padding:"5px", border:"#ccc 1px solid", textAlign:"left"}}>LAMINATE <br/>{laminate.laminateNumber}: {laminate.code} {laminate.thickness} mm ({laminate.grains})</td>
               <td>   
                   <table className="table" style={{width:"300px"}}>
+                    <tbody>
                   <tr  style={{lineHeight:"1", fontWeight:"normal"}}>
                         <th style={{width:"5%"}}>#</th>
                         <th style={{width:"40%"}}> Thickness</th>
@@ -149,7 +150,7 @@ class MaterialEdgeBand extends Component {
                   </tr>
                   {this.state.materialEdgeBands.filter(eb => eb.laminate == laminate.laminateNumber).sort((a,b) => a.materialEdgeBandNumber > b.materialEdgeBandNumber ? 1  : -1 ).map( (materialEdgeBand, i) => {
                   return (
-                  <tr  id={'mat-row-edgeband-' + materialEdgeBand.laminate + '-' + materialEdgeBand.materialEdgeBandNumber}   onClick={() => this.onItemClick(materialEdgeBand.materialEdgeBandNumber)}  style={{backgroundColor:this.isUsed(materialEdgeBand.materialEdgeBandNumber)?'yellow':'#fff'}}>
+                  <tr  key={i} id={'mat-row-edgeband-' + materialEdgeBand.laminate + '-' + materialEdgeBand.materialEdgeBandNumber}   onClick={() => this.onItemClick(materialEdgeBand.materialEdgeBandNumber)}  style={{backgroundColor:this.isUsed(materialEdgeBand.materialEdgeBandNumber)?'yellow':'#fff'}}>
                       <td style={{textAlign:"center"}}>{i + 1}</td>
                       <td>
                           <div className="form-group" style={{marginBottom:"0px"}}>
@@ -180,6 +181,7 @@ class MaterialEdgeBand extends Component {
 
                   </tr>)
                   })} 
+                  </tbody>
                 </table>
 
                 <span id="btnAddItem" className="btn btn-xs btn-rounded btn-outline-success mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold"}} onClick={()=>{this.addItem(laminate.laminateNumber)}}> Add </span>
@@ -191,12 +193,13 @@ class MaterialEdgeBand extends Component {
 
 
 {
-            this.props.material.boards.filter(b => b.allowEdgeBand).sort((a,b) => a.boardNumber > b.boardNumber ? 1  : -1 ).map( (board) => {
+            this.props.material.boards.filter(b => b.allowEdgeBand).sort((a,b) => a.boardNumber > b.boardNumber ? 1  : -1 ).map( (board, bNo) => {
             return (
-            <tr >
+            <tr key={bNo}>
               <td style={{backgroundColor:"#eee", lineHeight:"2", padding:"5px", border:"#ccc 1px solid", textAlign:"left"}}>BOARD:<br />{board.boardNumber}: {board.type} {board.thickness} mm - ( {board.height} x {board.width}) - {board.grade} {board.company}</td>
               <td>   
                   <table className="table" style={{width:"300px"}}>
+                    <tbody>
                   <tr  style={{lineHeight:"1", fontWeight:"normal"}}>
                         <th style={{width:"5%"}}>#</th>
                         <th style={{width:"40%"}}> Thickness</th>
@@ -205,7 +208,7 @@ class MaterialEdgeBand extends Component {
                   </tr>
                   {this.state.materialEdgeBands.filter(eb => eb.laminate == parseInt(board.boardNumber) + EB_START_NUMBER.BOARD).sort((a,b) => a.materialEdgeBandNumber > b.materialEdgeBandNumber ? 1  : -1 ).map( (materialEdgeBand, i) => {
                   return (
-                  <tr  id={'mat-row-edgeband-' + materialEdgeBand.laminate + '-' + materialEdgeBand.materialEdgeBandNumber}   onClick={() => this.onItemClick(materialEdgeBand.materialEdgeBandNumber)}  style={{backgroundColor:this.isUsed(materialEdgeBand.materialEdgeBandNumber)?'yellow':'#fff'}}>
+                  <tr key={i}  id={'mat-row-edgeband-' + materialEdgeBand.laminate + '-' + materialEdgeBand.materialEdgeBandNumber}   onClick={() => this.onItemClick(materialEdgeBand.materialEdgeBandNumber)}  style={{backgroundColor:this.isUsed(materialEdgeBand.materialEdgeBandNumber)?'yellow':'#fff'}}>
                       <td style={{textAlign:"center"}}>{i + 1}</td>
                       <td>
                           <div className="form-group" style={{marginBottom:"0px"}}>
@@ -236,6 +239,7 @@ class MaterialEdgeBand extends Component {
 
                   </tr>)
                   })} 
+                  </tbody>
                 </table>
 
                 <span id="btnAddItem" className="btn btn-xs btn-rounded btn-outline-success mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold"}} onClick={()=>{this.addItem(parseInt(board.boardNumber) + EB_START_NUMBER.BOARD)}}> Add </span>
@@ -244,7 +248,7 @@ class MaterialEdgeBand extends Component {
             </tr>)
             })}
 
-
+        </tbody>
         </table>
 
 

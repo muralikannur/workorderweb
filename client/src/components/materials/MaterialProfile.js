@@ -148,9 +148,10 @@ class MaterialProfile extends Component {
 
         </tr>
         </thead>
-        {this.state.profiles.sort((a,b) => a.profileNumber > b.profileNumber ? 1  : -1 ).map( (profile) => {
+        <tbody>
+        {this.state.profiles.sort((a,b) => a.profileNumber > b.profileNumber ? 1  : -1 ).map( (profile, i) => {
         return (
-        <tr  id={'mat-row-profile' + profile.profileNumber}  onClick={() => this.onItemClick(profile.profileNumber)} onMouseDown={() => this.onItemClick(profile.profileNumber)} onKeyDown={() => this.onItemClick(profile.profileNumber)} onFocus={() => this.onItemClick(profile.profileNumber)} style={{backgroundColor:this.isUsed(profile.profileNumber)?'yellow':'#fff'}}>
+        <tr key={i} id={'mat-row-profile' + profile.profileNumber}  onClick={() => this.onItemClick(profile.profileNumber)} onMouseDown={() => this.onItemClick(profile.profileNumber)} onKeyDown={() => this.onItemClick(profile.profileNumber)} onFocus={() => this.onItemClick(profile.profileNumber)} style={{backgroundColor:this.isUsed(profile.profileNumber)?'yellow':'#fff'}}>
             <td>{profile.profileNumber}</td>
             <td>
                 <div className="form-group" style={{marginBottom:"0px"}}>
@@ -172,7 +173,7 @@ class MaterialProfile extends Component {
 
         </tr>)
         })}
-
+        </tbody>
         </table>
 
         <span id="btnAddItem" className="btn btn-xs btn-rounded btn-outline-success mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold"}} onClick={()=>{this.addItem()}}>Add Profile</span>

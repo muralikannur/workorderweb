@@ -3508,3 +3508,157 @@
 2020-03-14T11:52:28.088Z [api\workorder.js] info: [object Object] - undefined
 
 2020-03-14T11:53:39.475Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-14T12:01:34.797Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-14T12:01:35.846Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-14T12:17:44.265Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-14T12:17:45.296Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-14T12:17:54.716Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-14T12:20:00.680Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-14T12:20:02.621Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-14T12:29:08.239Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-14T12:50:16.907Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-14T12:59:36.724Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-14T12:59:37.783Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-14T13:08:37.366Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-14T13:08:38.392Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-14T13:09:54.363Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-14T13:10:51.090Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-14T13:14:33.358Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-14T13:14:34.408Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-14T13:17:00.956Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-14T13:17:01.997Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-14T13:17:45.554Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-14T13:17:46.613Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T06:23:01.473Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T06:23:02.522Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T06:27:08.624Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T06:34:27.533Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T06:34:28.594Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T06:36:14.764Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T06:36:15.862Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T06:37:33.667Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T06:37:34.715Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T06:43:36.578Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T06:43:37.622Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T06:57:02.519Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T06:57:03.616Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T06:59:02.200Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T06:59:03.240Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T07:01:55.154Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T07:01:56.192Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T07:11:07.200Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T07:11:08.277Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T07:16:50.324Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T07:16:51.363Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T07:19:42.537Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T07:19:43.586Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T08:24:35.595Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T08:24:36.641Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T08:29:27.117Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T08:32:18.836Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T08:32:21.582Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T08:32:59.998Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T08:38:00.633Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T08:40:25.971Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T08:46:05.849Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T08:57:21.738Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T08:57:32.308Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T09:31:54.498Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T09:31:55.541Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T09:33:22.861Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T09:33:23.891Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T09:33:33.625Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T09:33:34.665Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T09:33:56.212Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T09:33:57.293Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T09:34:18.760Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T09:34:34.130Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T09:38:44.182Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T09:39:35.443Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T09:41:27.762Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T09:47:20.936Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T09:47:21.981Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T09:48:56.324Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T10:19:03.335Z [api\workorder.js] info: [object Object] - undefined
+
+2020-03-15T10:24:18.387Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T10:24:19.460Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T11:03:20.388Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+
+2020-03-15T11:03:21.421Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+
+2020-03-15T11:03:59.432Z [workorderweb\server.js] info: Server started on port 5000 - undefined

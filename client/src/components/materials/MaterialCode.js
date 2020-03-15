@@ -120,9 +120,10 @@ class MaterialCode extends Component {
               <th style={{width:"5%"}}>  </th>
         </tr>
         </thead>
+        <tbody>
         {this.state.materialCodes.sort((a,b) => a.materialCodeNumber > b.materialCodeNumber ? 1  : -1 ).map( (materialCode, i) => {
         return (
-        <tr id={'mat-row-materialcode' + materialCode.materialCodeNumber}  onClick={() => this.onItemClick(materialCode.materialCodeNumber)} onMouseDown={() => this.onItemClick(materialCode.materialCodeNumber)} onKeyDown={() => this.onItemClick(materialCode.materialCodeNumber)} onFocus={() => this.onItemClick(materialCode.materialCodeNumber)} style={{backgroundColor:this.isUsed(materialCode.materialCodeNumber)?'yellow':'#fff'}}>
+        <tr key={i} id={'mat-row-materialcode' + materialCode.materialCodeNumber}  onClick={() => this.onItemClick(materialCode.materialCodeNumber)} onMouseDown={() => this.onItemClick(materialCode.materialCodeNumber)} onKeyDown={() => this.onItemClick(materialCode.materialCodeNumber)} onFocus={() => this.onItemClick(materialCode.materialCodeNumber)} style={{backgroundColor:this.isUsed(materialCode.materialCodeNumber)?'yellow':'#fff'}}>
             <td>{materialCode.materialCodeNumber}</td>
             <td>
                 <div className="form-group" style={{marginBottom:"0px"}}>
@@ -168,7 +169,7 @@ class MaterialCode extends Component {
 
         </tr>)
         })}
-
+        </tbody>
         </table>
 
         <span id="btnAddItem" className="btn btn-xs btn-rounded btn-outline-success mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold"}} onClick={()=>{this.addItem()}}>Add Material Code</span>

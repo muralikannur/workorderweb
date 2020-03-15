@@ -143,10 +143,11 @@ class MaterialBoard extends Component {
 
         </tr>
         </thead>
+        <tbody>
         {this.state.boards.sort((a,b) => a.boardNumber > b.boardNumber ? 1  : -1 ).map( (board, i) => {
         return (
 
-        <tr id={'mat-row-board' + board.boardNumber} onFocus={() => this.onItemClick(board.boardNumber)} onMouseDown={() => this.onItemClick(board.boardNumber)} onClick={() => this.onItemClick(board.boardNumber)} style={{backgroundColor:this.isUsed(board.boardNumber)?'yellow':'#fff'}}>
+        <tr key={i} id={'mat-row-board' + board.boardNumber} onFocus={() => this.onItemClick(board.boardNumber)} onMouseDown={() => this.onItemClick(board.boardNumber)} onClick={() => this.onItemClick(board.boardNumber)} style={{backgroundColor:this.isUsed(board.boardNumber)?'yellow':'#fff'}}>
             <td>{board.boardNumber}</td>
             <td>
                 <div className="form-group" style={{marginBottom:"0px"}}>
@@ -183,7 +184,7 @@ class MaterialBoard extends Component {
 
         </tr>)
         })}
-
+        </tbody>
         </table>
 
         <span id="btnAddItem" className="btn btn-xs btn-rounded btn-outline-success mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold"}} onClick={()=>{this.addItem()}}>Add Board</span>

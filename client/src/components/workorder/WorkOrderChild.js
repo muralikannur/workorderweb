@@ -41,13 +41,13 @@ class WorkOrderChild extends Component {
 
           return(
             this.props.childitems.sort((a,b) => a.childNumber > b.childNumber ? 1 : -1)
-              .map(child => {
+              .map((child,i) => {
 
                 let mCode = this.props.material.materialCodes.find(m => m.materialCodeNumber == child.code);
 
                 return(
               
-                <tr style={{backgroundColor:"#ddd", color:"#555", padding:"2px"}}>
+                <tr key={i} style={{backgroundColor:"#ddd", color:"#555", padding:"2px"}}>
                 <td style={{backgroundColor:"#fff"}}></td>
                 <td>
                 {editCode?

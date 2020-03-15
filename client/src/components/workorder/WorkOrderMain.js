@@ -4,11 +4,11 @@ import $ from 'jquery';
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { WO_STATUS,PATTERN_CODE } from './../../constants';
+import { WO_STATUS,PATTERN_CODE, PATTERN_TYPE } from './../../constants';
 
 import { REMARKS, PROFILE_TYPE, EB_START_NUMBER} from './../../constants';
 import { notify_error, notify_success, isEmptyOrSpaces }  from '../../Utils/commonUtls';
-import { setDoubleThick }  from '../../Utils/remarksUtils';
+import { setDoubleThick, getPatternBoardSize }  from '../../Utils/remarksUtils';
 
 //Components
 import WorkOrderItems from './WorkOrderItems';
@@ -183,19 +183,41 @@ class WorkOrderMain extends Component {
       return false;
     }
 
-    //UPDATE REMARKS - DOUBLE THICK
+    //************ REMARKS ***********************/
+    let isValid = true;
+    // DOUBLE THICK
     
     let itemsWithDblThick = items.filter(i => ( i.parentId == 0 && i.doubleThickWidth != 0 ));
     if(itemsWithDblThick.length > 0){
-      let isValid = true;
         itemsWithDblThick.map(i => {
           let child1 = items.find(c => ( c.parentId == i.itemnumber && c.childNumber == 1 ));
           let child2 = items.find(c => ( c.parentId == i.itemnumber && c.childNumber == 2 ));
-          if(!setDoubleThick(i.doubleThickSides,i,child1,child2,i.doubleThickWidth)) 
+          if(!setDoubleThick(i.doubleThickSides,i,child1,child2,i.doubleThickWidth)) {
+            notify_error('Error while setting Double Thick for Item #' + i.itemnumber);
             isValid = false;
+            return;
+          }
         })
-      if(!isValid) return false;
+        if(!isValid) return false;
     }
+
+    //UPDATE REMARKS - PATTERN
+    
+    let itemsWithPattern = items.filter(i => ( i.parentId == 0 && i.code == PATTERN_CODE ));
+    if(itemsWithPattern.length > 0){
+      itemsWithPattern.map(i => {
+          if(i.patternType == PATTERN_TYPE.HORIZONTAL){
+            let expectedSize = getPatternBoardSize(i, this.props.material.edgebands);
+            let patternBoard = items.find(c => ( c.parentId == i.itemnumber && c.childNumber == 1 ));
+            if(expectedSize.height != patternBoard.height || expectedSize.width != patternBoard.width){
+              notify_error('Please correct the Pattern size of Item #' + i.itemnumber);
+              isValid = false;
+              return;
+            }
+          }
+        })
+        if(!isValid) return false;
+    }    
     
 
     return true;
@@ -226,7 +248,7 @@ class WorkOrderMain extends Component {
             <div className="modal-content" style={{marginTop:"10px", zIndex:2}} >
               <div className="modal-header" style={{paddingTop:"2px",paddingBottom:"0px"}}>
                 <h5 className="modal-title">Material Definition for Work Order {this.props.wo.wonumber}</h5>
-                  <button id="btnCloseMaterialPopup" type="button" class="btn btn-light" data-dismiss="modal"> Back to Items <i class="icon-login"></i> </button>
+                  <button id="btnCloseMaterialPopup" type="button" className="btn btn-light" data-dismiss="modal"> Back to Items <i className="icon-login"></i> </button>
               </div>
               <div className="modal-body" style={{paddingBottom:"0px"}}>
                 <MaterialMain materialTab={this.props.materialTab} items={this.props.wo.woitems} material={this.props.material} />

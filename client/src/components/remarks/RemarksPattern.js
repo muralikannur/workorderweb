@@ -35,6 +35,7 @@ class RemarksPattern extends Component {
       this.setState({ patternType : item.patternType })
       this.setState({ patternSplits : item.patternSplits })
       this.setState({ splitsCount : item.patternSplits.length })
+      this.setState({ patternBoardCode : item.patternBoardCode })
 
       if(this.props.material.edgebands){
         const edgebands = this.props.material.edgebands;
@@ -63,6 +64,10 @@ class RemarksPattern extends Component {
 
     if(name == 'patternType'){
       this.setState({patternType:value});
+      if(value == PATTERN_TYPE.SPECIAL_DESIGN){
+        this.setState({patternSplits:[]});
+        this.setState({ splitsCount : 0 })
+      }
     }
 
     if(name == 'splitsCount'){
@@ -118,6 +123,16 @@ class RemarksPattern extends Component {
 
     let totalSliptHeight = this.getSplitSum(); 
 
+    if(this.state.patternBoardCode == 0){
+      notify_error('Please select the Board');
+      return;
+    }
+
+    if(this.state.patternType == 0){
+      notify_error('Please select the Pattern Type');
+      return;
+    }
+
     if(totalSliptHeight != itemHeight){
       notify_error('Sum of splits height is not equal to item height');
       return;
@@ -131,7 +146,7 @@ class RemarksPattern extends Component {
 
 
     let newItem = JSON.parse(JSON.stringify(this.props.item));
-    newItem = { ...newItem, patternType: this.state.patternType, patternSplits: this.state.patternSplits}
+    newItem = { ...newItem, patternBoardCode: this.state.patternBoardCode, patternType: this.state.patternType, patternSplits: this.state.patternSplits}
     let remarks = newItem.remarks;
     if(remarks.length == 0 || !remarks.includes(REMARKS.PATTERN)){
       remarks.push(REMARKS.PATTERN);
@@ -229,6 +244,7 @@ class RemarksPattern extends Component {
                   <option value="0"  >Select</option>
                   <option value={PATTERN_TYPE.HORIZONTAL} >HORIZONTAL</option>
                   <option value={PATTERN_TYPE.VERTICAL} >VERTICAL</option>
+                  {/* <option value={PATTERN_TYPE.SPECIAL_DESIGN} >SPECIAL DESIGN</option>                   */}
                   </select>  
                 </td>
                 <td style={{width:"30%"}}>
@@ -247,18 +263,20 @@ class RemarksPattern extends Component {
             <br />
 
             <table style={{width:"100%"}}>
+              <tbody>
 
               <tr>
                 <td  style={{width:"40%"}}>
 
                   <table  className="table  table-striped"  style={{ width:"100%", fontSize:"10px", border:"#ccc 1px solid", display:`${this.state.patternSplits.length > 0 ? "block" : "none"}`}}>
+                  <tbody>
                     <tr style={{backgroundColor:"#ccc"}}>
                       <td>#</td><td>Laminate</td><td style={{width:"10px"}}>Height</td>
                     </tr>
                   
                 {
-                    this.state.patternSplits.sort((a,b) => a.id > b.id ? 1 : -1 ).map(pattern => {
-                      return <tr>
+                    this.state.patternSplits.sort((a,b) => a.id > b.id ? 1 : -1 ).map((pattern,i) => {
+                      return <tr key={i}>
                         <td>{pattern.id}</td>
                         <td>
                         <MaterialCodeDropDown codeValue={pattern.code} onChange={(e) => this.onPatternLaminateCodeChange(e,pattern.id)} item={this.props.item} material={this.props.material} onlyLaminate={true} />
@@ -273,11 +291,13 @@ class RemarksPattern extends Component {
                     <tr  style={{backgroundColor:"#ccc"}}>
                       <td></td><td >Balance</td><td>{parseInt(this.props.item.height) - totalSliptHeight}</td>
                     </tr>
+                    </tbody>
                   </table>
 
                 </td>
                 <td style={{width:"60%"}}>
                   <table style={{float:"right"}}>
+                  <tbody>
                     <tr>
                       <td style={{textAlign:"center"}}><span style={{fontSize:'10px'}}>{this.props.item.width}</span></td>
                       <td></td>
@@ -286,10 +306,10 @@ class RemarksPattern extends Component {
                       <td>
                         <div style={{border:"maroon 1px solid", margin:"0 auto",width:`${previewWidth}px`, height:`${previewHeight}px`}}>
                           {
-                            this.state.patternSplits.filter(s => s.height > 0).map(split => {
+                            this.state.patternSplits.filter(s => s.height > 0).map((split,i) => {
                               let sHeight = Math.ceil(parseInt(split.height) / 10)
                               let color = split.code == "0" ? '#fff' : colors[mCodes.findIndex(mc => mc.materialCodeNumber == split.code)];
-                              return <div style={{borderBottom:"maroon 1px solid",width:"100%", height:`${sHeight}px`, backgroundColor:`${color}`}}></div>
+                              return <div key={i} style={{borderBottom:"maroon 1px solid",width:"100%", height:`${sHeight}px`, backgroundColor:`${color}`}}></div>
                             })
                           }
                         </div>
@@ -297,6 +317,7 @@ class RemarksPattern extends Component {
                       </td>
                       <td> <span style={{fontSize:'10px'}}>{this.props.item.height}</span></td>
                     </tr>
+                    </tbody>
                   </table>
 
 
@@ -306,6 +327,7 @@ class RemarksPattern extends Component {
                 </td>
 
               </tr>
+              </tbody>
             </table>
 
             <br />
@@ -320,7 +342,7 @@ class RemarksPattern extends Component {
  
             <hr />
             <div className="modal-footer" style={{paddingTop:"0px",paddingBottom:"5px",display:"block", textAlign:"right"}}>
-            <button type="button" class="btn btn-success" onClick={() => {this.UpdateRemark()}}>Update</button>
+            <button type="button" className="btn btn-success" onClick={() => {this.UpdateRemark()}}>Update</button>
             </div>   
           </div>
   

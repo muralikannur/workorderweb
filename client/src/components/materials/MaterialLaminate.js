@@ -122,10 +122,11 @@ class MaterialLaminate extends Component {
 
         </tr>
         </thead>
+        <tbody>
         {
         this.state.laminates.sort((a,b) => a.laminateNumber > b.laminateNumber ? 1  : -1 ).map( (laminate, i) => {
         return (
-        <tr  id={'mat-row-laminate' + laminate.laminateNumber}   onClick={() => this.onItemClick(laminate.laminateNumber)} onMouseDown={() => this.onItemClick(laminate.laminateNumber)} onKeyDown={() => this.onItemClick(laminate.laminateNumber)}  onFocus={() => this.onItemClick(laminate.laminateNumber)}  style={{backgroundColor:this.isUsed(laminate.laminateNumber)?'yellow':'#fff'}}>
+        <tr key={i} id={'mat-row-laminate' + laminate.laminateNumber}   onClick={() => this.onItemClick(laminate.laminateNumber)} onMouseDown={() => this.onItemClick(laminate.laminateNumber)} onKeyDown={() => this.onItemClick(laminate.laminateNumber)}  onFocus={() => this.onItemClick(laminate.laminateNumber)}  style={{backgroundColor:this.isUsed(laminate.laminateNumber)?'yellow':'#fff'}}>
             <td>{laminate.laminateNumber}</td>
             <td><input type="text" className="form-control input-xs" value={laminate.code} maxLength="20"  id="code"  name="code" onChange={this.onChange}  /></td>
             <td><input type="text" className="form-control input-xs" value={laminate.thickness} maxLength="4"  id="thickness"  name="thickness" onChange={this.onChange}  /></td>
@@ -147,7 +148,7 @@ class MaterialLaminate extends Component {
 
         </tr>)
         })}
-
+        </tbody>
         </table>
 
         <span id="btnAddItem" className="btn btn-xs btn-rounded btn-outline-success mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold"}} onClick={()=>{this.addItem()}}>Add Laminate</span>

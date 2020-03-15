@@ -16,7 +16,8 @@ export const PROFILE_TYPE = {
 
 export const PATTERN_TYPE = {
     HORIZONTAL:1,
-    VERTICAL:2
+    VERTICAL:2,
+    SPECIAL_DESIGN:3
 }
 
 

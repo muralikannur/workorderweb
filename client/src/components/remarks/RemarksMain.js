@@ -65,7 +65,7 @@ showMaterialDefinition = () => {
               <div className="modal-header" style={{paddingTop:"2px",paddingBottom:"0px"}}>
                 <h5 className="modal-title">Item #{this.props.item.itemnumber} : {this.props.currentRemark == 0 ? "Add New":""} Remark</h5>
                   
-                  <button id="btnRemarksClose" type="button" class="btn btn-light" data-dismiss="modal"> Back <i class="icon-login"></i> </button>
+                  <button id="btnRemarksClose" type="button" className="btn btn-light" data-dismiss="modal"> Back <i className="icon-login"></i> </button>
               </div>
               <div className="modal-body" style={{paddingBottom:"0px"}}>
               {

@@ -57,7 +57,7 @@ class RemarksLedge extends Component {
             </select>   
             <hr /><br />
             <div className="modal-footer" style={{paddingTop:"0px",paddingBottom:"5px",display:"block", textAlign:"right"}}>
-            <button type="button" class="btn btn-success" onClick={() => {this.UpdateRemark()}}>Update</button>
+            <button type="button" className="btn btn-success" onClick={() => {this.UpdateRemark()}}>Update</button>
             </div>   
           </div>   
          <br />
