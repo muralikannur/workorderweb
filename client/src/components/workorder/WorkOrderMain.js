@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import $ from 'jquery';
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { NavLink, Link } from "react-router-dom";
 
 import { WO_STATUS,PATTERN_CODE, PATTERN_TYPE } from './../../constants';
 
 import { REMARKS, PROFILE_TYPE, EB_START_NUMBER} from './../../constants';
 import { notify_error, notify_success, isEmptyOrSpaces }  from '../../Utils/commonUtls';
-import { setDoubleThick, getPatternBoardSize }  from '../../Utils/remarksUtils';
+import { setDoubleThick, getPatternBoardSize, setPatternLaminateSize }  from '../../Utils/remarksUtils';
 
 //Components
 import WorkOrderItems from './WorkOrderItems';
@@ -214,7 +215,18 @@ class WorkOrderMain extends Component {
               isValid = false;
               return;
             }
+
+            // let patterLaminates = items.filter(c => ( c.parentId == i.itemnumber && c.childNumber != 1 ));
+            // patterLaminates.map((p,index) => {
+            //   const  {height, width} = getPatternLaminateSize(i,this.props.material.edgebands, p,patterLaminates.length, i.patternType);
+            //   if(p.height !== height && p.width !== width){
+            //     notify_error('Please correct the Pattern Laminate size of Item #' + i.itemnumber);
+            //     isValid = false;
+            //     return;
+            //   }
+            // })  
           }
+
         })
         if(!isValid) return false;
     }    
@@ -257,31 +269,49 @@ class WorkOrderMain extends Component {
           </div>
         </div>
 
-
-        <div className="row">
-          <div className="col-md-9 grid-margin stretch-card" data-spy="affix" data-offset-top="90" >
-            <div className="card">
+        <nav className="navbar horizontal-layout col-lg-12 col-12 p-0">
+        <div className="nav-bottom">
+          <div style={{marginLeft:"0px", width:"100%"}}>
+          <div data-spy="affix" data-offset-top="90">
               <table style={{width:"100%", color:"#439aff", borderBottom:"#ccc 1px solid"}}>
                 <tbody>
                 <tr>
-                  <td><h2><span style={{color:"#439aff", fontFamily:"Open Sans", margin:"20px"}}>{this.props.wo.wonumber}</span> &nbsp; <label className="badge badge-warning" style={{lineHeight:"1em", fontSize:"10px"}}>{this.props.wo.status}</label></h2></td>
+                  <td ><div style={{color:"#439aff", fontFamily:"Verdana", fontSize:"26px", padding:"5px", fontWeight:"bold"}}>{this.props.wo.wonumber}</div> </td>
                     <td style={{ textAlign: "right" }}>
                     <button type="button" id="btnMaterial" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#materialModal">Define Materials</button>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <button id="btnSaveWO" type="button" className="btn btn-success" style={{lineHeight:"1px"}} onClick={() => {this.saveWorkOrder(true);}}><i className="icon-doc" ></i>Save</button>
                     &nbsp; &nbsp;
-                    <button id="btnSubmitWO" type="button" className="btn btn-secondary"  style={{lineHeight:"1px"}} onClick={() => {this.submitWorkOrder();}}><i className="icon-notebook" ></i>Submit</button>
-                    &nbsp; &nbsp;
+                    {/* <button id="btnSubmitWO" type="button" className="btn btn-secondary"  style={{lineHeight:"1px"}} onClick={() => {this.submitWorkOrder();}}><i className="icon-notebook" ></i>Submit</button>
+                    &nbsp; &nbsp; */}
                     <button id="btnExport" type="button" className="btn btn-primary"  style={{lineHeight:"1px"}} onClick={() => {this.saveToExcel();}}><i className="icon-grid" ></i>Download</button>
                     &nbsp; &nbsp;                    
+                  </td>
+                  <td style={{textAlign:"right", width:"30%"}}>
+                    <nav>
+                    <NavLink to="/customerlist" className="nav-link"><i className="link-icon icon-people"></i> &nbsp; <span className="menu-title">Customers</span></NavLink>
+                    </nav>
                   </td>
                 </tr>
                 </tbody>
               </table>
+          </div>
+
+          </div>
+        </div>
+        </nav>
+
+
+        <div className="row">
+
+
+          <div className="col-md-9 grid-margin stretch-card" data-spy="affix" data-offset-top="90" >
+            <div className="card">
               <WorkOrderItems {...woItemsProps} setMaterialTab={this.props.setMaterialTab} validate={this.validate} cancelItems={this.cancelItems} saveWorkOrder={this.saveWorkOrder} />
             </div>
           </div>
-          <div className="col-md-3 grid-margin">
+          
+          <div className="col-md-3 grid-margin container-fluid" style={{position:"fixed",zIndex:"1050", margin:"0 auto", right:"0"}}>
             <WorkOrderPreview item={this.props.item} material={this.props.material} clearErrors={this.props.clearErrors} />
           </div>
         </div>

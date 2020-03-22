@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 
 import { REMARKS, EB_START_NUMBER} from '../../constants';
-import { getMaterialText, getEBText }  from '../../Utils/woUtils';
+import { getMaterialText, getEBText, getEBOptions }  from '../../Utils/woUtils';
 
 //Components
 import WorkOrderEdgeBand from './WorkOrderEdgeBand';
@@ -16,25 +16,26 @@ class WorkOrderChild extends Component {
     if(!this.props.childitems || this.props.childitems.length == 0) return <tr><td>no child</td></tr>;
 
           //EDGE BAND OPTIONS----------------------------------------------------------------  
-          let ebOptions = [{
-            materialEdgeBandNumber:0,
-            laminate:'0',
-            eb_thickness:'',
-            eb_width:'',
-          }];
+          // let ebOptions = [{
+          //   materialEdgeBandNumber:0,
+          //   laminate:'0',
+          //   eb_thickness:'',
+          //   eb_width:'',
+          // }];
 
-          let ebWithoutProfiles = this.props.material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
-          let childEBOptions = [...ebOptions, ...ebWithoutProfiles];
+          // let ebWithoutProfiles = this.props.material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
+          // let childEBOptions = [...ebOptions, ...ebWithoutProfiles];
+
+          let childEBOptions = getEBOptions(this.props.childitems[0],this.props.material);
+
 
           let [editA, editB, editC, editD, editCode] = Array(4).fill(false);
 
           let item = this.props.item;
+
           if(item.remarks.includes(REMARKS.DBLTHICK)){
               editCode = true;
-              if(item.doubleThickSides.includes('A')) editA = true;
-              if(item.doubleThickSides.includes('B')) editB = true;
-              if(item.doubleThickSides.includes('C')) editC = true;
-              if(item.doubleThickSides.includes('D')) editD = true;
+              editA = true;
           }
                       
           

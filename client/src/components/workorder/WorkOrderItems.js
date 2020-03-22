@@ -2,9 +2,9 @@ import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
-import { REMARKS, PROFILE_TYPE, EB_START_NUMBER,PATTERN_CODE} from '../../constants';
+import { REMARKS, PROFILE_TYPE, EB_START_NUMBER,PATTERN_CODE, PATTERN_TYPE} from '../../constants';
 import { notify_error}  from '../../Utils/commonUtls';
-import { getMaterialText, getNewWoItem }  from '../../Utils/woUtils';
+import { getMaterialText, getNewWoItem, getEBOptions, getEBThickness }  from '../../Utils/woUtils';
 
 
 //Components
@@ -184,12 +184,61 @@ class WorkOrderItems extends Component {
 
     var items = this.state.woitems;
     var item = items.find(i => i.itemnumber == this.state.currentItem);
-    var newItem = { ...item, [name]: value}
-
     items = items.filter(i => i.itemnumber != this.state.currentItem)
+
+    let isChildModified = false;
+    let newChildItem = {};
+
+    if(item.remarks.includes(REMARKS.PATTERN)){
+      
+      if(item.patternType == PATTERN_TYPE.HORIZONTAL){
+        if(name == "eb_b"){
+          newChildItem = this.getPatternLamSize(value, item, items, item.patternType, 2)
+          isChildModified = true;
+        }
+        if(name == "eb_d"){
+          newChildItem = this.getPatternLamSize(value, item, items, item.patternType, item.patternSplits.length + 1)
+          isChildModified = true;
+        }
+      }
+      if(item.patternType == PATTERN_TYPE.VERTICAL){
+        if(name == "eb_a"){
+          newChildItem = this.getPatternLamSize(value, item, items, item.patternType, 2)
+          isChildModified = true;
+        }
+        if(name == "eb_c"){
+          newChildItem = this.getPatternLamSize(value, item, items, item.patternType, item.patternSplits.length + 1)
+          isChildModified = true;
+        }
+      }
+    }
+    var newItem = { ...item, [name]: value}
     items = [...items,newItem]
+
+    if(isChildModified){
+      
+      items = items.filter(i => i.parentId != newChildItem.parentId || i.childNumber != newChildItem.childNumber);
+      items = [...items,newChildItem]
+    }
+
     this.setState({woitems: items});
     this.props.saveItems(items);
+  }
+
+  getPatternLamSize(value, item, items, patternType, pos){
+    let eb = getEBThickness(value,this.props.material.edgebands);
+    let childItem = items.find(i => i.parentId == item.itemnumber && i.childNumber == pos);
+    let splitHeight = item.patternSplits.find(s=> s.id == pos - 1).height;
+
+    
+
+    if(patternType == PATTERN_TYPE.HORIZONTAL)
+      childItem = {...childItem, height:Math.ceil(splitHeight + 5 - eb) }
+    else
+      childItem = {...childItem, width:Math.ceil(splitHeight + 5 - eb) }
+
+      console.log(childItem);
+    return childItem;
   }
 
   getSortedItems = () => {
@@ -341,55 +390,12 @@ class WorkOrderItems extends Component {
           </thead>
           {this.getSortedItems().map( (item, i) => {
 
-          //EDGE BAND OPTIONS----------------------------------------------------------------  
-          let ebOptions = [{
-            materialEdgeBandNumber:0,
-            laminate:'0',
-            eb_thickness:'',
-            eb_width:'',
-          }];
-
-          let ebWithoutProfiles = this.props.material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
-          let childEBOptions = [...ebOptions, ...ebWithoutProfiles];
-
-          let hasEProfile = false;
-
-          //If Item has E-Profile selected, EB sides should be default to E-Profiles thicknes and width
-          if(item.remarks.indexOf(REMARKS.E_PROFILE) != -1){
-            let eProfile = this.props.material.profiles.find(p => p.type == PROFILE_TYPE.E)
-            if(eProfile){
-              let edgeband = this.props.material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(eProfile.profileNumber))
-              if(edgeband){
-                ebOptions = [edgeband]
-                hasEProfile = true;
-              }
-            }
-          }
-
-          if(!hasEProfile){
-            if(this.props.material.materialCodes){
-              const mat = this.props.material.materialCodes.find(mc => mc.materialCodeNumber == item.code);
-              if(mat){
-                const laminate = this.props.material.edgebands.filter(eb => eb.laminate == mat.front_laminate );
-                const board = this.props.material.edgebands.filter(eb => eb.laminate == parseInt(mat.board) + EB_START_NUMBER.BOARD);
-                console.log(board)
-                
-                if(laminate || board){
-                  ebOptions = [...ebOptions, ...laminate, ...board];
-                }
-              } else if(item.code == PATTERN_CODE){
-                ebOptions = [...ebOptions, ...this.props.material.edgebands];
-              }
-            }
-          }
-
-          
+          let ebOptions = getEBOptions(item, this.props.material);
           console.log(ebOptions);
 
           let handleProfile = this.props.material.profiles.find(p => p.profileNumber == item.profileNumber)
           let childitems = this.state.woitems.filter(i => i.parentId == item.itemnumber)
            
-
           return (
             <tbody key={item.itemnumber}>
             <tr id={'item-row-' + item.itemnumber}    onClick={(e) => this.onItemClick(e,item.itemnumber)} onMouseDown={(e) => this.onItemClick(e,item.itemnumber)} onKeyDown={(e) => this.onItemClick(e,item.itemnumber)} onFocus={(e) => this.onItemClick(e,item.itemnumber)} style={{backgroundColor:`${item.itemnumber == this.state.currentItem ? "#b5d1ff" : "#eee"}`}} >

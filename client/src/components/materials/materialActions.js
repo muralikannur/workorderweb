@@ -22,6 +22,7 @@ export const saveMaterial = (material, callback) => (dispatch, getState) => {
     .catch(err =>
       {
         notify_error('ERROR while saving...');
+        console.log(err.response);
       dispatch(returnErrors(err, err.response.status))
       }
     );
@@ -37,6 +38,7 @@ export const getMaterial = id => (dispatch, getState) => {
       })
     )
     .catch(err =>{
+      console.log(err.response);
      // dispatch(returnErrors(err.response.data, err.response.status))
     }
     );

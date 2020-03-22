@@ -37,6 +37,7 @@ export const createWorkOrder = wo => (dispatch, getState) => {
     .catch(err =>
       {
       notify_error('ERROR while saving...');
+      console.log(err.response);
       //dispatch(returnErrors(err.response.data, err.response.status))
       }
     );
@@ -58,12 +59,14 @@ export const saveWorkOrder = (wo, notify=false) => (dispatch, getState) => {
         
       } else {
         notify_error('ERROR while saving...');
+        
       }
     }
     )
     .catch(err =>
       {
       notify_error('ERROR while saving...');
+      console.log(err.response);
       //dispatch(returnErrors(err.response.data, err.response.status))
       }
     );

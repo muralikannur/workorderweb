@@ -5,6 +5,8 @@ import { REMARKS, PATTERN_TYPE, PATTERN_CODE} from '../../constants';
 import { notify_error } from '../../Utils/commonUtls';
 import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
 import { getNewWoItem, getEBThickness }  from '../../Utils/woUtils';
+import { getPatternBoardSize, getPatternLaminateSize }  from '../../Utils/remarksUtils';
+
 class RemarksPattern extends Component {
  
   constructor(props){
@@ -77,7 +79,7 @@ class RemarksPattern extends Component {
         }
       } 
 
-      let splits = new Array(parseInt(value)).fill(null).map((a,i)=> ({id: i+1,code:0,height:0}))
+      let splits = new Array(parseInt(value)).fill(null).map((a,i)=> ({id: i+1,code:0,height:0,eb:false}))
 
       this.setState({patternSplits:splits});
       this.setState({ splitsCount : splits.length })
@@ -89,8 +91,11 @@ class RemarksPattern extends Component {
     if(name == 'height'){
 
       if(isNaN(value)) return;
+      
       if(value != '')
         value = parseInt(value);
+      else
+        value = 0;
       let height = value;
       if(isNaN(height) || height < 0) return;
 
@@ -104,7 +109,6 @@ class RemarksPattern extends Component {
       let splitUnModified = this.state.patternSplits.filter(s => s.id != splitId);
       splitToModify.height = value;
       this.setState({patternSplits:[...splitUnModified, splitToModify]});
-      console.log([...splitUnModified, splitToModify])
     }
 
   }
@@ -114,6 +118,29 @@ class RemarksPattern extends Component {
     this.state.patternSplits.map(s => totalSliptHeight += parseInt(s.height));
     return totalSliptHeight;
 
+  }
+
+  splitEBChanged (e,splitId){
+
+    let patternSplits = this.state.patternSplits;
+
+    let splitToModify = patternSplits.find(s => s.id == splitId);
+    splitToModify.eb = true;
+
+    let splitUnModified = patternSplits.filter(s => s.id != splitId);
+    let newSplits = [splitToModify];
+
+    //Unset EB option from alredy selected Laminate, if any
+    let splitWithEB = patternSplits.find(s => s.eb & s.id != splitId);
+    if(splitWithEB) {
+      splitWithEB.eb = false;
+      newSplits.push(splitWithEB);
+      splitUnModified = splitUnModified.filter(s => s.id != splitWithEB.id);
+    } 
+
+    newSplits = [...newSplits, ...splitUnModified];
+
+    this.setState({patternSplits:newSplits});
   }
   
   UpdateRemark(){
@@ -133,14 +160,25 @@ class RemarksPattern extends Component {
       return;
     }
 
-    if(totalSliptHeight != itemHeight){
+    if(this.state.patternType == PATTERN_TYPE.HORIZONTAL && totalSliptHeight != itemHeight){
       notify_error('Sum of splits height is not equal to item height');
+      return;
+    }
+
+    if(this.state.patternType == PATTERN_TYPE.VERTICAL && totalSliptHeight != itemWidth){
+      notify_error('Sum of splits width is not equal to item width');
       return;
     }
 
     let splitsWithoutCode = this.state.patternSplits.filter(s => s.code == 0);
     if(splitsWithoutCode.length > 0){
       notify_error('Code not selected for all the splits');
+      return;
+    }
+
+    let splitsWithEB = this.state.patternSplits.filter(s => s.eb );
+    if(splitsWithEB.length != 1){
+      notify_error('Please select one laminate for Edge Band');
       return;
     }
 
@@ -164,28 +202,24 @@ class RemarksPattern extends Component {
       childNumber:1
     }
 
-    let eb_a = this.state.eb_a;
-    let eb_b = this.state.eb_b;
-    let eb_c = this.state.eb_c;
-    let eb_d = this.state.eb_d;
-
     let splitItems = [];
     this.state.patternSplits.map((p,index) => {
 
-      let height = parseInt(p.height);
-      if(p.id == 1){
-        height = Math.ceil(height + 5 - eb_b);
-      }
-      if(p.id == this.state.patternSplits.length){
-        height = Math.ceil(height + 5 - eb_d);
-      }
+      let  {height, width} = getPatternLaminateSize(
+        this.props.item,
+        this.props.material.edgebands, 
+        p,
+        this.state.patternSplits.length, 
+        this.state.patternType, 
+        patternBoard)
 
       let splitItem = JSON.parse(JSON.stringify(patternBoard));
 
-      splitItem = {...splitItem,code:p.code, height, width:this.boardWidth, childNumber: index+2} ;
+      splitItem = {...splitItem,code:p.code, height, width, childNumber: index+2} ;
+
       splitItems.push(splitItem);
     })
-
+    
 
     let items = this.props.wo.woitems.filter(i => i.itemnumber != this.props.item.itemnumber)
     items = items.filter(item => item.parentId != this.props.item.itemnumber);
@@ -200,20 +234,21 @@ class RemarksPattern extends Component {
     let itemHeight =parseInt(this.props.item.height);
     let itemWidth = parseInt(this.props.item.width);
 
-    let heightEB = 0;
-    let widthEB = 0;
+    // let heightEB = 0;
+    // let widthEB = 0;
 
-    widthEB += Math.round(this.state.eb_a);
-    widthEB += Math.round(this.state.eb_c);
-    heightEB += Math.round(this.state.eb_b);
-    heightEB += Math.round(this.state.eb_d);
+    // widthEB += Math.round(this.state.eb_a);
+    // widthEB += Math.round(this.state.eb_c);
+    // heightEB += Math.round(this.state.eb_b);
+    // heightEB += Math.round(this.state.eb_d);
 
-    this.boardHeight = itemHeight + 10 - heightEB;
-    this.boardWidth = itemWidth + 10 - widthEB;
+    const boardSize = getPatternBoardSize(this.props.item,this.props.material.edgebands);
+    this.boardHeight = boardSize.height;
+    this.boardWidth = boardSize.width;
 
 
-    let previewHeight = Math.floor(itemHeight / 10);
-    let previewWidth = Math.floor(itemWidth / 10);
+    let previewHeight = Math.floor(parseInt(itemHeight) / 10);
+    let previewWidth = Math.floor(parseInt(itemWidth) / 10);
 
     let totalSliptHeight = this.getSplitSum();
 
@@ -271,7 +306,7 @@ class RemarksPattern extends Component {
                   <table  className="table  table-striped"  style={{ width:"100%", fontSize:"10px", border:"#ccc 1px solid", display:`${this.state.patternSplits.length > 0 ? "block" : "none"}`}}>
                   <tbody>
                     <tr style={{backgroundColor:"#ccc"}}>
-                      <td>#</td><td>Laminate</td><td style={{width:"10px"}}>Height</td>
+                      <td>#</td><td>Laminate</td><td style={{width:"10px"}}>{this.state.patternType == PATTERN_TYPE.HORIZONTAL ? "Height" : "Width"}</td><td title="Edge Band" >EB</td>
                     </tr>
                   
                 {
@@ -285,11 +320,14 @@ class RemarksPattern extends Component {
                         <td>
                           <input type="text"  onChange={(e) => this.onChange(e,pattern.id)} className="form-control input-xs" maxLength="4" value={pattern.height}  id="height"  name="height"  />
                         </td>
+                        <td style={{textAlign:"center", verticalAlign:"middle"}}>
+                        <input type="radio" checked={pattern.eb?'checked':''}  id={'split_eb_' + pattern.id} onChange={(e) => {this.splitEBChanged(e,pattern.id)}} />
+                        </td>
                       </tr>
                     })
                   }
                     <tr  style={{backgroundColor:"#ccc"}}>
-                      <td></td><td >Balance</td><td>{parseInt(this.props.item.height) - totalSliptHeight}</td>
+                      <td></td><td >Balance</td><td>{parseInt( this.state.patternType == PATTERN_TYPE.HORIZONTAL ? this.props.item.height : this.props.item.width) - totalSliptHeight}</td><td></td>
                     </tr>
                     </tbody>
                   </table>
@@ -307,9 +345,11 @@ class RemarksPattern extends Component {
                         <div style={{border:"maroon 1px solid", margin:"0 auto",width:`${previewWidth}px`, height:`${previewHeight}px`}}>
                           {
                             this.state.patternSplits.filter(s => s.height > 0).map((split,i) => {
-                              let sHeight = Math.ceil(parseInt(split.height) / 10)
+                              let sHeight = Math.ceil(parseInt(split.height) / 10);
                               let color = split.code == "0" ? '#fff' : colors[mCodes.findIndex(mc => mc.materialCodeNumber == split.code)];
-                              return <div key={i} style={{borderBottom:"maroon 1px solid",width:"100%", height:`${sHeight}px`, backgroundColor:`${color}`}}></div>
+                              return this.state.patternType == PATTERN_TYPE.HORIZONTAL  
+                                ?<div key={i} style={{borderBottom:"maroon 1px solid",float:"right",width:"100%", height:`${sHeight}px`, backgroundColor:`${color}`}}></div>
+                                :<div key={i} style={{borderRight:"maroon 1px solid",float:"right",width:`${sHeight}px`, height:"100%", backgroundColor:`${color}`, clear:'none'}}></div>
                             })
                           }
                         </div>
@@ -333,7 +373,9 @@ class RemarksPattern extends Component {
             <br />
             <span style={{color:'red', fontSize:'10px'}}>
               {
-                (totalSliptHeight > itemHeight) ? 'Total split height is more than Item Height':''
+                (totalSliptHeight > itemHeight) ? 
+                this.state.patternType == PATTERN_TYPE.HORIZONTAL ? 'Total split height is more than Item Height' : 'Total split width is more than Item Width'
+                :''
               }
             </span>
 

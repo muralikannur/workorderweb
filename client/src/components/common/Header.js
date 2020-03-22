@@ -48,21 +48,23 @@ class Header extends Component {
                 }
                 </div>
             </div>
-            {!user ? null : 
-            <div className="nav-bottom">
-                <div className="container">
-                    <nav>
-                        <ul className="nav" style={{fontWeight:"bold"}}>
-                            {/* <li className="nav-item">
-                                <NavLink to="/wolist" className="nav-link"><i className="link-icon icon-screen-tablet"></i> &nbsp; <span className="menu-title">Work Orders</span></NavLink>
-                            </li> */}
-                            <li className="nav-item">
-                                <NavLink to="/customerlist" className="nav-link"><i className="link-icon icon-people"></i> &nbsp; <span className="menu-title">Customers</span></NavLink>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>}
+            {
+            // !user ? null : 
+            // <div className="nav-bottom">
+            //     <div className="container">
+            //         <nav>
+            //             <ul className="nav" style={{fontWeight:"bold"}}>
+            //                 {/* <li className="nav-item">
+            //                     <NavLink to="/wolist" className="nav-link"><i className="link-icon icon-screen-tablet"></i> &nbsp; <span className="menu-title">Work Orders</span></NavLink>
+            //                 </li> */}
+            //                 <li className="nav-item">
+            //                     <NavLink to="/customerlist" className="nav-link"><i className="link-icon icon-people"></i> &nbsp; <span className="menu-title">Customers</span></NavLink>
+            //                 </li>
+            //             </ul>
+            //         </nav>
+            //     </div>
+            // </div>
+            }
             </nav>
         )
     }

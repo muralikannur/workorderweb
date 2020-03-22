@@ -85,13 +85,13 @@ class WorkOrderPreview extends Component {
                   {(!this.props.item || this.props.item.itemnumber == 0 || this.props.item.code == PATTERN_CODE) ? <div style={{ margin: "30px", color: "#ccc" }}>NO PREVIEW</div> :
                     <div className="previewItem">
 
-                      <span style={{ fontSize:"12px", color:"maroon" }}>  &nbsp; 
+                      {/* <span style={{ fontSize:"12px", color:"maroon" }}>  &nbsp; 
                         <b>H</b>: {this.height - (this.marginT + this.marginB)} &nbsp; 
                         <b>W</b>: {this.width - (this.marginL + this.marginR)}  &nbsp;  &nbsp;
                         <b>EB</b>: {Array.from(this.eb).map((k,i) => {
                           return (k[0] == 0 || k[1] == 0 ? null : <span key={i}>&nbsp;{numberWithCommas(k[1])}(<b>{k[0]}</b>), &nbsp;</span> ) })} 
 
-                      </span>
+                      </span> */}
 
                       <table style={{ width: "100%" }}>
                         <tbody>

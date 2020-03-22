@@ -13,7 +13,7 @@ class MaterialCodeDropDown extends Component {
     } else if(this.props.onlyBoard){
       mCodes = mCodes.filter(m => m.front_laminate == "0" && m.back_laminate == "0")
     }else if(this.props.excludeOnlyLaminate){
-      mCodes = mCodes.filter(m => m.board != "0" && m.back_laminate == "0")
+      mCodes = mCodes.filter(m => m.board != "0")
     }
 
 

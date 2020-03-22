@@ -11,11 +11,11 @@ class Login extends Component {
   componentDidMount(){
     this.props.clearErrors();
 
-    //  const user = {
-    //    email : 'muralikannur@gmail.com',
-    //    password : 'murali123'
-    //  };
-    //  this.props.login(user);
+     const user = {
+       email : 'muralikannur@gmail.com',
+       password : 'murali123'
+     };
+     this.props.login(user);
 
   }
 

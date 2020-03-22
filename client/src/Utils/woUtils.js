@@ -1,5 +1,5 @@
 
-import { REMARKS, PROFILE_TYPE, EB_START_NUMBER} from '../constants';
+import { REMARKS, PROFILE_TYPE, EB_START_NUMBER, PATTERN_CODE} from '../constants';
 import { notify_error, notify_success, isEmptyOrSpaces }  from './commonUtls';
 import propTypes from 'prop-types'
 
@@ -29,6 +29,75 @@ export const getEBThickness = (id, edgebands) => {
     return parseFloat(eb.eb_thickness);
   }
   return 0;
+}
+
+export const getEBOptions = (item, material) => {
+  //EDGE BAND OPTIONS----------------------------------------------------------------  
+  let ebOptions = [{
+    materialEdgeBandNumber:0,
+    laminate:'0',
+    eb_thickness:'',
+    eb_width:'',
+  }];
+
+  if(item.code == PATTERN_CODE){
+    if(item.patternSplits && item.patternSplits.length > 0){
+      const splitEB = item.patternSplits.find(s => s.eb);
+      if(splitEB){
+        const mat = material.materialCodes.find(mc => mc.materialCodeNumber == splitEB.code);
+        if(mat){
+          const laminate = material.edgebands.filter(eb => eb.laminate == mat.front_laminate );
+          ebOptions = [...ebOptions, ...laminate];
+        }
+      }
+    }
+    return ebOptions;
+  }
+
+  if(item.parentId != 0){
+    const ebWithoutProfiles = material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
+    if(ebWithoutProfiles && ebWithoutProfiles.length > 0){
+      ebOptions = [...ebOptions, ...ebWithoutProfiles];
+    }
+    return ebOptions;
+  }
+
+  // let ebWithoutProfiles = material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
+  // let childEBOptions = [...ebOptions, ...ebWithoutProfiles];
+
+  let hasEProfile = false;
+
+  //If Item has E-Profile selected, EB sides should be default to E-Profiles thicknes and width
+  if(item.remarks.indexOf(REMARKS.E_PROFILE) != -1){
+    let eProfile = material.profiles.find(p => p.type == PROFILE_TYPE.E)
+    if(eProfile){
+      let edgeband = material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(eProfile.profileNumber))
+      if(edgeband){
+        ebOptions = [edgeband]
+        hasEProfile = true;
+      }
+    }
+  }
+
+  if(!hasEProfile){
+    if(material.materialCodes){
+      const mat = material.materialCodes.find(mc => mc.materialCodeNumber == item.code);
+      if(mat){
+        const laminate = material.edgebands.filter(eb => eb.laminate == mat.front_laminate );
+        const board = material.edgebands.filter(eb => eb.laminate == parseInt(mat.board) + EB_START_NUMBER.BOARD);
+        console.log(board)
+        
+        if(laminate || board){
+          ebOptions = [...ebOptions, ...laminate, ...board];
+        }
+      } else if(item.code == PATTERN_CODE){
+        ebOptions = [...ebOptions, ...material.edgebands];
+      }
+    }
+  }
+
+  return ebOptions;
+
 }
 
 
