@@ -41,7 +41,6 @@ class RemarksEdgeProfile extends Component {
     if(profile && profile.type == PROFILE_TYPE.E){
       let edgeband = this.props.material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(this.state.profileNumber))
       if(edgeband){
-        newItem.profileNumber = profile.profileNumber;
         newItem.eb_a = edgeband.materialEdgeBandNumber;
         newItem.eb_b = edgeband.materialEdgeBandNumber;
         if(newItem.profileSide != 'H') newItem.eb_c = edgeband.materialEdgeBandNumber;
@@ -52,7 +51,7 @@ class RemarksEdgeProfile extends Component {
     let items = this.props.wo.woitems.filter(i => i.itemnumber != this.props.item.itemnumber)
     items = [...items,newItem]
     this.props.saveItems(items);
-    //this.props.setCurrentItem(newItem);
+    this.props.setCurrentItem(newItem);
     $('#btnRemarksClose').click();
   }
 

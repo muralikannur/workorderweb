@@ -34,7 +34,8 @@ export const EB_START_NUMBER = {
 
 export const WO_STATUS = {
     NEW:'NEW',
-    SUBMITTED:'SUBMITTED'
+    SUBMITTED:'SUBMITTED',
+    DELETED:'DELETED'
 }
 
 export const PATTERN_CODE = 1000;

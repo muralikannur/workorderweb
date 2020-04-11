@@ -72,8 +72,8 @@ export const setDoubleThick = (dblThkSides, item, newItem1, newItem2, doubleThic
     heightEB += Math.round(eb_b);
     heightEB += Math.round(eb_d);
 
-    let height = itemHeight + 10 - heightEB;
-    let width = itemWidth + 10 - widthEB;
+    let height = itemHeight + 10; // - heightEB;
+    let width = itemWidth + 10; // - widthEB;
 
     return {height, width}
   }
@@ -98,11 +98,11 @@ export const setDoubleThick = (dblThkSides, item, newItem1, newItem2, doubleThic
 
 
     if(patternType == PATTERN_TYPE.HORIZONTAL){
-      height = Math.ceil(currentSplit.height + 5 - (isFirst?eb_b:eb_d));
+      height = Math.ceil(currentSplit.height + 5 );  //- (isFirst?eb_b:eb_d)
     }
 
     if(patternType == PATTERN_TYPE.VERTICAL){
-      width = Math.ceil(currentSplit.height + 5 - (isFirst?eb_a:eb_c));
+      width = Math.ceil(currentSplit.height + 5); // - (isFirst?eb_a:eb_c)
     }
 
     return {height, width};

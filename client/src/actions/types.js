@@ -15,6 +15,7 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 
 export const GET_WO_LIST = 'GET_WO_LIST';
 export const ADD_WO_TO_LIST = 'ADD_WO_TO_LIST';
+export const UPDATE_WO_LIST = 'UPDATE_WO_LIST';
 export const GET_WO = 'GET_WO';
 export const SAVE_WO = 'SAVE_WO';
 export const CREATE_WO = 'CREATE_WO';

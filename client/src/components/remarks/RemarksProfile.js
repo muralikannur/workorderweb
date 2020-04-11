@@ -38,16 +38,28 @@ class RemarksProfile extends Component {
       notify_error('Please select the Profile Side');
       return;
     }
+    if(this.state.profileNumber == '0'){
+      notify_error('Please select the Profile Type');
+      return;
+    }
 
     let newItem = JSON.parse(JSON.stringify(this.props.item));
+    let remarks = newItem.remarks;
+
     newItem = { ...newItem, profileNumber: this.state.profileNumber, profileSide: this.state.profileSide}
     if(this.state.profileSide == 'H'){
       newItem.eb_c = 0; 
+      if(remarks.length > 0 && remarks.includes(REMARKS.E_PROFILE)){
+        newItem.eb_d = newItem.eb_a;
+      }
     }
     if(this.state.profileSide == 'W'){
       newItem.eb_d = 0; 
+      if(remarks.length > 0 && remarks.includes(REMARKS.E_PROFILE)){
+        newItem.eb_c = newItem.eb_a;
+      }
     }
-    let remarks = newItem.remarks;
+    
     if(remarks.length == 0 || !remarks.includes(REMARKS.PROFILE)){
       remarks.push(REMARKS.PROFILE);
     }
@@ -55,7 +67,7 @@ class RemarksProfile extends Component {
     let items = this.props.wo.woitems.filter(i => i.itemnumber != this.props.item.itemnumber)
     items = [...items,newItem]
     this.props.saveItems(items);
-    //this.props.setCurrentItem(newItem);
+    this.props.setCurrentItem(newItem);
     $('#btnRemarksClose').click();
   }
   render() {

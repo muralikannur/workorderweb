@@ -49,7 +49,8 @@ class WorkOrderChild extends Component {
                 return(
               
                 <tr key={i} style={{backgroundColor:"#ddd", color:"#555", padding:"2px"}}>
-                <td style={{backgroundColor:"#fff"}}></td>
+                <td></td>
+                <td ></td>
                 <td>
                 {editCode?
                     <MaterialCodeDropDown onChange={this.props.onChange} item={child} material={this.props.material}  excludeOnlyLaminate={true} /> 

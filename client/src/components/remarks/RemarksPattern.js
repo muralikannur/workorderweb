@@ -199,7 +199,8 @@ class RemarksPattern extends Component {
       width:this.boardWidth,
       quantity:this.props.item.quantity,
       code:this.state.patternBoardCode,
-      childNumber:1
+      childNumber:1,
+      comments:'Pattern Board for Item #' + this.props.item.itemnumber
     }
 
     let splitItems = [];
@@ -215,7 +216,14 @@ class RemarksPattern extends Component {
 
       let splitItem = JSON.parse(JSON.stringify(patternBoard));
 
-      splitItem = {...splitItem,code:p.code, height, width, childNumber: index+2} ;
+      splitItem = {
+        ...splitItem,
+        code:p.code, 
+        height, 
+        width, 
+        childNumber: index+2, 
+        comments: 'Pattern Laminate - ' + (parseInt(index) + 1) + ' for Item #' + this.props.item.itemnumber
+      } ;
 
       splitItems.push(splitItem);
     })
@@ -349,7 +357,7 @@ class RemarksPattern extends Component {
                               let color = split.code == "0" ? '#fff' : colors[mCodes.findIndex(mc => mc.materialCodeNumber == split.code)];
                               return this.state.patternType == PATTERN_TYPE.HORIZONTAL  
                                 ?<div key={i} style={{borderBottom:"maroon 1px solid",float:"right",width:"100%", height:`${sHeight}px`, backgroundColor:`${color}`}}></div>
-                                :<div key={i} style={{borderRight:"maroon 1px solid",float:"right",width:`${sHeight}px`, height:"100%", backgroundColor:`${color}`, clear:'none'}}></div>
+                                :<div key={i} style={{borderRight:"maroon 1px solid",float:"left",width:`${sHeight - 1}px`, height:"100%", backgroundColor:`${color}`, clear:'none'}}></div>
                             })
                           }
                         </div>

@@ -23,6 +23,23 @@ class WorkOrderPreview extends Component {
     this.marginR = getEBThickness(this.props.item.eb_c,this.props.material.edgebands);
     this.marginB = getEBThickness(this.props.item.eb_d,this.props.material.edgebands);
 
+    let handleProfile = this.props.material.profiles.find(p => p.profileNumber == this.props.item.profileNumber)
+
+    let isWidthHP = false, isHeightHP = false;
+    if(handleProfile){
+      if(this.props.item.profileSide == 'W'){
+        this.marginB = Math.round(handleProfile.height / 4);
+        isWidthHP = true;
+      }
+      if(this.props.item.profileSide == 'H'){
+        this.marginR = Math.round(handleProfile.height / 4);
+        isHeightHP = true;
+      }
+    }
+
+    console.log(isHeightHP)
+
+
     this.height = 0
     this.width = 0;
     this.qty = 0;
@@ -74,7 +91,7 @@ class WorkOrderPreview extends Component {
           <div className="card-header" role="tab" id="heading-2">
             <h6 className="mb-0">
               <a data-toggle="collapse" href="#collapse-2" aria-expanded="true" aria-controls="collapse-2">
-                PREVIEW
+                <b>PREVIEW </b>{(this.props.item && this.props.item.itemnumber != 0) ? ' Item # ' + this.props.item.itemnumber:''}
             </a>
             </h6>
           </div>
@@ -111,14 +128,33 @@ class WorkOrderPreview extends Component {
                                 borderTopWidth: `${this.marginT * 2}px`,
                                 borderRightWidth: `${this.marginR * 2}px`,
                                 borderBottomWidth: `${this.marginB * 2}px`,
-                                background: `${this.bg}`
+                                background: `${this.bg}`,
+                                borderRightColor: isHeightHP?'green':'maroon',
+                                borderBottomColor: isWidthHP?'green':'maroon'
                               }}></div>
                             </td>
-                            <td style={{ textAlign: "left", verticalAlign: "middle" }}><span style={{ color: "maroon", fontWeight: "bold" }}>C</span> &nbsp; <span style={{ color: "#aaa", fontSize: "small" }}>{this.height}</span> &nbsp; <span style={{ color: "maroon", fontSize: "small" }}>{this.marginR > 0 ? ' (' + this.marginR + ')' : ''}</span></td>
+                            <td style={{ textAlign: "left", verticalAlign: "middle" }}>
+                              <span style={{color: 'maroon', fontWeight: "bold" }}>C</span> &nbsp; 
+                              <span style={{ color: "#aaa", fontSize: "small" }}>{this.height}</span> &nbsp; 
+                              {isHeightHP?
+                              <span style={{ color: "green", fontSize: "small" }}> ({handleProfile.height})</span>
+                              :
+                              <span style={{ color: "maroon", fontSize: "small" }}>{this.marginR > 0 ? ' (' + this.marginR + ')' : ''}</span>
+                              }
+                              
+                            </td>
                           </tr>
                           <tr>
                             <td></td>
-                            <td style={{ textAlign: "center", verticalAlign: "top" }}><span style={{ color: "maroon", fontWeight: "bold" }}>D</span> &nbsp; <span style={{ color: "#aaa", fontSize: "small" }}>{this.width}</span> &nbsp; <span style={{ color: "maroon", fontSize: "small" }}>{this.marginB > 0 ? ' (' + this.marginB + ')' : ''}</span></td>
+                            <td style={{ textAlign: "center", verticalAlign: "top" }}>
+                              <span style={{ color: "maroon", fontWeight: "bold" }}>D</span> &nbsp; 
+                              <span style={{ color: "#aaa", fontSize: "small" }}>{this.width}</span> &nbsp; 
+                              {isWidthHP?
+                              <span style={{ color: "green", fontSize: "small" }}> ({handleProfile.height})</span>
+                              :
+                              <span style={{ color: "maroon", fontSize: "small" }}>{this.marginB > 0 ? ' (' + this.marginB + ')' : ''}</span>
+                              }
+                            </td>
                             <td></td>
                           </tr>
                         </tbody>

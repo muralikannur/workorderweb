@@ -28,14 +28,41 @@ export const saveMaterial = (material, callback) => (dispatch, getState) => {
     );
 };
 
-export const getMaterial = id => (dispatch, getState) => {
+export const copyMaterial = (copyMat, callback) => (dispatch, getState) => {
+  axios
+    .post('/api/material', copyMat, tokenConfig(getState))
+    .then(res =>{
+      if(res.status == 200){
+        callback();
+        dispatch({
+          type: GET_MATERIAL,
+          payload: res.data
+        })
+      } else {
+        notify_error('ERROR while saving...');
+      }
+    }
+    )
+    .catch(err =>
+      {
+        notify_error('ERROR while saving...');
+        console.log(err.response);
+      dispatch(returnErrors(err, err.response.status))
+      }
+    );
+};
+
+export const getMaterial = (id) => (dispatch, getState) => {
   axios
     .get('/api/material/' + id, tokenConfig(getState))
     .then(res =>
-      dispatch({
-        type: GET_MATERIAL,
-        payload: res.data
-      })
+      {
+        let matData = res.data
+        dispatch({
+          type: GET_MATERIAL,
+          payload: matData
+        })
+      }
     )
     .catch(err =>{
       console.log(err.response);

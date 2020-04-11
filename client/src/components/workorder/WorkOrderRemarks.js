@@ -4,6 +4,10 @@ import { getRemarkData } from '../../Utils/woUtils';
 
 class WorkOrderRemarks extends Component {
 
+  componentDidMount(){
+    this.REMOVE_REMARK_ICON_TITLE = "Remove Remark";
+  }
+
   render() {
     return <div> {this.props.item.remarks && this.props.item.remarks.length > 0 ? (
         this.props.item.remarks.map((id, index) => {

@@ -15,8 +15,9 @@ import  MaterialProfile  from './MaterialProfile';
 import  MaterialEdgeBand  from './MaterialEdgeBand';
 
 //Actions
-import { saveBoards, saveLaminates, saveMaterialEdgeBands, saveProfiles, saveMaterialCodes, saveMaterial } from './materialActions';
-
+import { saveBoards, saveLaminates, saveMaterialEdgeBands, saveProfiles, saveMaterialCodes, saveMaterial, copyMaterial } from './materialActions';
+import { saveItems } from '../workorder/woActions';
+import { setCurrentItem, } from '../../actions/configActions';
 class MaterialMain extends Component {
 
   constructor(props){
@@ -125,6 +126,33 @@ class MaterialMain extends Component {
     },100)
     
   }  
+
+  matCopySuccess = () => {
+    this.setState({isCancelClicked:true}) 
+    this.props.saveItems([]);
+    this.props.setCurrentItem(null);
+    notify_success('Copied Material Definition successfully');
+    $("#materialWoId").val("0");
+    
+    window.setTimeout(() => {
+      this.setState({isCancelClicked:false}) ;
+    },100)
+    
+  }  
+
+  copyMaterialsFrom = (e) =>{
+    if(e.target.value != "0"){
+      if(window.confirm('All the Material Definition and Items created for this Work Order will be deleted. Are you sure?')){
+        this.props.copyMaterial(
+          {MatFromWO: e.target.value, 
+            MatToId: this.props.material._id, 
+            MatToWO: this.props.woId
+          }, this.matCopySuccess);
+      }
+    }
+
+  }
+
 
   highlightError = (errItems, type, idName, isEB = false ) => {
     errItems.map(e => {$('#mat-row-' + type + (isEB? '-'+e.laminate +'-':'') + eval('e.' + idName)).css("background-color","#FF9999")});
@@ -338,14 +366,36 @@ class MaterialMain extends Component {
   }
 
 
+
   render() {
     return(
       <div className="col-md-12 grid-margin stretch-card">
       
       <div className="card">
         <div className="card-body">
+
+
+
+
+
+
+
           <div id="tabs" className="row ml-md-0 mr-md-0 vertical-tab tab-minimal">
+
+
+    
+
+
             <ul className="nav nav-tabs col-md-2 " role="tablist">
+            <li className="nav-item">
+              <select id="materialWoId" name="materialWoId" className="js-example-basic-single input-xs" style={{width:"200px"}} onChange={ (e) => this.copyMaterialsFrom(e)} >
+                  <option value="0">Copy Materials from</option>
+                  {this.props.wolist.filter(w => w._id != this.props.woId).map(wl => { return(
+                    <option value={wl._id} key={wl._id}>{wl.wonumber}</option>
+                  )})}
+              </select>
+              <br/> <br/>
+            </li>
 
               <li className="nav-item">
                 <a className="nav-link" 
@@ -429,7 +479,7 @@ class MaterialMain extends Component {
 
               </li>
             </ul>
-            <div className="tab-content col-md-10">
+            <div className="tab-content col-md-10" style={{verticalAlign:"top"}}>
               <div className={`tab-pane fade ${this.state.currentTab == "boards" && "show active"}`} id="board" role="tabpanel" aria-labelledby="board">
                 <MaterialBoard material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}/>
               </div>
@@ -459,5 +509,5 @@ class MaterialMain extends Component {
 
 export default connect(
   null,
-  {saveBoards, saveLaminates, saveMaterialEdgeBands,  saveProfiles, saveMaterialCodes, saveMaterial}
+  {saveBoards, saveLaminates, saveMaterialEdgeBands,  saveProfiles, saveMaterialCodes, saveMaterial, copyMaterial, saveItems, setCurrentItem}
 )(MaterialMain);

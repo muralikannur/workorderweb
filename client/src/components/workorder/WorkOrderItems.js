@@ -23,7 +23,10 @@ class WorkOrderItems extends Component {
       sortCol:'itemnumber',
       sortOrder:1,
       woitems:[],
-      item:null
+      item:null,
+      selectedItems:[],
+      filteredItems:[],
+      filterCode:"0"
     };
   }
 
@@ -37,6 +40,13 @@ class WorkOrderItems extends Component {
   componentWillReceiveProps(newProps){
     console.log('LIFECYCLE: Workorder Items - componentWillReceiveProps');
     this.setState({woitems: newProps.wo.woitems });
+    if(this.state.filterCode != "0"){
+      let items = newProps.wo.woitems.filter(i => i.itemnumber != 0 && i.code == this.state.filterCode);
+      this.setState({filteredItems: items });
+    }else {
+      this.setState({filteredItems: newProps.wo.woitems });
+    }
+
   }
 
   onItemClick = (e, i) => {
@@ -55,7 +65,7 @@ class WorkOrderItems extends Component {
     setTimeout(() => {
       if(window.confirm('Are you sure that you want to delete the Item # ' + i +' ??','Shape')){
         var items = this.state.woitems;
-        var newItems = items.filter(item => item.itemnumber != i);
+        var newItems = items.filter(item => item.itemnumber != i && item.parentId != i);
         this.setState({woitems: newItems, currentItem:0});
         this.props.setCurrentItem(null);
         this.setState({item:null});
@@ -186,40 +196,40 @@ class WorkOrderItems extends Component {
     var item = items.find(i => i.itemnumber == this.state.currentItem);
     items = items.filter(i => i.itemnumber != this.state.currentItem)
 
-    let isChildModified = false;
-    let newChildItem = {};
+    // let isChildModified = false;
+    // let newChildItem = {};
 
-    if(item.remarks.includes(REMARKS.PATTERN)){
+    // if(item.remarks.includes(REMARKS.PATTERN)){
       
-      if(item.patternType == PATTERN_TYPE.HORIZONTAL){
-        if(name == "eb_b"){
-          newChildItem = this.getPatternLamSize(value, item, items, item.patternType, 2)
-          isChildModified = true;
-        }
-        if(name == "eb_d"){
-          newChildItem = this.getPatternLamSize(value, item, items, item.patternType, item.patternSplits.length + 1)
-          isChildModified = true;
-        }
-      }
-      if(item.patternType == PATTERN_TYPE.VERTICAL){
-        if(name == "eb_a"){
-          newChildItem = this.getPatternLamSize(value, item, items, item.patternType, 2)
-          isChildModified = true;
-        }
-        if(name == "eb_c"){
-          newChildItem = this.getPatternLamSize(value, item, items, item.patternType, item.patternSplits.length + 1)
-          isChildModified = true;
-        }
-      }
-    }
+    //   if(item.patternType == PATTERN_TYPE.HORIZONTAL){
+    //     if(name == "eb_b"){
+    //       newChildItem = this.getPatternLamSize(value, item, items, item.patternType, 2)
+    //       isChildModified = true;
+    //     }
+    //     if(name == "eb_d"){
+    //       newChildItem = this.getPatternLamSize(value, item, items, item.patternType, item.patternSplits.length + 1)
+    //       isChildModified = true;
+    //     }
+    //   }
+    //   if(item.patternType == PATTERN_TYPE.VERTICAL){
+    //     if(name == "eb_a"){
+    //       newChildItem = this.getPatternLamSize(value, item, items, item.patternType, 2)
+    //       isChildModified = true;
+    //     }
+    //     if(name == "eb_c"){
+    //       newChildItem = this.getPatternLamSize(value, item, items, item.patternType, item.patternSplits.length + 1)
+    //       isChildModified = true;
+    //     }
+    //   }
+    // }
     var newItem = { ...item, [name]: value}
     items = [...items,newItem]
 
-    if(isChildModified){
+    // if(isChildModified){
       
-      items = items.filter(i => i.parentId != newChildItem.parentId || i.childNumber != newChildItem.childNumber);
-      items = [...items,newChildItem]
-    }
+    //   items = items.filter(i => i.parentId != newChildItem.parentId || i.childNumber != newChildItem.childNumber);
+    //   items = [...items,newChildItem]
+    // }
 
     this.setState({woitems: items});
     this.props.saveItems(items);
@@ -241,11 +251,53 @@ class WorkOrderItems extends Component {
     return childItem;
   }
 
-  getSortedItems = () => {
-    const so = this.state.sortOrder;
-    let items = this.state.woitems.filter(i => i.itemnumber != 0);
-    items = items.sort((a,b) => a.itemnumber > b.itemnumber ? 1 : -1);
-    return items;
+  itemCheckBoxClicked = (e) => {
+    let {value, checked} = e.target;
+
+    if(value == "0"){
+      
+      let selectedItems;
+      if(checked){
+        selectedItems = this.state.filteredItems.map(i => i.itemnumber);
+        $('[id^=chk]').prop('checked',true);
+      } else {
+        selectedItems = [];
+        $('[id^=chk]').prop('checked',false);
+      }
+      this.setState({selectedItems})
+    } else{
+      value = parseInt(value);
+      let selectedItems = this.state.selectedItems;
+      if(checked){
+        selectedItems.push(value)
+      } else {
+        selectedItems = selectedItems.filter(i => i != value);
+      }
+      this.setState({selectedItems})
+    }
+  }
+
+  deleteSelectedItems = () => {
+    if(window.confirm('Do you want to Delete selected Items?')){
+      let selected = this.state.selectedItems;
+      var items = this.state.woitems;
+      var newItems = [];
+      items.map(i => {
+        if(i.itemnumber != 0 && !selected.includes(i.itemnumber))
+          newItems.push(i);
+        if(i.itemnumber == 0 && !selected.includes(i.parentId))
+          newItems.push(i);
+      })
+
+      this.setState({woitems: newItems, currentItem:0});
+      this.props.setCurrentItem(null);
+      this.setState({item:null});
+      this.props.saveItems(newItems);
+
+      $('[id^=chk]').prop('checked',false);
+      this.setState({selectedItems:[]})
+
+    }
   }
 
 
@@ -350,6 +402,19 @@ class WorkOrderItems extends Component {
     this.props.saveItems(items);
   }
 
+  filterByCode = (e) => {
+    const code = e.target.value;
+    if(code != "0"){
+      let items = this.state.woitems.filter(i => i.itemnumber != 0 && i.code == code);
+      this.setState({filteredItems: items });
+    }else {
+      this.setState({filteredItems: this.state.woitems });
+    }
+    this.setState({filterCode: code});
+    $('[id^=chk]').prop('checked',false);
+    this.setState({selectedItems:[]})
+  }
+
   
 
   render() {
@@ -375,46 +440,81 @@ class WorkOrderItems extends Component {
 
     return(
       <div>
-        <RemarksMain setMaterialTab={this.props.setMaterialTab} item={this.state.item} currentRemark={this.props.currentRemark} setCurrentRemark={this.props.setCurrentRemark} wo={this.props.wo} material={this.props.material} saveItems={this.props.saveItems}/>
-        <button type="button" id="btnRemarks"  data-toggle="modal" data-target="#remarksModal" style={{visibility:"hidden"}}></button>
+        <table>
+          <tr>
+            <td style={{width:"170px", backgroundColor:"lightblue"}}>
+            {this.state.woitems.length > 0 ?
+              <span style={{color:"#555", fontSize:"12px", fontWeight:"bold"}}> &nbsp; Filter by Material Code</span>
+               :null}
+            </td>
+            <td style={{width:"150px", backgroundColor:"lightblue", paddingRight:"5px"}}>
+            {this.state.woitems.length > 0 ?
+              <MaterialCodeDropDown onChange={this.filterByCode} item={this.state.woitems[0]}  codeValue={this.state.filterCode} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} />
+               :null}
+            </td>
+            <td style={{width:"50px"}}>
+
+            </td>
+            <td>
+            {this.state.selectedItems.length > 0 ?
+            <button onClick={this.deleteSelectedItems} class="btn-danger">Delete selected {this.state.selectedItems.length} item(s)</button>
+            :null}
+            </td>
+          </tr>
+        </table>
+
+
         <table id="order-listing" className="table stripped" >
           <thead>
-            <tr>
-                {this.colNames.map((c,i) => {
-                  return (
-                    <th key={i} style={{width:`${c.w}%`}}>{c.t}</th>
-                  )
-                })}
-                <th> &nbsp; </th>
+            <tr style={{fontSize:'12px', backgroundColor:'navy', color:"#fff"}}>
+            <td style={{textAlign:"center", width:'10px'}}><input type="checkbox" value="0" onClick={this.itemCheckBoxClicked}></input></td>
+            <td style={{textAlign:'left',width:'20px'}} >#</td>
+            <td style={{textAlign:'left',width:'100px'}}>Material</td>
+            <td style={{textAlign:'left',width:'100px'}}>Type</td>
+            <td style={{textAlign:'left',width:'50px'}}>Height</td>
+            <td style={{textAlign:'left',width:'50px'}}>Width</td>
+            <td style={{textAlign:'left',width:'40px'}}>Qty</td>
+            <td style={{textAlign:'left',width:'120px'}}>Remarks</td>
+            <td style={{textAlign:'left',width:'80px'}}>EB-A</td>
+            <td style={{textAlign:'left',width:'20px'}}></td>
+            <td style={{textAlign:'left',width:'80px'}}>EB-B</td>
+            <td style={{textAlign:'left',width:'80px'}}>EB-C</td>
+            <td style={{textAlign:'left',width:'80px'}}>EB-D</td>
+            <td style={{textAlign:'left',width:'70px'}}>Comments</td>
+            <td style={{textAlign:'left',width:'40px'}}></td>
+
             </tr>
           </thead>
-          {this.getSortedItems().map( (item, i) => {
+        </table>
+        <div  style={{height: "500px", overflowY:"scroll", overflowX:"hidden"}}>
+        <table id="order-listing" className="table stripped" >
+
+          {this.state.filteredItems.sort((a,b) => a.itemnumber > b.itemnumber ? 1 : -1).map( (item, i) => {
 
           let ebOptions = getEBOptions(item, this.props.material);
           console.log(ebOptions);
 
           let handleProfile = this.props.material.profiles.find(p => p.profileNumber == item.profileNumber)
           let childitems = this.state.woitems.filter(i => i.parentId == item.itemnumber)
-           
+          
           return (
             <tbody key={item.itemnumber}>
             <tr id={'item-row-' + item.itemnumber}    onClick={(e) => this.onItemClick(e,item.itemnumber)} onMouseDown={(e) => this.onItemClick(e,item.itemnumber)} onKeyDown={(e) => this.onItemClick(e,item.itemnumber)} onFocus={(e) => this.onItemClick(e,item.itemnumber)} style={{backgroundColor:`${item.itemnumber == this.state.currentItem ? "#b5d1ff" : "#eee"}`}} >
-                <td style={{fontWeight:"bold", textAlign:"center"}}>{item.itemnumber}</td>
-                <td>
-                  <MaterialCodeDropDown onChange={this.onChange} item={item} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} />
-                </td>
-                <td><input type="text" className="form-control input-xs" value={item.itemtype}  id="itemtype"  name="itemtype" onChange={this.onChange}  /></td>
-                <td><input type="text" className="form-control input-xs" maxLength="4" value={item.height}  id="height"  name="height" onChange={this.onChange}  /></td>
-                <td><input type="text" className="form-control input-xs" maxLength="4" value={item.width}  id="width"  name="width" onChange={this.onChange}  /></td>
-                <td><input type="text" className="form-control input-xs" maxLength="4" value={item.quantity}  id="quantity"  name="quantity" onChange={this.onChange}  /></td>
-                <td><WorkOrderRemarks  item={item} material={this.props.material} deleteRemark={this.deleteRemark} addRemarkData={this.addRemarkData} showRemarkData={this.showRemarkData} /></td>
-                <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_a} EBname="eb_a" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
-                <td><i className={item.ebCopied?"icon icon-arrow-left-circle":"icon icon-arrow-right-circle"} title="Copy to BCD" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyAtoBCD(item)}}></i> </td>
-                <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_b} EBname="eb_b" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
-                <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_c} EBname="eb_c" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
-                <td><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_d} EBname="eb_d" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
-                <td><input type="text" className="form-control input-xs" value={item.comments}  id="comments"  name="comments" onChange={this.onChange}  /></td>
-                <td>
+                <td style={{textAlign:"center", width:'10px'}}><input type="checkbox" id={"chk"+item.itemnumber} value={item.itemnumber} onClick={this.itemCheckBoxClicked}></input></td>
+                <td style={{textAlign:'left',fontWeight:"bold", textAlign:"center", width:'20px'}}>{item.itemnumber}</td>
+                <td style={{textAlign:'left',width:'100px'}}><MaterialCodeDropDown onChange={this.onChange} item={item} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} /> </td>
+                <td style={{textAlign:'left',width:'100px'}}><input type="text" className="form-control input-xs" value={item.itemtype}  id="itemtype"  name="itemtype" onChange={this.onChange}  /></td>
+                <td style={{textAlign:'left',width:'50px'}}><input type="text" className="form-control input-xs" maxLength="4" value={item.height}  id="height"  name="height" onChange={this.onChange}  /></td>
+                <td style={{textAlign:'left',width:'50px'}}><input type="text" className="form-control input-xs" maxLength="4" value={item.width}  id="width"  name="width" onChange={this.onChange}  /></td>
+                <td style={{textAlign:'left',width:'40px'}}><input type="text" className="form-control input-xs" maxLength="4" value={item.quantity}  id="quantity"  name="quantity" onChange={this.onChange}  /></td>
+                <td style={{textAlign:'left',width:'120px'}}><WorkOrderRemarks  item={item} material={this.props.material} deleteRemark={this.deleteRemark} addRemarkData={this.addRemarkData} showRemarkData={this.showRemarkData} /></td>
+                <td style={{textAlign:'left',width:'80px'}}><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_a} EBname="eb_a" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
+                <td style={{textAlign:'left',width:'20px'}}><i className={item.ebCopied?"icon icon-arrow-left-circle":"icon icon-arrow-right-circle"} title="Copy to BCD" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyAtoBCD(item)}}></i> </td>
+                <td style={{textAlign:'left',width:'80px'}}><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_b} EBname="eb_b" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
+                <td style={{textAlign:'left',width:'80px'}}><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_c} EBname="eb_c" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
+                <td style={{textAlign:'left',width:'80px'}}><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_d} EBname="eb_d" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
+                <td style={{textAlign:'left',width:'70px'}}><input type="text" className="form-control input-xs" value={item.comments}  id="comments"  name="comments" onChange={this.onChange}  /></td>
+                <td style={{textAlign:'left',width:'40px'}}>
                 <i className="icon icon-layers" title="Make a Copy" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyItem(item.itemnumber)}}></i> &nbsp; 
                 <i className="remove icon-close" title="Remove" style={{color:"red", cursor:"pointer",paddingTop:"4px", display:"block", float:"right"}} onClick={()=>{this.deleteItem(item.itemnumber)}}></i>
                 </td>
@@ -434,16 +534,22 @@ class WorkOrderItems extends Component {
 
           </tbody>
             )   
+           
 
 
           })}
 
 
-
       </table>
+      </div>
       <span id="btnAddItem" className="btn btn-xs btn-rounded btn-outline-success mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold"}} onClick={()=>{this.addItem()}}>Add Item</span>
       &nbsp; 
       <span id="btnCancelItems" className="btn btn-xs btn-rounded btn-outline-danger mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold", "float":"right"}} onClick={()=>{this.props.cancelItems()}}>Cancel Changes</span>
+      
+      <RemarksMain setMaterialTab={this.props.setMaterialTab} item={this.state.item} currentRemark={this.props.currentRemark} setCurrentRemark={this.props.setCurrentRemark} wo={this.props.wo} material={this.props.material} saveItems={this.props.saveItems} setCurrentItem={this.props.setCurrentItem}/>
+        <button type="button" id="btnRemarks"  data-toggle="modal" data-target="#remarksModal" style={{visibility:"hidden"}}></button>
+
+    
     </div>
     )
     

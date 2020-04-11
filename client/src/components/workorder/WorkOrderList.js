@@ -3,11 +3,15 @@ import { connect } from 'react-redux';
 import $ from 'jquery';
 import { ToastContainer} from 'react-toastify';
 import * as qs from 'query-string';
+import { NavLink, Link } from "react-router-dom";
+
 
 import { clearErrors } from '../../actions/errorActions';
 import { getAllWorkOrders, createWorkOrder, getWorkOrder, clearWorkOrder } from './woActions';
 import { getMaterial, clearMaterial } from '../materials/materialActions';
 import { notify_error,isEmptyOrSpaces } from '../../Utils/commonUtls';
+
+import { WO_STATUS } from './../../constants';
 
 class WorkOrderList extends Component {
 
@@ -69,6 +73,11 @@ class WorkOrderList extends Component {
     if(history) history.push('/login');
   }
 
+  // deleteWorkOrder(wonumber){
+  //   if(window.confirm('Are you sure that you that you want to delete the Work Order ' + wonumber)){
+  //     this.props.saveWorkOrder({...this.props.wo,status:WO_STATUS.SUBMITTED});
+  //   }
+  // }
 
   //----------- CREATE NEW WORK ORDER -----------------------------------//
   saveWorkOrder = (e) => {
@@ -215,9 +224,14 @@ getWorkOrder = (id) => {
           <table style={{width:"100%", color:"#439aff"}}>
             <tbody>
             <tr>
-              <td><h4 id="woTitle" className="card-title">WORK ORDERS</h4> </td>
-              
-              <td style={{textAlign:"right"}}><button type="button"  data-toggle="modal" data-target="#newWoModal"  className="btn btn-success btn-fw"><i  className="icon-notebook"></i>Create New Work Order</button></td>
+              <td  style={{width:"50%"}}><h4 id="woTitle" style={{color:"green"}} className="card-title">WORK ORDERS</h4> </td>
+              <td>
+                <nav>
+                <NavLink to="/customerlist" className="nav-link"><i className="link-icon icon-people"></i> &nbsp; <span className="menu-title">Customers</span></NavLink>
+                </nav>  
+              </td>
+              <td style={{textAlign:"right"}}>
+                <button type="button"  data-toggle="modal" data-target="#newWoModal"  className="btn btn-success btn-fw"><i  className="icon-notebook"></i>Create New Work Order</button></td>
             </tr>
             </tbody>
           </table>
@@ -226,6 +240,7 @@ getWorkOrder = (id) => {
             <div className="col-12" >
 
             {(!wolist || wolist.length == 0) ? <h5>No Work Orders</h5> :
+              <div>
               <table className="table table-striped table-hover wolist" style={{border:"#CCC 1px solid", width:"100%"}}>
                 <thead>
                   <tr>
@@ -235,7 +250,7 @@ getWorkOrder = (id) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {wolist.map(wl => { return(
+                  {wolist.filter(w => w.status != WO_STATUS.DELETED).map(wl => { return(
                     <tr onClick={() => {this.getWorkOrder(wl._id)}} key={wl._id}>
                       <td>{wl.wonumber}</td>
                       <td>{wl.date}</td>
@@ -243,7 +258,34 @@ getWorkOrder = (id) => {
                     </tr>
                   )})}
                 </tbody>
-              </table>
+                </table>
+
+                {wolist.filter(w => w.status == WO_STATUS.DELETED).length == 0 ? null :
+                <div style={{marginTop:"30px"}}>
+                  <h6 style={{color:"red"}}>DELETED WORK ORDERS</h6>
+
+                  <table className="table table-striped table-hover wolist" style={{border:"#CCC 1px solid", width:"100%"}}>
+                  <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Created On</th>
+                        <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {wolist.filter(w => w.status == WO_STATUS.DELETED).map(wl => { return(
+                      <tr onClick={() => {this.getWorkOrder(wl._id)}} key={wl._id}>
+                        <td>{wl.wonumber}</td>
+                        <td>{wl.date}</td>
+                        <td>{wl.status}</td>
+                      </tr>
+                    )})}
+                  </tbody>
+                  </table>
+                  </div>
+
+                  }
+                                    </div>
             }
             </div>
           </div>

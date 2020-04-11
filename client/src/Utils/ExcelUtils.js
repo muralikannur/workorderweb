@@ -1,7 +1,7 @@
 
   import XLSX from 'xlsx';
-  import { EB_START_NUMBER ,PATTERN_CODE} from '../constants';
-  import { getMaterialText, getRemarkData, getEBThickness } from './woUtils';
+  import { EB_START_NUMBER ,PATTERN_CODE, PATTERN_TYPE, REMARKS} from '../constants';
+  import { getMaterialText, getRemarkDataDetails, getEBThickness } from './woUtils';
 
 
   export const downloadCuttingList = (wo, material) => {
@@ -38,37 +38,54 @@
         laminateName = laminate.code;
       }
 
+      let a_count = 0,b_count = 0,c_count = 0,d_count = 0;
+
+
       let eb_a_items = wo.woitems.filter(i => !isNaN(i.eb_a) && i.eb_a == eb.materialEdgeBandNumber);
       eb_a_items.map(i => {
-        count += parseInt(i.height) * parseInt(i.quantity)
+        a_count = parseInt(i.height) * parseInt(i.quantity)
       })
 
       let eb_b_items = wo.woitems.filter(i => !isNaN(i.eb_b) && i.eb_b == eb.materialEdgeBandNumber);
       eb_b_items.map(i => {
-        count += parseInt(i.width) * parseInt(i.quantity)
+        b_count = parseInt(i.width) * parseInt(i.quantity)
       })      
 
       let eb_c_items = wo.woitems.filter(i => !isNaN(i.eb_c) && i.eb_c == eb.materialEdgeBandNumber);
       eb_c_items.map(i => {
-        count += parseInt(i.height) * parseInt(i.quantity)
+        c_count = parseInt(i.height) * parseInt(i.quantity)
       })
 
       let eb_d_items = wo.woitems.filter(i => !isNaN(i.eb_d) && i.eb_d == eb.materialEdgeBandNumber);
       eb_d_items.map(i => {
-        count += parseInt(i.width) * parseInt(i.quantity)
+        d_count= parseInt(i.width) * parseInt(i.quantity)
       })    
+
+      count = a_count + b_count + c_count + d_count
 
 
       eb_list.push({
         LAM_BOARD:laminateName,
         THICK:  parseFloat(eb.eb_thickness),
         WIDTH:  parseInt(eb.eb_width),
-        LENGTH:count
+        LENGTH:count,
+        WASTAGE: '5%',
+        TOTAL_REQUIRED: count * 1.05,
+        A:a_count * 1.05,
+        B:b_count * 1.05,
+        C:c_count * 1.05,
+        D:d_count * 1.05
+
       })
     })
 
+    eb_list = eb_list.filter(e => e.LENGTH > 0);
+    eb_list = eb_list.sort((a,b) => a.LAM_BOARD > b.LAM_BOARD ? 1 : -1);
 
-    items.map(i => {
+
+    items
+      .sort((a,b) =>  ((a.itemnumber + a.parentId) * 10000 + a.childNumber) >  ((b.itemnumber + b.parentId) * 10000 + b.childNumber) ? -1 : 1) 
+      .map(i => {
 
       let refNo = i.parentId == 0 ? i.itemnumber : i.parentId;
       let mat = material.materialCodes.find(m => m.materialCodeNumber == i.code);
@@ -82,6 +99,44 @@
       let cutting_Height = parseInt(i.height);
       let cutting_Width = parseInt(i.width);
 
+
+      //Adjust Pattern Laminates size
+      if(i.parentId != 0){
+        let parentItem = items.find(p => p.itemnumber == i.parentId);
+        if(parentItem.remarks.includes(REMARKS.PATTERN)){
+          let patternType = parentItem.patternType;
+          let splitCount = parentItem.patternSplits.length;
+
+          if(i.childNumber == 1){  // if PatternBoard
+            cutting_Width -=  getEBThickness(parentItem.eb_a,material.edgebands);
+            cutting_Height -= getEBThickness(parentItem.eb_b,material.edgebands);
+            cutting_Width -=  getEBThickness(parentItem.eb_c,material.edgebands);
+            cutting_Height -= getEBThickness(parentItem.eb_d,material.edgebands);
+          } else {
+
+            if(patternType == PATTERN_TYPE.HORIZONTAL){
+              if(i.childNumber == 2){
+                cutting_Height -= getEBThickness(parentItem.eb_b,material.edgebands);
+              }
+              if(i.childNumber == splitCount + 1){
+                cutting_Height -= getEBThickness(parentItem.eb_d,material.edgebands);
+              }          
+            }
+  
+            if(patternType == PATTERN_TYPE.VERTICAL){
+              if(i.childNumber == 2){
+                cutting_Width -= getEBThickness(parentItem.eb_a,material.edgebands);
+              }
+              if(i.childNumber == splitCount + 1){
+                cutting_Height -= getEBThickness(parentItem.eb_c,material.edgebands);
+              }          
+            }
+
+          }
+
+
+        }
+      }
 
 
       if(i.doubleThickWidth == 0 && i.ledgeType == 0){
@@ -109,7 +164,7 @@
       let remarkData = '';
 
       i.remarks.map((id) => {
-        remarkData += getRemarkData(id, i, material) + ', ';
+        remarkData += getRemarkDataDetails(id, i, material) + ', ';
       })
 
 
@@ -141,7 +196,7 @@
         C_Height: Math.round(cutting_Height),
         C_Width:  Math.round(cutting_Width),
         Qty:qty,
-        Code:i.code,
+        Code:i.code != PATTERN_CODE ? parseInt(i.code) : 0,
         Grains: (grains == "H" || grains == "V" ? 'yes':'no'),
         EB_A:getEBThickness(i.eb_a,material.edgebands),
         EB_B:getEBThickness(i.eb_b,material.edgebands),
@@ -210,14 +265,20 @@
       { wpx : 50 }, 
       { wpx : 100 },      
       { wpx : 150 },     
-      { wpx : 150 }     
+      { wpx : 250 }     
     ];
 
     wb["Sheets"]["EdgeBands"]["!cols"] = [
-      { wpx : 150 },
+      { wpx : 250 },
+      { wpx : 50 },
+      { wpx : 50 },
+      { wpx : 100 },
+      { wpx : 50 },
       { wpx : 100 },
       { wpx : 100 },
-      { wpx : 100 } 
+      { wpx : 100 },
+      { wpx : 100 },
+      { wpx : 100 }
     ];
 
     const wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary', cellStyles: true})

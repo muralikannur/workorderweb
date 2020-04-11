@@ -105,37 +105,70 @@ export const getEBOptions = (item, material) => {
 export const getRemarkData = (id, item, material) =>{
     let remarkData = '';
     if(item.parentId !=0) return remarkData;
+
     switch(id){
       case REMARKS.PROFILE:
-          const profile = material.profiles.find(p => p.profileNumber == item.profileNumber)
-          if(profile)
-            remarkData = profile.type + ' - H: ' + profile.height + ' - W: ' + profile.width + '(' + item.profileSide + ')';
+          remarkData = 'PROFILE';
           break;
       case REMARKS.E_PROFILE:
-          const eProfile = material.profiles.find(p => p.type == PROFILE_TYPE.E)
-          if(eProfile)
-            remarkData = eProfile.type + ' - H: ' + eProfile.height + ' - W: ' + eProfile.width;
+          remarkData = 'E_PROFILE';
           break;
       case REMARKS.DBLTHICK:
-          remarkData = 'DBL THICK - ' + item.doubleThickWidth;
+          remarkData = 'DBLTHICK';
           break;    
       case REMARKS.SHAPE:
-          remarkData = 'SHAPE - ' + item.shapeDetails.substring(0,15);
+          remarkData = 'SHAPE';
           break;                                
       case REMARKS.LEDGE:
           remarkData = item.ledgeType == "1" ? 'LEDGE' : 'C-LEDGE'
           break;  
       case REMARKS.GLASS:
-          remarkData = 'GLASS - ' + item.glassWidth;
+          remarkData = 'GLASS';
           break;                              
       case REMARKS.PATTERN:
-          remarkData = 'PATTERN ' + item.patternSplits.length;
+          remarkData = 'PATTERN';
           break;   
     }
-  
     return remarkData;
       
   }
+
+  
+export const getRemarkDataDetails = (id, item, material) =>{
+  let remarkData = '';
+  if(item.parentId !=0) return remarkData;
+
+  switch(id){
+    case REMARKS.PROFILE:
+        const profile = material.profiles.find(p => p.profileNumber == item.profileNumber)
+        if(profile)
+          remarkData = profile.type + ' - H: ' + profile.height + ' - W: ' + profile.width + '(' + item.profileSide + ')';
+        break;
+    case REMARKS.E_PROFILE:
+        const eProfile = material.profiles.find(p => p.type == PROFILE_TYPE.E)
+        if(eProfile)
+          remarkData = eProfile.type + ' - H: ' + eProfile.height + ' - W: ' + eProfile.width;
+        break;
+    case REMARKS.DBLTHICK:
+        remarkData = 'DBL THICK - ' + item.doubleThickWidth;
+        break;    
+    case REMARKS.SHAPE:
+        remarkData = 'SHAPE - ' + item.shapeDetails.substring(0,15);
+        break;                                
+    case REMARKS.LEDGE:
+        remarkData = item.ledgeType == "1" ? 'LEDGE' : 'C-LEDGE'
+        break;  
+    case REMARKS.GLASS:
+        remarkData = 'GLASS - ' + item.glassWidth;
+        break;                              
+    case REMARKS.PATTERN:
+        remarkData = 'PATTERN ' + item.patternSplits.length;
+        break;   
+  }
+
+  return remarkData;
+    
+}
 
   export const Item = {
     itemnumber:propTypes.number.isRequired

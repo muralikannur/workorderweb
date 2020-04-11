@@ -86,8 +86,8 @@ showMaterialDefinition = () => {
 
               <hr />
                 {
-                     this.state.currentRemark == REMARKS.PROFILE && <RemarksProfile item={this.props.item}  wo={this.props.wo} material={this.props.material}  saveItems={this.props.saveItems} />
-                  || this.state.currentRemark == REMARKS.E_PROFILE && <RemarksEdgeProfile item={this.props.item}  wo={this.props.wo} material={this.props.material}  saveItems={this.props.saveItems} />
+                     this.state.currentRemark == REMARKS.PROFILE && <RemarksProfile item={this.props.item}  wo={this.props.wo} material={this.props.material}  saveItems={this.props.saveItems} setCurrentItem={this.props.setCurrentItem} />
+                  || this.state.currentRemark == REMARKS.E_PROFILE && <RemarksEdgeProfile item={this.props.item}  wo={this.props.wo} material={this.props.material}  saveItems={this.props.saveItems} setCurrentItem={this.props.setCurrentItem}  />
                   || this.state.currentRemark == REMARKS.DBLTHICK && <RemarksDoubleThick item={this.props.item} wo={this.props.wo} saveItems={this.props.saveItems}  material={this.props.material}  />
                   || this.state.currentRemark == REMARKS.LEDGE && <RemarksLedge item={this.props.item} wo={this.props.wo} saveItems={this.props.saveItems} />
                   || this.state.currentRemark == REMARKS.SHAPE && <RemarksShape item={this.props.item} wo={this.props.wo} saveItems={this.props.saveItems} />

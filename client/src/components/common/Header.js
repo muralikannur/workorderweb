@@ -1,6 +1,5 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-import { NavLink, Link } from "react-router-dom";
 import { logout } from '../../actions/authActions';
 
 class Header extends Component {
@@ -26,14 +25,10 @@ class Header extends Component {
                             <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                             
                             &nbsp; 
-                            <span className="nav-profile-name"><b>{user.email}</b></span>
+                            <span id="userEmail" className="nav-profile-name"><b>{user.email}</b></span>
                             </a>
                             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            {/* <Link to="/settings" className="dropdown-item">
-                                <i className="icon-settings text-primary mr-2"></i>
-                                Settings
-                            </Link>
-                            <div className="dropdown-divider"></div> */}
+
                             <a onClick={this.props.logout} href='#' className="dropdown-item">
                                 <i className="icon-logout text-primary mr-2"></i>
                                 Logout
@@ -48,23 +43,6 @@ class Header extends Component {
                 }
                 </div>
             </div>
-            {
-            // !user ? null : 
-            // <div className="nav-bottom">
-            //     <div className="container">
-            //         <nav>
-            //             <ul className="nav" style={{fontWeight:"bold"}}>
-            //                 {/* <li className="nav-item">
-            //                     <NavLink to="/wolist" className="nav-link"><i className="link-icon icon-screen-tablet"></i> &nbsp; <span className="menu-title">Work Orders</span></NavLink>
-            //                 </li> */}
-            //                 <li className="nav-item">
-            //                     <NavLink to="/customerlist" className="nav-link"><i className="link-icon icon-people"></i> &nbsp; <span className="menu-title">Customers</span></NavLink>
-            //                 </li>
-            //             </ul>
-            //         </nav>
-            //     </div>
-            // </div>
-            }
             </nav>
         )
     }

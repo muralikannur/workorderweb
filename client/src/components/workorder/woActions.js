@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_WO, SAVE_MAIN, GET_WO_LIST, SAVE_MATERIAL, SAVE_ITEMS, CREATE_WO, ADD_WO_TO_LIST, CLEAR_WO } from '../../actions/types';
+import { GET_WO, SAVE_MAIN, GET_WO_LIST, SAVE_MATERIAL, SAVE_ITEMS, CREATE_WO, ADD_WO_TO_LIST, CLEAR_WO, UPDATE_WO_LIST } from '../../actions/types';
 import { tokenConfig } from '../../actions/authActions';
 import { returnErrors } from '../../actions/errorActions';
 import { getMaterial } from '../materials/materialActions';
@@ -99,6 +99,15 @@ export const getAllWorkOrders = customer_id => (dispatch, getState) => {
       dispatch(returnErrors(err.response.data, err.response.status))
     );
 };
+
+export const updateWorkOrderList = (wonumber, status) => (dispatch) => {
+      dispatch({
+        type: UPDATE_WO_LIST,
+        wonumber, 
+        status
+      })
+};
+
 
 
 export const saveMaterial = (matData) => dispatch => {

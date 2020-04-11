@@ -19,9 +19,11 @@ import MaterialMain from '../materials/MaterialMain';
 //Actions
 import { clearErrors } from '../../actions/errorActions';
 import { saveWorkOrder } from './woActions';
-import { getMaterial, clearMaterial } from '../materials/materialActions';
+import { getMaterial, clearMaterial, saveMaterial, copyMaterial } from '../materials/materialActions';
 import { saveItems, clearWorkOrder } from './woActions';
 import { setCurrentItem, setCurrentRemark, setMaterialTab } from '../../actions/configActions';
+import { updateWorkOrderList } from './woActions';
+
 import { downloadCuttingList } from '../../Utils/ExcelUtils';
 
 class WorkOrderMain extends Component {
@@ -60,7 +62,10 @@ class WorkOrderMain extends Component {
   componentWillReceiveProps(newProps) {
     console.log('LIFECYCLE: Workorder Main - componentWillReceiveProps');
     if (newProps.wo.status != this.props.wo.status) {
-      this.disableEdit(newProps.wo.status);
+      window.setTimeout(() => {
+        this.disableEdit(newProps.wo.status);
+      },100)
+      
     }
   }
 
@@ -78,6 +83,24 @@ class WorkOrderMain extends Component {
     if(window.confirm('Are you sure that you have entered all the items and ready to Submit the Work Order?')){
       this.props.saveWorkOrder({...this.props.wo,status:WO_STATUS.SUBMITTED});
       this.setState({originalItems:this.props.wo.woitems});
+    }
+  }
+
+  deleteWorkOrder = () =>{
+    if(window.confirm('Do you want to Delete this Work Order?')){
+      this.props.saveWorkOrder({...this.props.wo,status:WO_STATUS.DELETED});
+      this.props.updateWorkOrderList(this.props.wo.wonumber,WO_STATUS.DELETED);      
+      const { history } = this.props;
+      if(history) history.push('/wolist');
+    }
+  }
+
+  restoreWorkOrder = () =>{
+    if(window.confirm('Do you want to Restore this Work Order?')){
+      this.props.saveWorkOrder({...this.props.wo,status:WO_STATUS.NEW});
+      this.props.updateWorkOrderList(this.props.wo.wonumber,WO_STATUS.NEW);
+      const { history } = this.props;
+      if(history) history.push('/wolist');
     }
   }
 
@@ -113,19 +136,30 @@ class WorkOrderMain extends Component {
   }
 
   disableEdit = (status) => {
-    if(status == WO_STATUS.SUBMITTED){
+    if(status == WO_STATUS.SUBMITTED || status == WO_STATUS.DELETED){
       $("#order-listing").find("*").attr("disabled", "disabled");
       $('td:nth-child(12),th:nth-child(12)').hide();
       $('#btnAddItem').hide();
       $('#btnSaveWO').hide();
       $('#btnSubmitWO').hide();
       $('#btnMaterial').hide();
+      $('#btnExport').hide();
+    }
+
+    if(status == WO_STATUS.DELETED){
+      $('#btnRestore').show();
+      $('#btnDelete').hide();
+    } else {
+      $('#btnRestore').hide();
+      $('#btnDelete').show();
     }
   }
 
   highlightError = (errItems) => {
     errItems.map(e => {$('#item-row-' + e).css("background-color","#FF9999")});
   }
+
+
 
   validate = () => {
 
@@ -252,18 +286,28 @@ class WorkOrderMain extends Component {
     let {isAuthenticated, item, saveWorkOrder, getMaterial, ...woItemsProps} = this.props; // eslint-disable-line
 
     return(
-      <div className="content-wrapper" style={{margin:"2px", maxWidth:"100%"}}>
+      <div className="content-wrapper" style={{margin:"2px", maxWidth:"100%", paddingTop:"0px"}}>
           <ToastContainer />
 
         <div className="modal fade" id="materialModal" tabIndex="-1" role="dialog" aria-labelledby="materialModalLabel"  data-backdrop="static" data-keyboard="false">
           <div className="modal-dialog modal-lg mt-0" >
             <div className="modal-content" style={{marginTop:"10px", zIndex:2}} >
               <div className="modal-header" style={{paddingTop:"2px",paddingBottom:"0px"}}>
-                <h5 className="modal-title">Material Definition for Work Order {this.props.wo.wonumber}</h5>
-                  <button id="btnCloseMaterialPopup" type="button" className="btn btn-light" data-dismiss="modal"> Back to Items <i className="icon-login"></i> </button>
+                <table style={{width:"100%"}}>
+                  <tr>
+                    <td style={{width:"600px"}}>
+                    <h5 className="modal-title">Material Definition for Work Order {this.props.wo.wonumber}</h5>
+                    </td>
+
+                    <td  style={{textAlign:"right"}}>
+                    <button id="btnCloseMaterialPopup" type="button" className="btn btn-light" data-dismiss="modal"> Back to Items <i className="icon-login"></i> </button>
+                    </td>
+                  </tr>
+                </table>
+                  
               </div>
               <div className="modal-body" style={{paddingBottom:"0px"}}>
-                <MaterialMain materialTab={this.props.materialTab} items={this.props.wo.woitems} material={this.props.material} />
+                <MaterialMain materialTab={this.props.materialTab} items={this.props.wo.woitems} material={this.props.material} wolist={this.props.wolist} woId={this.props.wo._id} />
               </div>
             </div>
           </div>
@@ -284,14 +328,30 @@ class WorkOrderMain extends Component {
                     &nbsp; &nbsp;
                     {/* <button id="btnSubmitWO" type="button" className="btn btn-secondary"  style={{lineHeight:"1px"}} onClick={() => {this.submitWorkOrder();}}><i className="icon-notebook" ></i>Submit</button>
                     &nbsp; &nbsp; */}
+                        
                     <button id="btnExport" type="button" className="btn btn-primary"  style={{lineHeight:"1px"}} onClick={() => {this.saveToExcel();}}><i className="icon-grid" ></i>Download</button>
-                    &nbsp; &nbsp;                    
+                    &nbsp; &nbsp;    
+
+                     <button id="btnDelete" type="button" className="btn btn-danger"  style={{lineHeight:"1px"}} onClick={() => {this.deleteWorkOrder();}}><i className="icon-close" ></i>Delete</button>
+                     <button id="btnRestore" type="button" className="btn btn-success"  style={{lineHeight:"1px"}} onClick={() => {this.restoreWorkOrder();}}><i className="icon-reload" ></i>Restore</button>
+                    &nbsp; &nbsp;                      &nbsp; &nbsp;        
+
+
+
                   </td>
-                  <td style={{textAlign:"right", width:"30%"}}>
+                  <td >
+                    <nav>
+                    <NavLink to="/wolist" className="nav-link"><i className="link-icon icon-list"></i> &nbsp; <span className="menu-title">Work Orders</span></NavLink>
+                    </nav>
+                
+                  </td>
+                  <td>
                     <nav>
                     <NavLink to="/customerlist" className="nav-link"><i className="link-icon icon-people"></i> &nbsp; <span className="menu-title">Customers</span></NavLink>
-                    </nav>
+                    </nav>                      
                   </td>
+
+
                 </tr>
                 </tbody>
               </table>
@@ -311,7 +371,8 @@ class WorkOrderMain extends Component {
             </div>
           </div>
           
-          <div className="col-md-3 grid-margin container-fluid" style={{position:"fixed",zIndex:"1050", margin:"0 auto", right:"0"}}>
+          <div className="col-md-3 grid-margin container-fluid" >
+          {/* style={{position:"fixed",zIndex:"1050", margin:"0 auto", right:"0"}} */}
             <WorkOrderPreview item={this.props.item} material={this.props.material} clearErrors={this.props.clearErrors} />
           </div>
         </div>
@@ -327,11 +388,12 @@ const mapStateToProps = state => ({
   material: state.material,
   item: state.config.currentItem,
   materialTab:state.config.materialTab,
-  currentRemark:state.config.currentRemark
+  currentRemark:state.config.currentRemark,
+  wolist: state.wolist,
 
 });
 
 export default connect(
   mapStateToProps,
-  {clearErrors, saveWorkOrder, getMaterial, saveItems, setCurrentItem, setCurrentRemark, setMaterialTab}
+  {clearErrors, saveWorkOrder, getMaterial, saveItems, setCurrentItem, setCurrentRemark, setMaterialTab, updateWorkOrderList}
 )(WorkOrderMain);
