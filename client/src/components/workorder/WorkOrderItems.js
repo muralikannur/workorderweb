@@ -28,6 +28,7 @@ class WorkOrderItems extends Component {
       filteredItems:[],
       filterCode:"0"
     };
+    this.counter = 1;
   }
 
   componentDidMount(){
@@ -39,13 +40,14 @@ class WorkOrderItems extends Component {
 
   componentWillReceiveProps(newProps){
     console.log('LIFECYCLE: Workorder Items - componentWillReceiveProps');
+    
+
+    if(this.state.filteredItems.length == 0 || this.state.woitems.length != newProps.wo.woitems)
+    setTimeout(() => {
+      this.filterByCode({target:{value:this.state.filterCode}});
+    },100)
+
     this.setState({woitems: newProps.wo.woitems });
-    if(this.state.filterCode != "0"){
-      let items = newProps.wo.woitems.filter(i => i.itemnumber != 0 && i.code == this.state.filterCode);
-      this.setState({filteredItems: items });
-    }else {
-      this.setState({filteredItems: newProps.wo.woitems });
-    }
 
   }
 
@@ -66,10 +68,11 @@ class WorkOrderItems extends Component {
       if(window.confirm('Are you sure that you want to delete the Item # ' + i +' ??','Shape')){
         var items = this.state.woitems;
         var newItems = items.filter(item => item.itemnumber != i && item.parentId != i);
-        this.setState({woitems: newItems, currentItem:0});
+        let orderedItems = this.reorderItems(newItems);
+        this.setState({woitems: orderedItems, currentItem:0});
         this.props.setCurrentItem(null);
         this.setState({item:null});
-        this.props.saveItems(newItems);
+        this.props.saveItems(orderedItems);
       }
     },100
     )
@@ -95,6 +98,7 @@ class WorkOrderItems extends Component {
     setTimeout(() => {
       this.setState({currentItem:maxId})
     },100)
+    this.filterByCode({target:{value:this.state.filterCode}});
   }  
 
   copyAtoBCD = (item) => {
@@ -156,6 +160,7 @@ class WorkOrderItems extends Component {
     const newItem = getNewWoItem(maxId);
     this.setState({woitems: [...this.state.woitems, newItem], currentItem:maxId});
     this.props.saveItems( [...this.state.woitems, newItem]);
+    //this.filterByCode({target:{value:this.state.filterCode}});
   }
 
   getMaxId = () => {
@@ -289,15 +294,38 @@ class WorkOrderItems extends Component {
           newItems.push(i);
       })
 
-      this.setState({woitems: newItems, currentItem:0});
+      //reorder itemnumber
+      let orderedItems = this.reorderItems(newItems);
+
+      this.setState({
+        woitems: orderedItems, 
+        currentItem:0,
+        item:null,
+        selectedItems:[]
+      });
+    
+
       this.props.setCurrentItem(null);
-      this.setState({item:null});
-      this.props.saveItems(newItems);
+      this.props.saveItems(orderedItems);
 
       $('[id^=chk]').prop('checked',false);
-      this.setState({selectedItems:[]})
+
+      //this.filterByCode({target:{value:this.state.filterCode}});
 
     }
+  }
+
+  reorderItems = (newItems) =>{
+    let orderedItems = [];
+    newItems = newItems.filter(i => i.itemnumber != 0);
+    newItems = newItems.sort((a,b) =>  a.itemnumber > b.itemnumber ? 1 : -1);
+    newItems.map((p, index) => {
+        let childItems = this.state.woitems.filter(i => i.parentId == p.itemnumber);
+        childItems.map(c => {c.parentId = index + 1; orderedItems.push(c)});
+        p.itemnumber = index + 1;
+        orderedItems.push(p)
+      })
+    return orderedItems;
   }
 
 
@@ -404,20 +432,29 @@ class WorkOrderItems extends Component {
 
   filterByCode = (e) => {
     const code = e.target.value;
+    console.log('code = ' + code);
     if(code != "0"){
       let items = this.state.woitems.filter(i => i.itemnumber != 0 && i.code == code);
       this.setState({filteredItems: items });
     }else {
-      this.setState({filteredItems: this.state.woitems });
+      this.setState({filteredItems: this.state.woitems.filter(i => i.itemnumber != 0) });
     }
     this.setState({filterCode: code});
     $('[id^=chk]').prop('checked',false);
-    this.setState({selectedItems:[]})
+
+    //if triggered by dropdown list
+    if(e.target.name){
+      this.setState({selectedItems:[]})
+    }
+
   }
 
   
 
   render() {
+
+    console.log('render items' + this.counter);
+    this.counter++;
 
     if(!this.props.material || !this.props.material.materialCodes || this.props.material.materialCodes.length == 0) return null
 
@@ -442,14 +479,14 @@ class WorkOrderItems extends Component {
       <div>
         <table>
           <tr>
-            <td style={{width:"170px", backgroundColor:"lightblue"}}>
+            <td style={{width:"45px", backgroundColor:"lightblue"}}>
             {this.state.woitems.length > 0 ?
-              <span style={{color:"#555", fontSize:"12px", fontWeight:"bold"}}> &nbsp; Filter by Material Code</span>
+              <span style={{color:"#555", fontSize:"12px", fontWeight:"bold"}}> &nbsp; Filter</span>
                :null}
             </td>
-            <td style={{width:"150px", backgroundColor:"lightblue", paddingRight:"5px"}}>
+            <td style={{width:"120px", backgroundColor:"lightblue", paddingRight:"5px"}}>
             {this.state.woitems.length > 0 ?
-              <MaterialCodeDropDown onChange={this.filterByCode} item={this.state.woitems[0]}  codeValue={this.state.filterCode} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} />
+              <MaterialCodeDropDown onChange={this.filterByCode} item={this.state.woitems[0]}  codeValue={this.state.filterCode} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} label="All" />
                :null}
             </td>
             <td style={{width:"50px"}}>
@@ -457,7 +494,7 @@ class WorkOrderItems extends Component {
             </td>
             <td>
             {this.state.selectedItems.length > 0 ?
-            <button onClick={this.deleteSelectedItems} class="btn-danger">Delete selected {this.state.selectedItems.length} item(s)</button>
+            <button style={{fontSize:"14px"}}  onClick={this.deleteSelectedItems} class="btn-danger-sm">Delete selected {this.state.selectedItems.length} item(s)</button>
             :null}
             </td>
           </tr>
@@ -467,7 +504,7 @@ class WorkOrderItems extends Component {
         <table id="order-listing" className="table stripped" >
           <thead>
             <tr style={{fontSize:'12px', backgroundColor:'navy', color:"#fff"}}>
-            <td style={{textAlign:"center", width:'10px'}}><input type="checkbox" value="0" onClick={this.itemCheckBoxClicked}></input></td>
+            <td style={{textAlign:"center", width:"10px",display:`${this.props.editMode?'table-cell':'none'}`}}><input type="checkbox" value="0" onClick={this.itemCheckBoxClicked}></input></td>
             <td style={{textAlign:'left',width:'20px'}} >#</td>
             <td style={{textAlign:'left',width:'100px'}}>Material</td>
             <td style={{textAlign:'left',width:'100px'}}>Type</td>
@@ -481,7 +518,7 @@ class WorkOrderItems extends Component {
             <td style={{textAlign:'left',width:'80px'}}>EB-C</td>
             <td style={{textAlign:'left',width:'80px'}}>EB-D</td>
             <td style={{textAlign:'left',width:'70px'}}>Comments</td>
-            <td style={{textAlign:'left',width:'40px'}}></td>
+            <td style={{textAlign:'left', width:"40px",display:`${this.props.editMode?'table-cell':'none'}`}}></td>
 
             </tr>
           </thead>
@@ -492,7 +529,6 @@ class WorkOrderItems extends Component {
           {this.state.filteredItems.sort((a,b) => a.itemnumber > b.itemnumber ? 1 : -1).map( (item, i) => {
 
           let ebOptions = getEBOptions(item, this.props.material);
-          console.log(ebOptions);
 
           let handleProfile = this.props.material.profiles.find(p => p.profileNumber == item.profileNumber)
           let childitems = this.state.woitems.filter(i => i.parentId == item.itemnumber)
@@ -500,7 +536,7 @@ class WorkOrderItems extends Component {
           return (
             <tbody key={item.itemnumber}>
             <tr id={'item-row-' + item.itemnumber}    onClick={(e) => this.onItemClick(e,item.itemnumber)} onMouseDown={(e) => this.onItemClick(e,item.itemnumber)} onKeyDown={(e) => this.onItemClick(e,item.itemnumber)} onFocus={(e) => this.onItemClick(e,item.itemnumber)} style={{backgroundColor:`${item.itemnumber == this.state.currentItem ? "#b5d1ff" : "#eee"}`}} >
-                <td style={{textAlign:"center", width:'10px'}}><input type="checkbox" id={"chk"+item.itemnumber} value={item.itemnumber} onClick={this.itemCheckBoxClicked}></input></td>
+                <td style={{textAlign:"center", width:"10px",display:`${this.props.editMode?'table-cell':'none'}`}}><input type="checkbox" checked={this.state.selectedItems.includes(item.itemnumber)?"checked":""} value={item.itemnumber}   id={"chk"+item.itemnumber} value={item.itemnumber} onClick={this.itemCheckBoxClicked}></input></td>
                 <td style={{textAlign:'left',fontWeight:"bold", textAlign:"center", width:'20px'}}>{item.itemnumber}</td>
                 <td style={{textAlign:'left',width:'100px'}}><MaterialCodeDropDown onChange={this.onChange} item={item} material={this.props.material} showPattern={true} excludeOnlyLaminate={true} /> </td>
                 <td style={{textAlign:'left',width:'100px'}}><input type="text" className="form-control input-xs" value={item.itemtype}  id="itemtype"  name="itemtype" onChange={this.onChange}  /></td>
@@ -514,7 +550,7 @@ class WorkOrderItems extends Component {
                 <td style={{textAlign:'left',width:'80px'}}><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_c} EBname="eb_c" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
                 <td style={{textAlign:'left',width:'80px'}}><WorkOrderEdgeBand setMaterialTab={this.props.setMaterialTab} ebOptions={ebOptions} EBvalue={item.eb_d} EBname="eb_d" onChange={this.onChange} handleProfile={handleProfile} profileSide={item.profileSide}   /></td>
                 <td style={{textAlign:'left',width:'70px'}}><input type="text" className="form-control input-xs" value={item.comments}  id="comments"  name="comments" onChange={this.onChange}  /></td>
-                <td style={{textAlign:'left',width:'40px'}}>
+                <td style={{textAlign:'left', width:"40px",display:`${this.props.editMode?'table-cell':'none'}`}}>
                 <i className="icon icon-layers" title="Make a Copy" style={{color:"blue", cursor:"pointer",paddingTop:"4px", display:"block", float:"left"}} onClick={()=>{this.copyItem(item.itemnumber)}}></i> &nbsp; 
                 <i className="remove icon-close" title="Remove" style={{color:"red", cursor:"pointer",paddingTop:"4px", display:"block", float:"right"}} onClick={()=>{this.deleteItem(item.itemnumber)}}></i>
                 </td>
@@ -541,11 +577,16 @@ class WorkOrderItems extends Component {
 
 
       </table>
+      {this.props.editMode?
+      <div>
+        <span id="btnAddItem" className="btn btn-xs btn-rounded btn-outline-success mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold"}} onClick={()=>{this.addItem()}}>Add Item</span>
+        &nbsp; 
+        <span id="btnCancelItems" className="btn btn-xs btn-rounded btn-outline-danger mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold", "float":"right"}} onClick={()=>{this.props.cancelItems()}}>Cancel Changes</span>
       </div>
-      <span id="btnAddItem" className="btn btn-xs btn-rounded btn-outline-success mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold"}} onClick={()=>{this.addItem()}}>Add Item</span>
-      &nbsp; 
-      <span id="btnCancelItems" className="btn btn-xs btn-rounded btn-outline-danger mr-2" style={{cursor:"pointer", margin:"5px", fontWeight:"bold", "float":"right"}} onClick={()=>{this.props.cancelItems()}}>Cancel Changes</span>
-      
+      :null}
+
+      </div>
+
       <RemarksMain setMaterialTab={this.props.setMaterialTab} item={this.state.item} currentRemark={this.props.currentRemark} setCurrentRemark={this.props.setCurrentRemark} wo={this.props.wo} material={this.props.material} saveItems={this.props.saveItems} setCurrentItem={this.props.setCurrentItem}/>
         <button type="button" id="btnRemarks"  data-toggle="modal" data-target="#remarksModal" style={{visibility:"hidden"}}></button>
 

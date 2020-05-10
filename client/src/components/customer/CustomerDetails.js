@@ -16,21 +16,23 @@ class CustomerDetails extends Component {
       phone:'',
       whatsapp:'',
       email:'',
-      billing_address:'',
-      shipping_address:''
+      address1:'',
+      address2:'',
+      pin:'',
+      gst:'',
     }
   }
 
   componentDidMount(){
-    const { customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address } = this.props.customer;
-    this.setState({ customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address })
+    const { customercode,companyname,contactperson, phone, whatsapp, email, address1, address2, pin, gst } = this.props.customer;
+    this.setState({ customercode,companyname,contactperson, phone, whatsapp, email, address1, address2, pin, gst })
 
   }
 
 componentWillReceiveProps(newProps){
   if(newProps.customer.customercode == "" || newProps.customer.customercode != this.state.customercode){
-    const { customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address } = newProps.customer;
-    this.setState({ customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address })
+    const { customercode,companyname,contactperson, phone, whatsapp, email, address1, address2, pin, gst } = newProps.customer;
+    this.setState({ customercode,companyname,contactperson, phone, whatsapp, email, address1, address2, pin, gst })
   } 
   return true;
 }
@@ -45,7 +47,7 @@ componentWillReceiveProps(newProps){
   onSubmit = e => {
     e.preventDefault();
     
-    let { customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address } = this.state;
+    let { customercode,companyname,contactperson, phone, whatsapp, email, address1, address2, pin, gst } = this.state;
     
 
     if(customercode.length != 3){
@@ -64,7 +66,7 @@ componentWillReceiveProps(newProps){
     }
 
     customercode = customercode.toUpperCase();
-    const newCustomer = {customercode,companyname,contactperson, phone, whatsapp, email, billing_address, shipping_address };
+    const newCustomer = {customercode,companyname,contactperson, phone, whatsapp, email, address1, address2, pin, gst };
 
       this.props.saveCustomer(newCustomer, this.props.currentCustomer);
       //$('#btnCustomersClose').click();
@@ -112,6 +114,13 @@ componentWillReceiveProps(newProps){
                   </div>
 
                   <div className="form-group row">
+                  <label htmlFor="phone" className="col-sm-3 col-form-label">Email <span style={{color:'red'}}>*</span></label>
+                  <div className="col-sm-9">
+                      <input type="text" onChange={ (e) => this.onChange(e)} value={this.state.email} className="form-control" id="email" name="email" placeholder="Email"/>
+                  </div>
+                  </div>
+
+                  <div className="form-group row">
                   <label htmlFor="phone" className="col-sm-3 col-form-label">Phone <span style={{color:'red'}}>*</span></label>
                   <div className="col-sm-9">
                       <input type="text" onChange={ (e) => this.onChange(e)} value={this.state.phone} className="form-control" id="phone" name="phone" placeholder="Phone"/>
@@ -123,16 +132,30 @@ componentWillReceiveProps(newProps){
                       <input type="text" onChange={ (e) => this.onChange(e)} value={this.state.whatsapp}  className="form-control" id="whatsapp" name="whatsapp" placeholder="WhatsApp Number"/>
                   </div>
                   </div>
+
+
                   <div className="form-group row">
-                  <label htmlFor="whatsapp" className="col-sm-3 col-form-label">Email <span style={{color:'red'}}>*</span></label>
+                  <label className="col-sm-3 col-form-label">Address</label>
+                  
                   <div className="col-sm-9">
-                      <input type="text" onChange={ (e) => this.onChange(e)} value={this.state.email}  className="form-control" id="email" name="email" placeholder="Email"/>
+                      <input style={{width:"500px"}} type="text" onChange={ (e) => this.onChange(e)} value={this.state.address1}  className="form-control" id="address1" name="address1" placeholder="Address1"/>
+                      <input style={{width:"500px"}} type="text" onChange={ (e) => this.onChange(e)} value={this.state.address2}  className="form-control" id="address2" name="address2" placeholder="Address2"/>
+                      <input style={{width:"200px"}} type="text" onChange={ (e) => this.onChange(e)} value={this.state.pin}  className="form-control" id="pin" name="pin" placeholder="PIN"/>
+                      
                   </div>
                   </div>
+
                   <div className="form-group row">
-                  <label htmlFor="billing_address" className="col-sm-3 col-form-label">Billing Address</label>
+                  <label htmlFor="whatsapp" className="col-sm-3 col-form-label">GST <span style={{color:'red'}}>*</span></label>
                   <div className="col-sm-9">
-                      <input type="text" onChange={ (e) => this.onChange(e)} value={this.state.billing_address}   className="form-control" id="billing_address" name="billing_address" placeholder="Billing Address"/>
+                  <input style={{width:"300px"}} type="text" onChange={ (e) => this.onChange(e)} value={this.state.gst}  className="form-control" id="gst" name="gst" placeholder="GST"/>
+                  </div>
+                  </div>
+
+                  {/* <div className="form-group row">
+                  <label htmlFor="address" className="col-sm-3 col-form-label">Billing Address</label>
+                  <div className="col-sm-9">
+                      <input type="text" onChange={ (e) => this.onChange(e)} value={this.state.address}   className="form-control" id="address" name="address" placeholder="Billing Address"/>
                   </div>
                   </div>
                   <div className="form-group row">
@@ -140,7 +163,7 @@ componentWillReceiveProps(newProps){
                   <div className="col-sm-9">
                       <input type="text" onChange={ (e) => this.onChange(e)} value={this.state.shipping_address}  className="form-control" id="shipping_address" name="shipping_address" placeholder="Billing Address"/>
                   </div>
-                  </div>                    
+                  </div>                     */}
 
 
                   <button style={{float:"right", padding:"10px"}}  onClick={ (e) => this.onSubmit(e)} className="btn btn-primary submit-btn">Submit</button>

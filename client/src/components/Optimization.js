@@ -183,6 +183,34 @@ class Optimization extends Component {
     return newX;
   }
 
+  fitOneInLastXBalance = (items,xBalance, ctx) => {
+    let xBalWidth = xBalance.w;
+    for(let buffer = 0; buffer <= xBalWidth - 10; buffer++){
+      items = items.filter(i => i.x == -1);
+      items.filter(item => item.w == xBalance.w - buffer).every(i => {
+        if(i.h <= xBalance.h){
+          this.drawMultiItems(ctx,xBalance,[i]);
+          xBalance.h -= i.h;
+          xBalance.y += i.h;
+          //items = items.filter(i => i.x == -1);
+          console.log(JSON.stringify(xBalance));
+          this.showXBalance(ctx,xBalance);
+        }
+      })
+      items.filter(item => item.h == xBalance.w - buffer).every(i => {
+        if(i.w <= xBalance.h){
+          i.r=true;
+          this.drawMultiItems(ctx,xBalance,[i]);
+          xBalance.h -= i.w;
+          xBalance.y += i.w;
+          //items = items.filter(i => i.x == -1);
+          console.log(JSON.stringify(xBalance));
+          this.showXBalance(ctx,xBalance);
+        }
+      })
+    }
+  }
+
 
 
   drawMultiItems = (ctx,bal,m) => {
@@ -190,10 +218,10 @@ class Optimization extends Component {
     for(let i = 0; i < m.length; i++){
       m[i].x=bal.x;
       m[i].y=yPos; 
-      let h = (i.r?m[i].w:m[i].h);
-      let w = (i.r?m[i].h:m[i].w);
+      let h = (m[i].r?m[i].w:m[i].h);
+      let w = (m[i].r?m[i].h:m[i].w);
       this.drawItem(ctx,m[i],h,w);
-      yPos += m[i].h;
+      yPos += h;
     }
 
   }
@@ -217,6 +245,21 @@ class Optimization extends Component {
       this.setState({currentItem:i.n})
     }
   }
+
+  showXBalance = (ctx,xBalance) => {
+    ctx.strokeStyle = "#ff0000";
+    ctx.strokeRect(xBalance.x, xBalance.y, xBalance.w, xBalance.h);
+    ctx.strokeStyle = "#000";
+  }
+
+
+  // sleep = (milliseconds) => {
+  //   const date = Date.now();
+  //   let currentDate = null;
+  //   do {
+  //     currentDate = Date.now();
+  //   } while (currentDate - date < milliseconds);
+  // }
 
   updateCanvas() {
 
@@ -308,6 +351,29 @@ class Optimization extends Component {
       }
     }
 
+    newX = -1;
+    while(newX != 0){
+      newX =  this.fitTwoInXBalance(ctx,items.filter(i =>  i.x == -1 && i.w <= xBalance.w), xBalance,4);
+      if(newX != 0){
+        xBalance.w -= newX;
+        xBalance.x += newX;
+      }
+    }
+
+    console.log(JSON.stringify(xBalance));
+
+    this.fitOneInLastXBalance(items.filter(i => i.x == -1),xBalance, ctx);
+
+
+
+    // ctx.strokeStyle = "#ff0000";
+    // ctx.strokeRect(xBalance.x, xBalance.y, xBalance.h, xBalance.w);
+    // ctx.strokeStyle = "#000";
+
+
+this.setState({xBalance});
+
+
 
     ctx.stroke();
 
@@ -327,7 +393,6 @@ onMouseMove = (e)  => {
     if(this.state.currentItem != item.n){
       this.setState({currentItem:item.n})
     }
-    console.log(item);
   }else{
     this.setState({currentItem:0})
   }
@@ -361,7 +426,11 @@ onMouseMove = (e)  => {
             </table>
           </td>
         </tr>
+        <tr><td>
+        <h3>{this.state.xBalance.h} X {this.state.xBalance.w}</h3>  
+        </td></tr>
       </table>
+      
     )
   }
 }

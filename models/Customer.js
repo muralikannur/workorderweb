@@ -27,14 +27,26 @@ const CustomerSchema = new Schema({
     type: String,
     required: false
   },  
-  billing_address: {
+
+
+  address1: {
     type: String,
     required: false
   },
-  shipping_address: {
+  address2: {
     type: String,
     required: false
   },
+  pin: {
+    type: String,
+    required: false
+  },
+  gst: {
+    type: String,
+    required: false
+  },
+
+
   user_id: {
     type: Schema.Types.ObjectId,
     required: true

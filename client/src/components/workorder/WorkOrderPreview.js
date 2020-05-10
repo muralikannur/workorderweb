@@ -28,11 +28,11 @@ class WorkOrderPreview extends Component {
     let isWidthHP = false, isHeightHP = false;
     if(handleProfile){
       if(this.props.item.profileSide == 'W'){
-        this.marginB = Math.round(handleProfile.height / 4);
+        this.marginB = Math.round(handleProfile.height / 8);
         isWidthHP = true;
       }
       if(this.props.item.profileSide == 'H'){
-        this.marginR = Math.round(handleProfile.height / 4);
+        this.marginR = Math.round(handleProfile.height / 8);
         isHeightHP = true;
       }
     }
@@ -129,15 +129,15 @@ class WorkOrderPreview extends Component {
                                 borderRightWidth: `${this.marginR * 2}px`,
                                 borderBottomWidth: `${this.marginB * 2}px`,
                                 background: `${this.bg}`,
-                                borderRightColor: isHeightHP?'green':'maroon',
-                                borderBottomColor: isWidthHP?'green':'maroon'
+                                borderRightColor: isHeightHP?'red':'maroon',
+                                borderBottomColor: isWidthHP?'red':'maroon'
                               }}></div>
                             </td>
                             <td style={{ textAlign: "left", verticalAlign: "middle" }}>
                               <span style={{color: 'maroon', fontWeight: "bold" }}>C</span> &nbsp; 
                               <span style={{ color: "#aaa", fontSize: "small" }}>{this.height}</span> &nbsp; 
                               {isHeightHP?
-                              <span style={{ color: "green", fontSize: "small" }}> ({handleProfile.height})</span>
+                              <span style={{ color: "red", fontSize: "small" }}> ({handleProfile.height})</span>
                               :
                               <span style={{ color: "maroon", fontSize: "small" }}>{this.marginR > 0 ? ' (' + this.marginR + ')' : ''}</span>
                               }
@@ -150,7 +150,7 @@ class WorkOrderPreview extends Component {
                               <span style={{ color: "maroon", fontWeight: "bold" }}>D</span> &nbsp; 
                               <span style={{ color: "#aaa", fontSize: "small" }}>{this.width}</span> &nbsp; 
                               {isWidthHP?
-                              <span style={{ color: "green", fontSize: "small" }}> ({handleProfile.height})</span>
+                              <span style={{ color: "red", fontSize: "small" }}> ({handleProfile.height})</span>
                               :
                               <span style={{ color: "maroon", fontSize: "small" }}>{this.marginB > 0 ? ' (' + this.marginB + ')' : ''}</span>
                               }

@@ -28,14 +28,22 @@ const WorkOrderSchema = new Schema({
     type:String,
     default:'New'
   },  
-  billing_address: {
-    type: String,
-    required: false
-  },
-  shipping_address: {
-    type: String,
-    required: false
-  }
+
+  client:{ type: String,  required: false  },
+  billing_address1:{ type: String,  required: false  },
+  billing_address2:{ type: String,  required: false  },
+  billing_pin:{ type: String,  required: false  },
+  billing_phone:{ type: String,  required: false  },
+  billing_gst:{ type: String,  required: false  },
+  shipping_address1:{ type: String,  required: false  },
+  shipping_address2:{ type: String,  required: false  },
+  shipping_pin:{ type: String,  required: false  },
+  shipping_phone:{ type: String,  required: false  },
+  shipping_gst:{ type: String,  required: false  },
+
+
+
+
 });
 
 module.exports = Item = mongoose.model('workorder', WorkOrderSchema);

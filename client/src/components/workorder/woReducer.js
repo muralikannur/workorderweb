@@ -10,7 +10,8 @@ const initialState = {
   wonumber:'',
   wodate:Date.now,
   userid:0,
-  address:'',
+  billing_address:'',
+  shipping_address:'',  
   woitems: [],
   status:''
 };

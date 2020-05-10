@@ -10,7 +10,7 @@ router.get('/', auth, (req, res) => {
   if (req.user.name == "ADMIN") {
       search = {};
   }
-  Customer.find(search,{_id:1,customercode:1,companyname:1,contactperson:1,phone:1,whatsapp:1,email:1,billing_address:1,shipping_address:1})
+  Customer.find(search,{_id:1,customercode:1,companyname:1,contactperson:1,phone:1,whatsapp:1,email:1,address1:1,address2:1,pin:1,gst:1})
       .then(c => {
           res.status(200).json(c)
       })
@@ -40,7 +40,7 @@ router.get('/:id',auth, (req, res) => {
 //Create Customer
 router.post('/', auth, (req,  res) => {
 
-    let { action, customercode, companyname,contactperson,phone,whatsapp,email,billing_address,shipping_address } = req.body;
+    let { action, customercode, companyname,contactperson,phone,whatsapp,email,address1,address2,pin,gst } = req.body;
 
     if(action == 'create'){
       Customer.findOne({customercode})
@@ -50,7 +50,7 @@ router.post('/', auth, (req,  res) => {
           res.status(200).json({error:'Customer Code ' + customercode + ' already exists.'})
         } else {
           const user_id = req.user.id;
-          const newCustomer = new Customer({ customercode,companyname,contactperson,phone,whatsapp,email,billing_address,shipping_address, user_id});
+          const newCustomer = new Customer({ customercode,companyname,contactperson,phone,whatsapp,email,address1,address2,pin,gst, user_id});
           newCustomer.save().then(c => {
               res.status(200).json(c);
           }).catch(err => { 
@@ -62,11 +62,15 @@ router.post('/', auth, (req,  res) => {
     }
 
     if(action == 'update'){
-      Customer.updateOne({customercode},{$set:{ companyname,contactperson,phone,whatsapp,email,billing_address,shipping_address}},(err,data) => {
+      Customer.updateOne({customercode},{$set:{ companyname,contactperson,phone,whatsapp,email,address1,address2,pin,gst}},(err,data) => {
         if(err){
           logger.error(err); res.status(400).json(err);
         }else{
-          res.status(200).json(data);
+          Customer.findOne({customercode})
+          .then(customer => {
+            res.status(200).json(customer);
+          })
+          
         }
       })
     }

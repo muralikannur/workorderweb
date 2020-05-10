@@ -15,14 +15,14 @@ import { setDoubleThick, getPatternBoardSize, setPatternLaminateSize }  from '..
 import WorkOrderItems from './WorkOrderItems';
 import WorkOrderPreview from './WorkOrderPreview';
 import MaterialMain from '../materials/MaterialMain';
+import WorkOrderDetails from './WorkOrderDetails';
 
 //Actions
 import { clearErrors } from '../../actions/errorActions';
-import { saveWorkOrder } from './woActions';
+import { saveWorkOrder, updateStatus, updateAddress } from './woActions';
 import { getMaterial, clearMaterial, saveMaterial, copyMaterial } from '../materials/materialActions';
 import { saveItems, clearWorkOrder } from './woActions';
 import { setCurrentItem, setCurrentRemark, setMaterialTab } from '../../actions/configActions';
-import { updateWorkOrderList } from './woActions';
 
 import { downloadCuttingList } from '../../Utils/ExcelUtils';
 
@@ -32,7 +32,9 @@ class WorkOrderMain extends Component {
     super(props);
     this.state = {
       originalItems : [],
-      originalMaterials : {}
+      originalMaterials : {},
+      billing_address:'',
+      shipping_address:'',
     }
   }
 
@@ -55,7 +57,7 @@ class WorkOrderMain extends Component {
     });
 
     setTimeout(() => {
-      this.setState({originalItems:this.props.wo.woitems});
+      this.setState({originalItems: JSON.parse(JSON.stringify(this.props.wo.woitems))});
     },1000);
   }
 
@@ -67,10 +69,22 @@ class WorkOrderMain extends Component {
       },100)
       
     }
+    if (newProps.wo.billing_address != this.state.billing_address) {
+        this.setState({billing_address:newProps.wo.billing_address});      
+    }
+    if (newProps.wo.shipping_address != this.state.shipping_address) {
+      this.setState({shipping_address:newProps.wo.shipping_address});      
+    }
+    
   }
 
   componentWillUnmount() {
     this.unblock();
+  }
+
+  onChange = (e) => {
+    const { value, name } = e.target;
+    this.setState({[name]:value});
   }
 
   submitWorkOrder = () => {
@@ -82,23 +96,41 @@ class WorkOrderMain extends Component {
     if(!this.validate()){return;}
     if(window.confirm('Are you sure that you have entered all the items and ready to Submit the Work Order?')){
       this.props.saveWorkOrder({...this.props.wo,status:WO_STATUS.SUBMITTED});
-      this.setState({originalItems:this.props.wo.woitems});
+      this.setState({originalItems:JSON.parse(JSON.stringify(this.props.wo.woitems))});
     }
   }
 
-  deleteWorkOrder = () =>{
-    if(window.confirm('Do you want to Delete this Work Order?')){
-      this.props.saveWorkOrder({...this.props.wo,status:WO_STATUS.DELETED});
-      this.props.updateWorkOrderList(this.props.wo.wonumber,WO_STATUS.DELETED);      
-      const { history } = this.props;
-      if(history) history.push('/wolist');
-    }
+  updateAddress = (address) => {
+      this.props.updateAddress(
+        this.props.wo._id,
+        this.props.user.id, 
+        address.client,
+        address.billing_address1,
+        address.billing_address2,
+        address.billing_pin,
+        address.billing_phone,
+        address.billing_gst,
+        address.shipping_address1,
+        address.shipping_address2,
+        address.shipping_pin,
+        address.shipping_phone,
+        address.shipping_gst
+      );
   }
+
+
+  // deleteWorkOrder = () =>{
+  //   if(window.confirm('Do you want to Delete this Work Order?')){
+  //     this.props.saveWorkOrder({...this.props.wo,status:WO_STATUS.DELETED});
+  //     this.props.updateWorkOrderList(this.props.wo.wonumber,WO_STATUS.DELETED);      
+  //     const { history } = this.props;
+  //     if(history) history.push('/wolist');
+  //   }
+  // }
 
   restoreWorkOrder = () =>{
     if(window.confirm('Do you want to Restore this Work Order?')){
-      this.props.saveWorkOrder({...this.props.wo,status:WO_STATUS.NEW});
-      this.props.updateWorkOrderList(this.props.wo.wonumber,WO_STATUS.NEW);
+      this.props.updateStatus(this.props.wo._id, this.props.wo.wonumber, this.props.user.id, 'NEW');
       const { history } = this.props;
       if(history) history.push('/wolist');
     }
@@ -108,7 +140,7 @@ class WorkOrderMain extends Component {
     if(!this.validate()){return false;}
     this.props.saveWorkOrder(this.props.wo, resetOriginalItems);
     if(resetOriginalItems){
-      this.setState({originalItems:this.props.wo.woitems});
+      this.setState({originalItems:JSON.parse(JSON.stringify(this.props.wo.woitems))});
     }
     return true;
   }
@@ -136,23 +168,23 @@ class WorkOrderMain extends Component {
   }
 
   disableEdit = (status) => {
-    if(status == WO_STATUS.SUBMITTED || status == WO_STATUS.DELETED){
-      $("#order-listing").find("*").attr("disabled", "disabled");
-      $('td:nth-child(12),th:nth-child(12)').hide();
-      $('#btnAddItem').hide();
-      $('#btnSaveWO').hide();
-      $('#btnSubmitWO').hide();
-      $('#btnMaterial').hide();
-      $('#btnExport').hide();
-    }
+    // if(status == WO_STATUS.SUBMITTED || status == WO_STATUS.DELETED){
+    //   $("#order-listing").find("*").attr("disabled", "disabled");
+    //   $('td:nth-child(12),th:nth-child(12)').hide();
+    //   $('#btnAddItem').hide();
+    //   $('#btnSaveWO').hide();
+    //   $('#btnSubmitWO').hide();
+    //   $('#btnMaterial').hide();
+    //   $('#btnExport').hide();
+    // }
 
-    if(status == WO_STATUS.DELETED){
-      $('#btnRestore').show();
-      $('#btnDelete').hide();
-    } else {
-      $('#btnRestore').hide();
-      $('#btnDelete').show();
-    }
+    // if(status == WO_STATUS.DELETED){
+    //   $('#btnRestore').show();
+    //  // $('#btnDelete').hide();
+    // } else {
+    //   $('#btnRestore').hide();
+    // //  $('#btnDelete').show();
+    // }
   }
 
   highlightError = (errItems) => {
@@ -289,11 +321,14 @@ class WorkOrderMain extends Component {
       <div className="content-wrapper" style={{margin:"2px", maxWidth:"100%", paddingTop:"0px"}}>
           <ToastContainer />
 
+
+        {/* Modal - Material Definition */}
         <div className="modal fade" id="materialModal" tabIndex="-1" role="dialog" aria-labelledby="materialModalLabel"  data-backdrop="static" data-keyboard="false">
           <div className="modal-dialog modal-lg mt-0" >
             <div className="modal-content" style={{marginTop:"10px", zIndex:2}} >
               <div className="modal-header" style={{paddingTop:"2px",paddingBottom:"0px"}}>
                 <table style={{width:"100%"}}>
+                  <tbody>
                   <tr>
                     <td style={{width:"600px"}}>
                     <h5 className="modal-title">Material Definition for Work Order {this.props.wo.wonumber}</h5>
@@ -303,6 +338,7 @@ class WorkOrderMain extends Component {
                     <button id="btnCloseMaterialPopup" type="button" className="btn btn-light" data-dismiss="modal"> Back to Items <i className="icon-login"></i> </button>
                     </td>
                   </tr>
+                  </tbody>
                 </table>
                   
               </div>
@@ -313,6 +349,10 @@ class WorkOrderMain extends Component {
           </div>
         </div>
 
+        {/* Modal Edit Work Order Details */}
+        <WorkOrderDetails edit={true} updateAddress={this.updateAddress} user={this.props.user} wo ={this.props.wo} customerlist = {[]} wolist = {[]} createWorkOrder={this.props.createWorkOrder}/>
+
+
         <nav className="navbar horizontal-layout col-lg-12 col-12 p-0">
         <div className="nav-bottom">
           <div style={{marginLeft:"0px", width:"100%"}}>
@@ -321,31 +361,33 @@ class WorkOrderMain extends Component {
                 <tbody>
                 <tr>
                   <td ><div style={{color:"#439aff", fontFamily:"Verdana", fontSize:"26px", padding:"5px", fontWeight:"bold"}}>{this.props.wo.wonumber}</div> </td>
-                    <td style={{ textAlign: "right" }}>
-                    <button type="button" id="btnMaterial" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#materialModal">Define Materials</button>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <button id="btnSaveWO" type="button" className="btn btn-success" style={{lineHeight:"1px"}} onClick={() => {this.saveWorkOrder(true);}}><i className="icon-doc" ></i>Save</button>
-                    &nbsp; &nbsp;
-                    {/* <button id="btnSubmitWO" type="button" className="btn btn-secondary"  style={{lineHeight:"1px"}} onClick={() => {this.submitWorkOrder();}}><i className="icon-notebook" ></i>Submit</button>
-                    &nbsp; &nbsp; */}
-                        
-                    <button id="btnExport" type="button" className="btn btn-primary"  style={{lineHeight:"1px"}} onClick={() => {this.saveToExcel();}}><i className="icon-grid" ></i>Download</button>
-                    &nbsp; &nbsp;    
-
-                     <button id="btnDelete" type="button" className="btn btn-danger"  style={{lineHeight:"1px"}} onClick={() => {this.deleteWorkOrder();}}><i className="icon-close" ></i>Delete</button>
-                     <button id="btnRestore" type="button" className="btn btn-success"  style={{lineHeight:"1px"}} onClick={() => {this.restoreWorkOrder();}}><i className="icon-reload" ></i>Restore</button>
-                    &nbsp; &nbsp;                      &nbsp; &nbsp;        
-
-
+                    <td style={{ textAlign: "left" }}>
+                    {this.props.editMode ?
+                      <div>
+                        <button type="button" id="btnMaterial" className="btn btn-primary" style={{marginLeft:"20px"}}  data-toggle="modal" data-target="#materialModal">Define Materials</button>
+                        <button id="btnSaveWO" type="button" className="btn btn-success" style={{lineHeight:"1px",marginLeft:"20px"}} onClick={() => {this.saveWorkOrder(true);}}><i className="icon-doc" ></i>Save</button>
+                        <button id="btnExport" type="button" className="btn btn-primary"  style={{lineHeight:"1px",marginLeft:"20px"}} onClick={() => {this.saveToExcel();}}><i className="icon-grid" ></i>Download</button>
+                      </div>
+                    :
+                      <button id="btnRestore" type="button" className="btn btn-success"  style={{lineHeight:"1px"}} onClick={() => {this.restoreWorkOrder();}}><i className="icon-reload" ></i>Restore</button>
+                    }
 
                   </td>
-                  <td >
+                  <td style={{width:"200px"}}>
+
+                  <button type="button"  data-toggle="modal" data-target="#newWoModal"  className="btn btn-success btn-fw"><i  className="icon-notebook"></i>Edit Address</button>
+
+                  {/* <nav>
+                    <NavLink className="nav-link" data-toggle="modal" data-target="#modalWODetails"><i className="link-icon icon-list"></i> &nbsp; <span className="menu-title">Edit Address</span></NavLink>
+                    </nav> */}
+                  </td>
+                  <td style={{width:"200px"}}>
                     <nav>
                     <NavLink to="/wolist" className="nav-link"><i className="link-icon icon-list"></i> &nbsp; <span className="menu-title">Work Orders</span></NavLink>
                     </nav>
                 
                   </td>
-                  <td>
+                  <td style={{width:"200px"}}>
                     <nav>
                     <NavLink to="/customerlist" className="nav-link"><i className="link-icon icon-people"></i> &nbsp; <span className="menu-title">Customers</span></NavLink>
                     </nav>                      
@@ -367,7 +409,7 @@ class WorkOrderMain extends Component {
 
           <div className="col-md-9 grid-margin stretch-card" data-spy="affix" data-offset-top="90" >
             <div className="card">
-              <WorkOrderItems {...woItemsProps} setMaterialTab={this.props.setMaterialTab} validate={this.validate} cancelItems={this.cancelItems} saveWorkOrder={this.saveWorkOrder} />
+              <WorkOrderItems {...woItemsProps} setMaterialTab={this.props.setMaterialTab} validate={this.validate} cancelItems={this.cancelItems} saveWorkOrder={this.saveWorkOrder} editMode={this.props.editMode} />
             </div>
           </div>
           
@@ -384,16 +426,17 @@ class WorkOrderMain extends Component {
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
   wo: state.wo,
   material: state.material,
   item: state.config.currentItem,
   materialTab:state.config.materialTab,
   currentRemark:state.config.currentRemark,
   wolist: state.wolist,
-
+  editMode: state.config.editMode
 });
 
 export default connect(
   mapStateToProps,
-  {clearErrors, saveWorkOrder, getMaterial, saveItems, setCurrentItem, setCurrentRemark, setMaterialTab, updateWorkOrderList}
+  {clearErrors, saveWorkOrder, getMaterial, saveItems, setCurrentItem, setCurrentRemark, setMaterialTab, updateStatus, updateAddress}
 )(WorkOrderMain);

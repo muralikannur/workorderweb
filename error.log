@@ -80,3 +80,58 @@
     at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
     at _combinedTickCallback (internal/process/next_tick.js:131:7)
     at process._tickCallback (internal/process/next_tick.js:180:9)
+
+2020-04-19T07:30:26.648Z [api\workorder.js] error: User Authentication failed while creating new Work Order - undefined
+
+2020-04-19T07:30:37.363Z [api\workorder.js] error: User Authentication failed while creating new Work Order - undefined
+
+2020-04-19T07:35:26.393Z [api\workorder.js] error: User Authentication failed while creating new Work Order - undefined
+
+2020-04-19T07:35:30.847Z [api\workorder.js] error: User Authentication failed while creating new Work Order - undefined
+
+2020-04-19T07:36:11.768Z [api\workorder.js] error: User Authentication failed while creating new Work Order - undefined
+
+2020-04-20T10:55:40.065Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-05-03T06:35:37.664Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-05-03T06:38:50.365Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-05-03T06:44:01.360Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-05-03T06:47:07.985Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-05-03T06:49:17.271Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-05-10T06:46:26.346Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-05-10T06:48:25.423Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-05-10T06:49:28.354Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)

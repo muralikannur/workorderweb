@@ -72,6 +72,51 @@ export const saveWorkOrder = (wo, notify=false) => (dispatch, getState) => {
     );
 };
 
+export const updateStatus = (id, wonumber, user_id, status) => (dispatch, getState) => {
+  axios
+    .post('/api/wo/' + id, {user_id, status}, tokenConfig(getState))
+    .then(res =>
+      {
+        dispatch(updateWorkOrderList(wonumber,status))
+        notify_success('Work Order ' + wonumber + ' is ' + (status == 'NEW' ? ' restored.' : ' deleted.'));
+      }
+    )
+    .catch(err =>
+      notify_error('ERROR while updating work order.')
+    );
+};
+
+export const updateAddress = (id, user_id,client,billing_address1,billing_address2,billing_pin,billing_phone,billing_gst,shipping_address1,shipping_address2,shipping_pin,shipping_phone,shipping_gst ) => (dispatch, getState) => {
+  axios
+    .post('/api/wo/' + id, {user_id,client,billing_address1,billing_address2,billing_pin,billing_phone,billing_gst,shipping_address1,shipping_address2,shipping_pin,shipping_phone,shipping_gst}, tokenConfig(getState))
+    .then(res =>
+      {
+        notify_success('Address updated successfully.');
+      }
+    )
+    .catch(err =>
+      notify_error('ERROR while updating address.')
+    );
+};
+
+
+// export const restoreWorkOrder = (id, wonumber, user_id) => (dispatch, getState) => {
+//   axios
+//     .post('/api/wo/' + id, {user_id}, tokenConfig(getState))
+//     .then(res =>
+//       {
+//         dispatch(updateWorkOrderList(wonumber,'NEW'))
+//         notify_success('Work Order ' + wonumber + ' restored.');
+//       }
+//     )
+//     .catch(err =>
+//       notify_error('ERROR while restoring work order.')
+//     );
+// };
+
+
+
+
 export const getWorkOrder = id => (dispatch, getState) => {
   axios
     .get('/api/wo/' + id, tokenConfig(getState))

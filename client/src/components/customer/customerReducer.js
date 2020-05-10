@@ -9,8 +9,11 @@ const initialState = {
   phone:'',
   email:'',
   whatsapp:'',
-  billing_address:'',
-  shipping_address:''
+  address1:'',
+  address2:'',
+  pin:'',
+  gst:''
+
 };
 
 export default function(state = initialState, action) {

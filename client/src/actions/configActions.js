@@ -1,4 +1,4 @@
-import { SET_CURRENT_ITEM,  SET_CURRENT_REMARK, SET_CURRENT_CUSTOMER, SET_CURRENT_MATERIAL_TAB } from './types';
+import { SET_CURRENT_ITEM,  SET_CURRENT_REMARK, SET_CURRENT_CUSTOMER, SET_CURRENT_MATERIAL_TAB, SET_EDIT_MODE } from './types';
 
 // SET CURRENT ITEM
 export const setCurrentItem = (i) => {
@@ -31,3 +31,12 @@ export const setMaterialTab = (matTab) => {
     payload: matTab
   };
 };
+
+// SET EDIT MODE
+export const setEditMode = (editMode) => {
+  return {
+    type: SET_EDIT_MODE,
+    payload: editMode
+  };
+};
+

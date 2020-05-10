@@ -85,7 +85,6 @@ export const getEBOptions = (item, material) => {
       if(mat){
         const laminate = material.edgebands.filter(eb => eb.laminate == mat.front_laminate );
         const board = material.edgebands.filter(eb => eb.laminate == parseInt(mat.board) + EB_START_NUMBER.BOARD);
-        console.log(board)
         
         if(laminate || board){
           ebOptions = [...ebOptions, ...laminate, ...board];
