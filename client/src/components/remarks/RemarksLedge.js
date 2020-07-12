@@ -1,55 +1,30 @@
-import React, { Component} from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
 import $ from 'jquery';
-import { REMARKS, PROFILE_TYPE} from '../../constants';
+import { notify_error } from '../../Utils/commonUtls';
 
-class RemarksLedge extends Component {
- 
-  constructor(props){
-    super(props);
-    this.state = {
-      ledgeType:0
-    }
-  }
-  componentDidMount(){
-    setTimeout(() => {
-      this.updateState();
-    },200
-    )
-  }
+import { updateLedge } from './remarksActions';
 
-  updateState() {
-    if(this.props.item != null){
-      this.setState({ ledgeType : this.props.item.ledgeType })
-    }
-  }
 
-  onChange = (e) => {
-    const { value, name } = e.target;
-    this.setState({[name]:value});
-  }
-  
+
+class RemarksLedge extends PureComponent {
+   
   UpdateRemark(){
-    let newItem = JSON.parse(JSON.stringify(this.props.item));
-    newItem.ledgeType = this.state.ledgeType;
-    let remarks = newItem.remarks;
-    if(remarks.length == 0 || !remarks.includes(REMARKS.LEDGE)){
-      remarks.push(REMARKS.LEDGE);
+    let value = $('#ledgeType').val();
+    if(value == "0"){
+      notify_error('Please select a Ledge Type.');
+      return;
     }
-
-
-    let items = this.props.wo.woitems.filter(i => i.itemnumber != this.props.item.itemnumber)
-    items = [...items,newItem]
-    this.props.saveItems(items);
-    //this.props.setCurrentItem(newItem);
+    this.props.updateLedge(value);
     $('#btnRemarksClose').click();
   }
+  
   render() {
     return(
       <div>
           <div>
             <h5>Select the Ledge Type</h5>
-            <select style={{width:"300px"}}  id="ledgeType" name="ledgeType" value={this.state.ledgeType}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
+            <select style={{width:"300px"}}  id="ledgeType" name="ledgeType"  defaultValue={this.props.ledgeType}  className="js-example-basic-single input-xs  w-100">
             <option value="0" key="0" >Select...</option>
             <option value="1" key="1" >LEDGE</option>
             <option value="2" key="2" >C-LEDGE</option>
@@ -69,12 +44,14 @@ class RemarksLedge extends Component {
   }
 }
 
-RemarksLedge.propTypes = {
-  item: PropTypes.object.isRequired,
-  wo: PropTypes.object.isRequired,
-  material: PropTypes.object.isRequired,  
-  saveItems: PropTypes.func.isRequired
-}
+const mapStateToProps = state => (
+  {
+    ledgeType: state.config.currentItem.ledgeType,
+  }
+);
 
-
-export default RemarksLedge;
+export default connect(
+  mapStateToProps,
+  {updateLedge},
+  null
+)(RemarksLedge);

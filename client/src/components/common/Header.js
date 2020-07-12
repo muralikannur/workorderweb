@@ -1,8 +1,8 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/authActions';
 
-class Header extends Component {
+class Header extends PureComponent {
  
 
     render() {

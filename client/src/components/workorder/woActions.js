@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_WO, SAVE_MAIN, GET_WO_LIST, SAVE_MATERIAL, SAVE_ITEMS, CREATE_WO, ADD_WO_TO_LIST, CLEAR_WO, UPDATE_WO_LIST } from '../../actions/types';
+import { GET_WO, SAVE_MAIN, GET_WO_LIST, SAVE_MATERIAL, SAVE_ITEMS, CREATE_WO, ADD_WO_TO_LIST, CLEAR_WO, UPDATE_WO_LIST, SAVE_ITEM } from '../../actions/types';
 import { tokenConfig } from '../../actions/authActions';
 import { returnErrors } from '../../actions/errorActions';
 import { getMaterial } from '../materials/materialActions';
@@ -20,6 +20,7 @@ export const createWorkOrder = wo => (dispatch, getState) => {
           _id:res.data._id,
           wonumber:res.data.wonumber,
           customer_id:res.data.customer_id,
+          project:res.data.project,
           date:res.data.date
         }
 
@@ -86,9 +87,9 @@ export const updateStatus = (id, wonumber, user_id, status) => (dispatch, getSta
     );
 };
 
-export const updateAddress = (id, user_id,client,billing_address1,billing_address2,billing_pin,billing_phone,billing_gst,shipping_address1,shipping_address2,shipping_pin,shipping_phone,shipping_gst ) => (dispatch, getState) => {
+export const updateAddress = (id, user_id,client,billing_address1,billing_address2,billing_pin,billing_phone,billing_gst,shipping_address1,shipping_address2,shipping_pin,shipping_phone,shipping_gst,ship_to_billing ) => (dispatch, getState) => {
   axios
-    .post('/api/wo/' + id, {user_id,client,billing_address1,billing_address2,billing_pin,billing_phone,billing_gst,shipping_address1,shipping_address2,shipping_pin,shipping_phone,shipping_gst}, tokenConfig(getState))
+    .post('/api/wo/' + id, {user_id,client,billing_address1,billing_address2,billing_pin,billing_phone,billing_gst,shipping_address1,shipping_address2,shipping_pin,shipping_phone,shipping_gst,ship_to_billing}, tokenConfig(getState))
     .then(res =>
       {
         notify_success('Address updated successfully.');
@@ -166,6 +167,13 @@ export const saveItems = (items) => dispatch => {
   dispatch({
     type: SAVE_ITEMS,
     payload: items
+  })
+};
+
+export const saveItem = (item) => dispatch => {
+  dispatch({
+    type: SAVE_ITEM,
+    payload: item
   })
 };
 

@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import { ToastContainer} from 'react-toastify';
@@ -15,7 +15,7 @@ import { setEditMode } from '../../actions/configActions';
 
 import { WO_STATUS } from './../../constants';
 
-class WorkOrderList extends Component {
+class WorkOrderList extends PureComponent {
 
   constructor(props){
     super(props);
@@ -31,6 +31,7 @@ class WorkOrderList extends Component {
       shipping_pin:'',
       shipping_phone:'',
       shipping_gst:'',
+      ship_to_billing:'',
       customercode:'',
       customer_id:'',
       materialWoId:0
@@ -123,6 +124,7 @@ getWorkOrder = (id, status) => {
                       <th style={{width:"200px"}}>Order #</th>
                       <th style={{width:"200px"}}>Created On</th>
                       <th style={{width:"200px"}}>Client Name</th>
+                      <th style={{width:"200px"}}>Project Name</th>
                       <th style={{width:"200px"}}>Status</th>
                       <th style={{width:"200px"}}>DELETE</th>
                   </tr>
@@ -133,6 +135,7 @@ getWorkOrder = (id, status) => {
                       <td><a href="#"  onClick={() => {this.getWorkOrder(wl._id, wl.status)}} >{wl.wonumber}</a></td>
                       <td>{wl.date}</td>
                       <td>{wl.client}</td>
+                      <td>{wl.project}</td>
                       <td>{wl.status}</td>
                       <td><a href="#" onClick={() => {this.deleteWorkOrder(wl.wonumber,wl._id)}}>DELETE</a></td>                      
                     </tr>
@@ -150,6 +153,7 @@ getWorkOrder = (id, status) => {
                         <th style={{width:"200px"}}>Order #</th>
                         <th style={{width:"200px"}}>Created On</th>
                         <th style={{width:"200px"}}>Client Name</th>
+                        <th style={{width:"200px"}}>Project Name</th>
                         <th style={{width:"200px"}}>Status</th>
                         <th style={{width:"100px"}}>RESTORE</th>
                         <th style={{width:"100px"}}>DELETE</th>
@@ -161,6 +165,7 @@ getWorkOrder = (id, status) => {
                         <td><a href="#"  onClick={() => {this.getWorkOrder(wl._id, wl.status)}} >{wl.wonumber}</a> </td>
                         <td>{wl.date}</td>
                         <td>{wl.client}</td>
+                        <td>{wl.project}</td>
                         <td>{wl.status}</td>
                         <td><a href="#" onClick={() => {this.restoreWorkOrder(wl.wonumber,wl._id)}}>RESTORE</a></td>  
                         <td><a href="#" onClick={() => {this.removeWorkOrder(wl.wonumber,wl._id)}}>DELETE</a></td>  

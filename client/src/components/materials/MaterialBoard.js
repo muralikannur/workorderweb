@@ -1,8 +1,9 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
 import { boardType } from '../../appConfig';
 import { notify_error } from '../../Utils/commonUtls';
 
-class MaterialBoard extends Component {
+class MaterialBoard extends PureComponent {
   constructor(props){
       super(props);
       this.state = {
@@ -14,7 +15,7 @@ class MaterialBoard extends Component {
 
   componentDidMount(){
     window.setTimeout(() => {
-      this.setState({boards:this.props.material.boards});
+      this.setState({boards:this.props.boards});
     },1000)
   }
 
@@ -23,16 +24,15 @@ class MaterialBoard extends Component {
     if(!this.state.loaded){}
 
     if(nextProps.currentTab == 'boards' && (nextProps.nextTab != 'boards' && nextProps.nextTab != '')){
-      if(nextProps.material.boards != this.state.boards){
+      if(nextProps.boards != this.state.boards){
         this.props.save(this.state.boards)
       } else {
         this.props.save('changeTab');
       }
     }
 
-
     if(this.props.isCancelClicked){
-      this.setState({boards:this.props.material.boards});
+      this.setState({boards:this.props.boards});
     }
   }
 
@@ -116,7 +116,7 @@ class MaterialBoard extends Component {
   }
 
   isUsed = (id) => {
-    if(this.props.material.materialCodes && this.props.material.materialCodes.find(mc => mc.board == id)){
+    if(this.props.materialCodes && this.props.materialCodes.find(mc => mc.board == id)){
       return true;
     }
     return false;
@@ -196,4 +196,15 @@ class MaterialBoard extends Component {
   }
 }
 
-export default MaterialBoard;
+const mapStateToProps = state => (
+  {
+    boards: state.material.boards,
+    materialCodes: state.material.materialCodes,
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  null,
+  null
+)(MaterialBoard);

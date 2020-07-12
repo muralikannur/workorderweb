@@ -1,15 +1,15 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'react-redux';
 import { ToastContainer} from 'react-toastify';
 import $ from 'jquery';
 
 import { clearErrors } from '../../actions/errorActions';
-import { saveCustomer, getAllCustomers, setCustomer} from './customerActions';
+import { saveCustomer, getAllCustomers, setCustomer, getCustomerCode} from './customerActions';
 import { getAllWorkOrders } from '../workorder/woActions';
 
 import CustomerDetails from './CustomerDetails';
 
-class CustomerList extends Component {
+class CustomerList extends PureComponent {
 
   constructor(props){
     super(props);
@@ -55,7 +55,7 @@ showWorkOrders = (customer) => {
     return(
       <div className="content-wrapper"  style={{margin:"2px", maxWidth:"100%"}}>
          <ToastContainer />
-        <CustomerDetails currentCustomer={this.state.currentCustomer} customer={this.props.customer} saveCustomer={this.props.saveCustomer} />
+        <CustomerDetails currentCustomer={this.state.currentCustomer} customer={this.props.customer} saveCustomer={this.props.saveCustomer} getCustomerCode={this.props.getCustomerCode} />
       <div className="card">
         <div className="card-body">
           <table style={{width:"100%", color:"#439aff"}}>
@@ -78,7 +78,7 @@ showWorkOrders = (customer) => {
                 <thead>
                   <tr>
                       <th>Customer Code</th>
-                      <th>Contact Person</th>
+                      <th>Customer Name</th>
                       <th>Phone Number</th>
                       <th></th>
 
@@ -88,7 +88,7 @@ showWorkOrders = (customer) => {
                   {this.props.customerlist.map(cl => { return(
                     <tr key={cl._id}>
                       <td onClick={() => {this.showWorkOrders(cl)}}  >{cl.customercode}</td>
-                      <td onClick={() => {this.showWorkOrders(cl)}}>{cl.contactperson}</td>
+                      <td onClick={() => {this.showWorkOrders(cl)}}>{cl.companyname}</td>
                       <td onClick={() => {this.showWorkOrders(cl)}}>{cl.phone}</td>
                       <td onClick={() => {this.editCustomer(cl)}}><i className="icon-doc" ></i></td>
                     </tr>
@@ -115,6 +115,6 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {saveCustomer, getAllCustomers, getAllWorkOrders, setCustomer},
+  {saveCustomer, getAllCustomers, getAllWorkOrders, setCustomer, getCustomerCode},
   null
 )(CustomerList);

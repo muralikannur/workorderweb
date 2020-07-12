@@ -29,7 +29,7 @@ export const threshold = {
 
 export const remarks = [
   {id:REMARKS.PROFILE,name:'Handle Profile'},
-  {id:REMARKS.E_PROFILE,name:'Edge Profile'},
+  // {id:REMARKS.E_PROFILE,name:'Edge Profile'},
   {id:REMARKS.GLASS,name:'Glass'},
   {id:REMARKS.DBLTHICK,name:'Double Thick'}, 
   {id:REMARKS.LEDGE,name:'Ledge'},

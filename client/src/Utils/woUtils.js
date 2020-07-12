@@ -65,35 +65,58 @@ export const getEBOptions = (item, material) => {
   // let ebWithoutProfiles = material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
   // let childEBOptions = [...ebOptions, ...ebWithoutProfiles];
 
-  let hasEProfile = false;
+  // let hasEProfile = false;
 
-  //If Item has E-Profile selected, EB sides should be default to E-Profiles thicknes and width
-  if(item.remarks.indexOf(REMARKS.E_PROFILE) != -1){
-    let eProfile = material.profiles.find(p => p.type == PROFILE_TYPE.E)
-    if(eProfile){
-      let edgeband = material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(eProfile.profileNumber))
-      if(edgeband){
-        ebOptions = [edgeband]
-        hasEProfile = true;
-      }
-    }
-  }
+  // //If Item has E-Profile selected, EB sides should be default to E-Profiles thicknes and width
+  // if(item.remarks.indexOf(REMARKS.E_PROFILE) != -1){
+  //   let eProfile = material.profiles.find(p => p.type == PROFILE_TYPE.E)
+  //   if(eProfile){
+  //     let edgeband = material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(eProfile.profileNumber))
+  //     if(edgeband){
+  //       ebOptions = [edgeband]
+  //       hasEProfile = true;
+  //     }
+  //   }
+  // }
 
-  if(!hasEProfile){
-    if(material.materialCodes){
-      const mat = material.materialCodes.find(mc => mc.materialCodeNumber == item.code);
-      if(mat){
-        const laminate = material.edgebands.filter(eb => eb.laminate == mat.front_laminate );
-        const board = material.edgebands.filter(eb => eb.laminate == parseInt(mat.board) + EB_START_NUMBER.BOARD);
+  // if(!hasEProfile){
+  //   if(material.materialCodes){
+  //     const mat = material.materialCodes.find(mc => mc.materialCodeNumber == item.code);
+  //     if(mat){
+  //       const laminate = material.edgebands.filter(eb => eb.laminate == mat.front_laminate );
+  //       const board = material.edgebands.filter(eb => eb.laminate == parseInt(mat.board) + EB_START_NUMBER.BOARD);
         
-        if(laminate || board){
-          ebOptions = [...ebOptions, ...laminate, ...board];
-        }
-      } else if(item.code == PATTERN_CODE){
-        ebOptions = [...ebOptions, ...material.edgebands];
+  //       if(laminate || board){
+  //         ebOptions = [...ebOptions, ...laminate, ...board];
+  //       }
+  //     } else if(item.code == PATTERN_CODE){
+  //       ebOptions = [...ebOptions, ...material.edgebands];
+  //     }
+  //   }
+  // }
+
+
+  if(material.materialCodes){
+    const mat = material.materialCodes.find(mc => mc.materialCodeNumber == item.code);
+    if(mat){
+      const laminate = material.edgebands.filter(eb => eb.laminate == mat.front_laminate );
+      const board = material.edgebands.filter(eb => eb.laminate == parseInt(mat.board) + EB_START_NUMBER.BOARD);
+
+      if(laminate || board){
+        ebOptions = [...ebOptions, ...laminate, ...board];
       }
+      let eProfile = material.profiles.find(p => p.type == PROFILE_TYPE.E)
+      if(eProfile){
+        const eprofileEB = material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(eProfile.profileNumber));
+        ebOptions = [...ebOptions, eprofileEB];  
+      }
+
+    } else if(item.code == PATTERN_CODE){
+      ebOptions = [...ebOptions, ...material.edgebands];
     }
   }
+
+
 
   return ebOptions;
 

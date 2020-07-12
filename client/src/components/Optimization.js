@@ -1,7 +1,7 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import $ from 'jquery';
 
-class Optimization extends Component {
+class Optimization extends PureComponent {
 
   constructor(props){
     super(props);

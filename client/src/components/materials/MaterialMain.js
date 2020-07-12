@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'react-redux';
 
 import $ from 'jquery';
@@ -18,7 +18,7 @@ import  MaterialEdgeBand  from './MaterialEdgeBand';
 import { saveBoards, saveLaminates, saveMaterialEdgeBands, saveProfiles, saveMaterialCodes, saveMaterial, copyMaterial } from './materialActions';
 import { saveItems } from '../workorder/woActions';
 import { setCurrentItem, } from '../../actions/configActions';
-class MaterialMain extends Component {
+class MaterialMain extends PureComponent {
 
   constructor(props){
     super(props);
@@ -373,19 +373,7 @@ class MaterialMain extends Component {
       
       <div className="card">
         <div className="card-body">
-
-
-
-
-
-
-
           <div id="tabs" className="row ml-md-0 mr-md-0 vertical-tab tab-minimal">
-
-
-    
-
-
             <ul className="nav nav-tabs col-md-2 " role="tablist">
             <li className="nav-item">
               <select id="materialWoId" name="materialWoId" className="js-example-basic-single input-xs" style={{width:"200px"}} onChange={ (e) => this.copyMaterialsFrom(e)} >
@@ -481,19 +469,19 @@ class MaterialMain extends Component {
             </ul>
             <div className="tab-content col-md-10" style={{verticalAlign:"top"}}>
               <div className={`tab-pane fade ${this.state.currentTab == "boards" && "show active"}`} id="board" role="tabpanel" aria-labelledby="board">
-                <MaterialBoard material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}/>
+                <MaterialBoard  save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}/>
               </div>
               <div className={`tab-pane fade ${this.state.currentTab == "laminates" && "show active"}`} id="laminate" role="tabpanel" aria-labelledby="laminate">
-                <MaterialLaminate material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
+                <MaterialLaminate save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
               </div>
               <div className={`tab-pane fade ${this.state.currentTab == "edgebands" && "show active"}`}  id="edgeband" role="tabpanel" aria-labelledby="edgeband">
-                  <MaterialEdgeBand  items={this.props.items} material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
+                  <MaterialEdgeBand save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
               </div>  
               <div className={`tab-pane fade ${this.state.currentTab == "profiles" && "show active"}`}  id="profile" role="tabpanel" aria-labelledby="profile">
-                  <MaterialProfile  items={this.props.items} material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
+                  <MaterialProfile save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
               </div>
               <div className={`tab-pane fade ${this.state.currentTab == "materialCodes" && "show active"}`}  id="materialcode" role="tabpanel" aria-labelledby="materialcode">
-                  <MaterialCode  items={this.props.items}  material={this.props.material} save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
+                  <MaterialCode save={this.save} isCancelClicked={this.state.isCancelClicked} currentTab={this.state.currentTab} nextTab={this.state.nextTab}  />
               </div>
             
             </div>
@@ -507,7 +495,13 @@ class MaterialMain extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  material: state.material,
+  materialTab:state.config.materialTab,
+  wolist:state.wolist
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   {saveBoards, saveLaminates, saveMaterialEdgeBands,  saveProfiles, saveMaterialCodes, saveMaterial, copyMaterial, saveItems, setCurrentItem}
 )(MaterialMain);

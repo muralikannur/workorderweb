@@ -1,9 +1,12 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect'
+
 import { profileType } from '../../appConfig';
 import { PROFILE_TYPE } from '../../constants';
 import { notify_error } from '../../Utils/commonUtls';
 
-class MaterialProfile extends Component {
+class MaterialProfile extends PureComponent {
  
     constructor(props){
         super(props);
@@ -15,14 +18,14 @@ class MaterialProfile extends Component {
 
     componentDidMount(){
       window.setTimeout(() => {
-        this.setState({profiles:this.props.material.profiles});
+        this.setState({profiles:this.props.profiles});
       },1000)
     }
   
     componentWillReceiveProps(nextProps){
   
       if(nextProps.currentTab == 'profiles' && (nextProps.nextTab != 'profiles' && nextProps.nextTab != '')){
-        if(nextProps.material.profiles != this.state.profiles){
+        if(nextProps.profiles != this.state.profiles){
           this.props.save(this.state.profiles)
         } else {
           this.props.save('changeTab');
@@ -30,7 +33,7 @@ class MaterialProfile extends Component {
       }
   
       if(this.props.isCancelClicked){
-        this.setState({profiles:this.props.material.profiles});
+        this.setState({profiles:this.props.profiles});
       }
     }
   
@@ -40,7 +43,7 @@ class MaterialProfile extends Component {
 
   isUsed = (id) => {
     if(id == 0) return false;
-    if(this.props.items && this.props.items.find(i => i.profileNumber == id)){
+    if(this.props.usedProfiles.includes(id)){
       return true;
     }
     return false;
@@ -155,7 +158,7 @@ class MaterialProfile extends Component {
             <td>{profile.profileNumber}</td>
             <td>
                 <div className="form-group" style={{marginBottom:"0px"}}>
-                    <select  onChange={this.onChange} defaultValue={profile.type}  id="type" name="type" className="js-example-basic-single input-xs  w-100">
+                    <select disabled={ this.isUsed(profile.profileNumber) }onChange={this.onChange} defaultValue={profile.type}  id="type" name="type" className="js-example-basic-single input-xs  w-100">
                     <option value="0">Select the Profile Type</option>
                     {profileType.map( (e) => {
                     return (
@@ -186,5 +189,28 @@ class MaterialProfile extends Component {
   }
 }
 
+const getUsedProfiles = createSelector(
+  [(state) => state.wo.woitems],
+  (items) => {
+    let usedProfiles = [];
+    items.map(i => {
+      if(i.profileNumber != 0 && !usedProfiles.includes(i.profileNumber)){
+        usedProfiles.push(parseInt(i.profileNumber));
+      }
+    })
+    return usedProfiles;
+  }
+)
 
-export default MaterialProfile;
+const mapStateToProps = state => (
+  {
+    profiles: state.material.profiles,
+    usedProfiles: getUsedProfiles(state)
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  null,
+  null
+)(MaterialProfile);

@@ -1,1 +1,13 @@
-test
+import { batch } from 'react-redux'
+import { action1, action2 } from './actions';
+// dispatches both actions at the same time
+batch(() => {
+  dispatch(action1());
+  dispatch(action2());
+});
+
+
+https://itnext.io/redux-ruins-you-react-app-performance-you-are-doing-something-wrong-82e28ec96cf5
+
+https://react-redux.js.org/api/connect
+

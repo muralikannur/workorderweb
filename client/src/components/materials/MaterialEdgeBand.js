@@ -1,9 +1,11 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect'
 
 import { edgeBandThickness, edgeBandWidth } from '../../appConfig';
 import { EB_START_NUMBER } from '../../constants';
 
-class MaterialEdgeBand extends Component {
+class MaterialEdgeBand extends PureComponent {
     constructor(props){
         super(props);
         this.state = {
@@ -14,14 +16,14 @@ class MaterialEdgeBand extends Component {
 
     componentDidMount(){
       window.setTimeout(() => {
-        this.setState({materialEdgeBands:this.props.material.edgebands});
+        this.setState({materialEdgeBands:this.props.edgebands});
       },1000)
     }
   
     componentWillReceiveProps(nextProps){
   
       if(nextProps.currentTab == 'edgebands' && (nextProps.nextTab != 'edgebands' && nextProps.nextTab != '')){
-        if(nextProps.material.edgebands != this.state.materialEdgeBands){
+        if(nextProps.edgebands != this.state.materialEdgeBands){
           this.props.save(this.state.materialEdgeBands)
         } else {
           this.props.save('changeTab');
@@ -29,7 +31,7 @@ class MaterialEdgeBand extends Component {
       }
   
       if(this.props.isCancelClicked){
-        this.setState({materialEdgeBands:this.props.material.edgebands});
+        this.setState({materialEdgeBands:this.props.edgebands});
       }
     }
   
@@ -115,13 +117,13 @@ class MaterialEdgeBand extends Component {
    
   isUsed = (id) => {
     if(id == 0) return false;
-    if(this.props.items && this.props.items.find(i => i.eb_a == id || i.eb_b == id || i.eb_c == id || i.eb_d == id )){
+    if(this.props.usedEdgeBands.includes(id)){
       return true;
     }
     return false;
   }
   render() {
-    if((!this.props.material.laminates || this.props.material.laminates.length == 0) && (!this.props.material.boards || !this.props.material.boards.find(b => b.allowEdgeBand))) {return <h5>No Laminates defined.</h5>};
+    if(!this.props.enableEB) {return <h5>No Laminates defined.</h5>};
     return(
         <div className="row">
         <div className="col-md-12 pl-md-5">
@@ -135,7 +137,7 @@ class MaterialEdgeBand extends Component {
         <tbody>
 
         {
-            this.props.material.laminates.sort((a,b) => a.laminateNumber > b.laminateNumber ? 1  : -1 ).map( (laminate, lNo) => {
+            this.props.laminates.sort((a,b) => a.laminateNumber > b.laminateNumber ? 1  : -1 ).map( (laminate, lNo) => {
             return (
             <tr key={lNo}>
               <td style={{backgroundColor:"#eee", lineHeight:"2", padding:"5px", border:"#ccc 1px solid", textAlign:"left"}}>LAMINATE <br/>{laminate.laminateNumber}: {laminate.code} {laminate.thickness} mm ({laminate.grains})</td>
@@ -193,7 +195,7 @@ class MaterialEdgeBand extends Component {
 
 
 {
-            this.props.material.boards.filter(b => b.allowEdgeBand).sort((a,b) => a.boardNumber > b.boardNumber ? 1  : -1 ).map( (board, bNo) => {
+            this.props.boards.filter(b => b.allowEdgeBand).sort((a,b) => a.boardNumber > b.boardNumber ? 1  : -1 ).map( (board, bNo) => {
             return (
             <tr key={bNo}>
               <td style={{backgroundColor:"#eee", lineHeight:"2", padding:"5px", border:"#ccc 1px solid", textAlign:"left"}}>BOARD:<br />{board.boardNumber}: {board.type} {board.thickness} mm - ( {board.height} x {board.width}) - {board.grade} {board.company}</td>
@@ -259,5 +261,55 @@ class MaterialEdgeBand extends Component {
   }
 }
 
+const enableEdgeBand  = createSelector(
+  [
+    (state) => state.material.laminates,
+    (state) => state.material.boards,
+  ],
+  (laminates, boards) => {
 
-export default MaterialEdgeBand;
+    if((!laminates || laminates.length == 0) && (!boards || !boards.find(b => b.allowEdgeBand))){
+      return false;
+    }
+    return true;
+
+  }
+)
+
+const getUsedEdgeBands = createSelector(
+  [(state) => state.wo.woitems],
+  (items) => {
+    let usedEdgeBands = [];
+    items.map(i => {
+      if(i.eb_a != 0 && !usedEdgeBands.includes(i.eb_a)){
+        usedEdgeBands.push(parseInt(i.eb_a));
+      }
+      if(i.eb_b != 0 && !usedEdgeBands.includes(i.eb_b)){
+        usedEdgeBands.push(parseInt(i.eb_b));
+      }
+      if(i.eb_c != 0 && !usedEdgeBands.includes(i.eb_c)){
+        usedEdgeBands.push(parseInt(i.eb_c));
+      }
+      if(i.eb_d != 0 && !usedEdgeBands.includes(i.eb_d)){
+        usedEdgeBands.push(parseInt(i.eb_d));
+      }
+    })
+    return usedEdgeBands;
+  }
+)
+
+const mapStateToProps = state => (
+  {
+    edgebands: state.material.edgebands,
+    laminates: state.material.laminates,
+    boards: state.material.boards,
+    usedEdgeBands: getUsedEdgeBands(state),
+    enableEB: enableEdgeBand(state)    
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  null,
+  null
+)(MaterialEdgeBand);

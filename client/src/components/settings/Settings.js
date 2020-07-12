@@ -1,10 +1,10 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'react-redux';
 import { clearErrors } from '../../actions/errorActions';
 
 import Profile from './Profile';
 
-class Settings extends Component {
+class Settings extends PureComponent {
  
   componentDidMount(){
     this.props.clearErrors();

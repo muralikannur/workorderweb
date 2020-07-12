@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { remarks } from '../../appConfig';
 import { getRemarkData } from '../../Utils/woUtils';
 
-class WorkOrderRemarks extends Component {
+class WorkOrderRemarks extends PureComponent {
 
   componentDidMount(){
     this.REMOVE_REMARK_ICON_TITLE = "Remove Remark";

@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'react-redux';
 
 import { register } from '../../actions/authActions';
@@ -6,7 +6,7 @@ import { clearErrors, returnErrors } from '../../actions/errorActions';
 
 import { Link } from "react-router-dom";
 
-class Register extends Component {
+class Register extends PureComponent {
 
   componentDidMount(){
     this.props.clearErrors();

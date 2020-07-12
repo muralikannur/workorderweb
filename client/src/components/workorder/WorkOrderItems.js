@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
@@ -15,7 +15,7 @@ import WorkOrderChild from './WorkOrderChild';
 import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
 
 
-class WorkOrderItems extends Component {
+class WorkOrderItems extends PureComponent {
   constructor(props){
     super(props);
     this.state = {
@@ -30,6 +30,8 @@ class WorkOrderItems extends Component {
     };
     this.counter = 1;
   }
+
+
 
   componentDidMount(){
     console.log('LIFECYCLE: Workorder Items - componentDidMount');
@@ -133,6 +135,7 @@ class WorkOrderItems extends Component {
     }
 
     item.ebCopied = !item.ebCopied;
+    this.props.setCurrentItem(item);
 
     let nonModifiedItems = items.filter(i => i != item);
 
@@ -587,7 +590,7 @@ class WorkOrderItems extends Component {
 
       </div>
 
-      <RemarksMain setMaterialTab={this.props.setMaterialTab} item={this.state.item} currentRemark={this.props.currentRemark} setCurrentRemark={this.props.setCurrentRemark} wo={this.props.wo} material={this.props.material} saveItems={this.props.saveItems} setCurrentItem={this.props.setCurrentItem}/>
+      <RemarksMain setMaterialTab={this.props.setMaterialTab} currentRemark={this.props.currentRemark} setCurrentRemark={this.props.setCurrentRemark}  saveItems={this.props.saveItems} setCurrentItem={this.props.setCurrentItem}/>
         <button type="button" id="btnRemarks"  data-toggle="modal" data-target="#remarksModal" style={{visibility:"hidden"}}></button>
 
     

@@ -62,6 +62,24 @@ export const saveCustomer = (customer,id) => (dispatch, getState) => {
 //     );
 // };
 
+
+export const getCustomerCode = code => (dispatch, getState) => {
+  axios
+    .get('/api/customer/' + code, tokenConfig(getState))
+    .then(res =>{
+      if(res.data && res.data.companyname){
+        notify_error("Customer Code already exists for " + res.data.companyname);
+        return res.data.companyname;
+      } 
+    }
+    )
+    .catch(err =>
+      {
+        dispatch(returnErrors(err.response.data, err.response.status))
+      }
+    );
+};
+
 export const setCustomer = customer => (dispatch) => {
   dispatch({
     type: GET_CUSTOMER,

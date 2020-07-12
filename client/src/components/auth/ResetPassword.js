@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 
@@ -6,7 +6,7 @@ import { resetpassword } from '../../actions/authActions';
 import { clearErrors, returnErrors } from '../../actions/errorActions';
 import * as qs from 'query-string';
 
-class ResetPassword extends Component {
+class ResetPassword extends PureComponent {
 
   componentDidMount(){
     this.props.clearErrors();

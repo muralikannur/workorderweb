@@ -1,10 +1,11 @@
-import React, { Component} from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
 import $ from 'jquery';
-import { REMARKS, PROFILE_TYPE} from './../../constants';
 import { notify_error } from '../../Utils/commonUtls';
+import { updateProfile } from './remarksActions';
+import { PROFILE_TYPE} from '../../constants';
 
-class RemarksProfile extends Component {
+class RemarksProfile extends PureComponent {
  
   constructor(props){
     super(props);
@@ -13,75 +14,35 @@ class RemarksProfile extends Component {
       profileSide:''
     }
   }
-  componentDidMount(){
-    setTimeout(() => {
-      this.updateState();
-    },200
-    )
-  }
 
-  updateState() {
-    if(this.props.item != null){
-      this.setState({ profileNumber : this.props.item.profileNumber })
-      this.setState({ profileSide : this.props.item.profileSide })
-    }
-  }
-
-  onChange = (e) => {
-    const { value, name } = e.target;
-    this.setState({[name]:value});
-  }
-  
   UpdateRemark(){
 
-    if(this.state.profileSide == ''){
+    let profileSide = $('#profileSide').val();
+    let profileNumber = $('#profileNumber').val()
+
+    if(profileSide == ''){
       notify_error('Please select the Profile Side');
       return;
     }
-    if(this.state.profileNumber == '0'){
+    if(profileNumber == '0'){
       notify_error('Please select the Profile Type');
       return;
     }
-
-    let newItem = JSON.parse(JSON.stringify(this.props.item));
-    let remarks = newItem.remarks;
-
-    newItem = { ...newItem, profileNumber: this.state.profileNumber, profileSide: this.state.profileSide}
-    if(this.state.profileSide == 'H'){
-      newItem.eb_c = 0; 
-      if(remarks.length > 0 && remarks.includes(REMARKS.E_PROFILE)){
-        newItem.eb_d = newItem.eb_a;
-      }
-    }
-    if(this.state.profileSide == 'W'){
-      newItem.eb_d = 0; 
-      if(remarks.length > 0 && remarks.includes(REMARKS.E_PROFILE)){
-        newItem.eb_c = newItem.eb_a;
-      }
-    }
-    
-    if(remarks.length == 0 || !remarks.includes(REMARKS.PROFILE)){
-      remarks.push(REMARKS.PROFILE);
-    }
-
-    let items = this.props.wo.woitems.filter(i => i.itemnumber != this.props.item.itemnumber)
-    items = [...items,newItem]
-    this.props.saveItems(items);
-    this.props.setCurrentItem(newItem);
+    this.props.updateProfile(profileNumber, profileSide);
     $('#btnRemarksClose').click();
   }
   render() {
     return(
       <div>
-          {(this.props.material.profiles && this.props.material.profiles.filter(p => p.type == PROFILE_TYPE.H).length > 0) ? 
+          {(this.props.profiles && this.props.profiles.filter(p => p.type == PROFILE_TYPE.H).length > 0) ? 
           <div>
             <table style={{width:"100%"}}>
               <tr>
                 <td>
                   <h6>Select the Profile Type</h6>
-                  <select style={{width:"300px"}}  id="profileNumber" name="profileNumber" value={this.state.profileNumber}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
+                  <select style={{width:"300px"}}  id="profileNumber" name="profileNumber" defaultValue={this.props.profileNumber}  className="js-example-basic-single input-xs  w-100">
                   <option value="0" key="0" >Select...</option>
-                  {this.props.material.profiles.filter(p => p.type != PROFILE_TYPE.E).map( (e) => {
+                  {this.props.profiles.filter(p => p.type != PROFILE_TYPE.E).map( (e) => {
                     return (
                       <option value={e.profileNumber} key={e.profileNumber} >{e.type} - H:{e.height} - W:{e.width}</option>
                     )})}
@@ -89,7 +50,7 @@ class RemarksProfile extends Component {
                 </td>
                 <td>
                   <h6>Select the side</h6>
-                  <select style={{width:"300px"}}  id="profileSide" name="profileSide" value={this.state.profileSide}  onChange={this.onChange} className="js-example-basic-single input-xs  w-100">
+                  <select style={{width:"300px"}}  id="profileSide" name="profileSide" defaultValue={this.props.profileSide}  className="js-example-basic-single input-xs  w-100">
                     <option value="" key="" >Select...</option>
                     <option value="H" key="H" >Height</option>
                     <option value="W" key="W" >Width</option>
@@ -114,12 +75,16 @@ class RemarksProfile extends Component {
   }
 }
 
-RemarksProfile.propTypes = {
-  item: PropTypes.object.isRequired,
-  wo: PropTypes.object.isRequired,
-  material: PropTypes.object.isRequired,  
-  saveItems: PropTypes.func.isRequired
-}
+const mapStateToProps = state => (
+  {
+    profileNumber:state.config.currentItem.profileNumber,
+    profileSide:state.config.currentItem.profileSide,
+    profiles:state.material.profiles
+  }
+);
 
-
-export default RemarksProfile;
+export default connect(
+  mapStateToProps,
+  {updateProfile},
+  null
+)(RemarksProfile);

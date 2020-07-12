@@ -1,37 +1,34 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
+
+import { getGrains, getEBThickness } from './woCommonActions';
 
 import { edgeBandThickness } from '../../appConfig';
-import { numberWithCommas } from '../../Utils/commonUtls';
-import { getEBThickness }  from '../../Utils/woUtils';
 import { PATTERN_CODE} from '../../constants';
 
-class WorkOrderPreview extends Component {
+class WorkOrderPreview extends PureComponent {
 
-  componentDidMount() {
-    this.props.clearErrors();
-  }
 
   render() {
 
-    if(!this.props.item) return null;
-    if(this.props.item.code == PATTERN_CODE) return null;
+    if(this.props.itemnumber == -1) return null;
+    if(this.props.code == PATTERN_CODE) return null;
 
 
-    this.marginL = getEBThickness(this.props.item.eb_a,this.props.material.edgebands);
-    this.marginT = getEBThickness(this.props.item.eb_b,this.props.material.edgebands);
-    this.marginR = getEBThickness(this.props.item.eb_c,this.props.material.edgebands);
-    this.marginB = getEBThickness(this.props.item.eb_d,this.props.material.edgebands);
+    this.marginL = this.props.getEBThickness(this.props.eb_a);
+    this.marginT = this.props.getEBThickness(this.props.eb_b);
+    this.marginR = this.props.getEBThickness(this.props.eb_c);
+    this.marginB = this.props.getEBThickness(this.props.eb_d);
 
-    let handleProfile = this.props.material.profiles.find(p => p.profileNumber == this.props.item.profileNumber)
+    let handleProfile = this.props.profiles.find(p => p.profileNumber == this.props.profileNumber)
 
     let isWidthHP = false, isHeightHP = false;
     if(handleProfile){
-      if(this.props.item.profileSide == 'W'){
+      if(this.props.profileSide == 'W'){
         this.marginB = Math.round(handleProfile.height / 8);
         isWidthHP = true;
       }
-      if(this.props.item.profileSide == 'H'){
+      if(this.props.profileSide == 'H'){
         this.marginR = Math.round(handleProfile.height / 8);
         isHeightHP = true;
       }
@@ -44,15 +41,13 @@ class WorkOrderPreview extends Component {
     this.width = 0;
     this.qty = 0;
 
-    if(this.props.item){
-      if(this.props.item.height != '')
-        this.height = parseInt(this.props.item.height);
-      if(this.props.item.width != '')
-        this.width = parseInt(this.props.item.width);
-      if(this.props.item.quantity != '')
-        this.qty = parseInt(this.props.item.quantity);
+    if(this.props.height != '')
+      this.height = parseInt(this.props.height);
+    if(this.props.width != '')
+      this.width = parseInt(this.props.width);
+    if(this.props.quantity != '')
+      this.qty = parseInt(this.props.quantity);
 
-    }
 
     this.eb = new Map();
 
@@ -66,18 +61,10 @@ class WorkOrderPreview extends Component {
     this.eb.set(this.marginB, this.eb.get(this.marginB) + (this.width * this.qty));
 
     this.bg = ''
-    if(this.props.item && this.props.item.code != 0 && this.props.item.code != PATTERN_CODE && this.props.material.materialCodes && this.props.material.materialCodes.length > 0){
-      let mCode = this.props.material.materialCodes.find(m => m.materialCodeNumber == this.props.item.code);
-      let board = this.props.material.boards.find(b => b.boardNumber == mCode.board);
-      let laminate = this.props.material.laminates.find(l => l.laminateNumber == mCode.front_laminate);
+    if(this.props.code != 0 && this.props.code != PATTERN_CODE){
 
-      let grains = "";
-      if(laminate && laminate.grains != "N"){
-        grains = laminate.grains;
-      } else if(board){
-        grains = board.grains;
-      }
-
+      let grains = this.props.getGrains(this.props.code);
+     
       if(grains == "V"){
         this.bg = 'repeating-linear-gradient(to right, #eee, #999 3px, #ccc 3px, #fff 3px)';
       } else if(grains == "H"){
@@ -91,7 +78,7 @@ class WorkOrderPreview extends Component {
           <div className="card-header" role="tab" id="heading-2">
             <h6 className="mb-0">
               <a data-toggle="collapse" href="#collapse-2" aria-expanded="true" aria-controls="collapse-2">
-                <b>PREVIEW </b>{(this.props.item && this.props.item.itemnumber != 0) ? ' Item # ' + this.props.item.itemnumber:''}
+                <b>PREVIEW </b>{(this.props.itemnumber != 0) ? ' Item # ' + this.props.itemnumber:''}
             </a>
             </h6>
           </div>
@@ -99,7 +86,7 @@ class WorkOrderPreview extends Component {
             <div className="card-body" style={{ padding: "0px" }}>
               <div className="w-100 mx-auto">
                 <div className="card-body d-flex py-0" style={{ padding: "0px" }}>
-                  {(!this.props.item || this.props.item.itemnumber == 0 || this.props.item.code == PATTERN_CODE) ? <div style={{ margin: "30px", color: "#ccc" }}>NO PREVIEW</div> :
+                  {(this.props.itemnumber <= 0 || this.props.code == PATTERN_CODE) ? <div style={{ margin: "30px", color: "#ccc" }}>NO PREVIEW</div> :
                     <div className="previewItem">
 
                       {/* <span style={{ fontSize:"12px", color:"maroon" }}>  &nbsp; 
@@ -173,10 +160,29 @@ class WorkOrderPreview extends Component {
   }
 }
 
-WorkOrderPreview.propTypes = {
-  item: PropTypes.object.isRequired,
-  material: PropTypes.object.isRequired,
-  clearErrors: PropTypes.func.isRequired
-}
 
-export default WorkOrderPreview;
+const mapStateToProps = state => (
+  {
+
+    profiles: state.material.profiles,
+
+    itemnumber:state.config.currentItem.itemnumber,
+    code:state.config.currentItem.code,
+    height:state.config.currentItem.height,
+    width:state.config.currentItem.width,
+    quantity:state.config.currentItem.quantity,
+    profileNumber:state.config.currentItem.profileNumber,
+    profileSide:state.config.currentItem.profileSide,    
+    eb_a : state.config.currentItem.eb_a,
+    eb_b : state.config.currentItem.eb_b,
+    eb_c : state.config.currentItem.eb_c,
+    eb_d : state.config.currentItem.eb_d
+
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  {getGrains, getEBThickness},
+  null
+)(WorkOrderPreview);

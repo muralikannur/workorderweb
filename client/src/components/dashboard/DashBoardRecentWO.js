@@ -1,8 +1,8 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'react-redux';
 import { clearErrors } from '../../actions/errorActions';
 
-class DashBoardRecentWO extends Component {
+class DashBoardRecentWO extends PureComponent {
  
   componentDidMount(){
     this.props.clearErrors();

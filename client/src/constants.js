@@ -1,6 +1,6 @@
 export const REMARKS = {
     PROFILE:1,
-    E_PROFILE:2,
+    //E_PROFILE:2,
     GLASS:3,
     DBLTHICK:4,
     LEDGE:5,

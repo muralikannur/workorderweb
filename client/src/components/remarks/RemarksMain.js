@@ -1,17 +1,19 @@
-import React, { Component} from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
 import $ from 'jquery';
 import { REMARKS, PATTERN_CODE } from './../../constants';
 import { remarks } from '../../appConfig';
+
 import RemarksProfile from './RemarksProfile';
-import RemarksEdgeProfile from './RemarksEdgeProfile';
 import RemarksDoubleThick from './RemarksDoubleThick';
 import RemarksLedge from './RemarksLedge';
 import RemarksShape from './RemarksShape';
 import RemarksPattern from './RemarksPattern';
 import RemarksGlass from './RemarksGlass';
 
-class RemarksMain extends Component {
+import {setCurrentRemark} from '../../actions/configActions';
+
+class RemarksMain extends PureComponent {
  
   constructor(props){
     super(props);
@@ -44,13 +46,17 @@ showMaterialDefinition = () => {
   $('#btnMaterial').click();
  }
 
+ removeCurrentRemark = () => {
+    this.props.setCurrentRemark(0);
+ }
+
   render() {
-    if(!this.props.item) return null;
+    if(this.props.itemnumber == -1) return null;
 
     this.availableRemarks = remarks.map(x => x.id);
-    if(this.props.item && this.props.item.remarks){
-      let usedRemarks = new Set(this.props.item.remarks);
-      if(this.props.item.code !== PATTERN_CODE) usedRemarks.add(REMARKS.PATTERN);
+    if(this.props.remarks){
+      let usedRemarks = new Set(this.props.remarks);
+      if(this.props.code !== PATTERN_CODE) usedRemarks.add(REMARKS.PATTERN);
       this.availableRemarks = this.availableRemarks.filter(x => !usedRemarks.has(x));
     }
 
@@ -63,9 +69,9 @@ showMaterialDefinition = () => {
           <div className="modal-dialog mt-0" >
             <div className="modal-content" style={{marginTop:"10px", zIndex:0}} >
               <div className="modal-header" style={{paddingTop:"2px",paddingBottom:"0px"}}>
-                <h5 className="modal-title">Item #{this.props.item.itemnumber} : {this.props.currentRemark == 0 ? "Add New":""} Remark</h5>
+                <h5 className="modal-title">Item #{this.props.itemnumber} : {this.props.currentRemark == 0 ? "Add New":""} Remark</h5>
                   
-                  <button id="btnRemarksClose" type="button" className="btn btn-light" data-dismiss="modal"> Back <i className="icon-login"></i> </button>
+                  <button id="btnRemarksClose" type="button" onClick={() => this.removeCurrentRemark()} className="btn btn-light" data-dismiss="modal"> Back <i className="icon-login"></i> </button>
               </div>
               <div className="modal-body" style={{paddingBottom:"0px"}}>
               {
@@ -86,13 +92,12 @@ showMaterialDefinition = () => {
 
               <hr />
                 {
-                     this.state.currentRemark == REMARKS.PROFILE && <RemarksProfile item={this.props.item}  wo={this.props.wo} material={this.props.material}  saveItems={this.props.saveItems} setCurrentItem={this.props.setCurrentItem} />
-                  || this.state.currentRemark == REMARKS.E_PROFILE && <RemarksEdgeProfile item={this.props.item}  wo={this.props.wo} material={this.props.material}  saveItems={this.props.saveItems} setCurrentItem={this.props.setCurrentItem}  />
-                  || this.state.currentRemark == REMARKS.DBLTHICK && <RemarksDoubleThick item={this.props.item} wo={this.props.wo} saveItems={this.props.saveItems}  material={this.props.material}  />
-                  || this.state.currentRemark == REMARKS.LEDGE && <RemarksLedge item={this.props.item} wo={this.props.wo} saveItems={this.props.saveItems} />
-                  || this.state.currentRemark == REMARKS.SHAPE && <RemarksShape item={this.props.item} wo={this.props.wo} saveItems={this.props.saveItems} />
-                  || this.state.currentRemark == REMARKS.PATTERN && <RemarksPattern item={this.props.item} wo={this.props.wo} saveItems={this.props.saveItems} material={this.props.material}  />
-                  || this.state.currentRemark == REMARKS.GLASS && <RemarksGlass item={this.props.item} wo={this.props.wo} saveItems={this.props.saveItems} material={this.props.material}  />
+                     this.state.currentRemark == REMARKS.PROFILE && <RemarksProfile />
+                  || this.state.currentRemark == REMARKS.DBLTHICK && <RemarksDoubleThick />
+                  || this.state.currentRemark == REMARKS.LEDGE && <RemarksLedge />
+                  || this.state.currentRemark == REMARKS.SHAPE && <RemarksShape />
+                  || this.state.currentRemark == REMARKS.PATTERN && <RemarksPattern />
+                  || this.state.currentRemark == REMARKS.GLASS && <RemarksGlass  />
 
                 } 
                 <span onClick={() => {this.showMaterialDefinition();}} style={{cursor:"pointer", color:"#555", fontSize:"12px"}}> <u>Material Definition</u> </span>
@@ -106,12 +111,15 @@ showMaterialDefinition = () => {
   }
 }
 
-RemarksMain.propTypes = {
-  item: PropTypes.object.isRequired,
-  wo: PropTypes.object.isRequired,
-  material: PropTypes.object.isRequired,  
-  currentRemark: PropTypes.object.isRequired,    
-  saveItems: PropTypes.func.isRequired
-}
+const mapStateToProps = state => ({
+  itemnumber: state.config.currentItem.itemnumber,
+  remarks: state.config.currentItem.remarks,
+  code: state.config.currentItem.code
+});
 
-export default RemarksMain;
+
+export default connect(
+  mapStateToProps,
+  {setCurrentRemark},
+  null
+)(RemarksMain);

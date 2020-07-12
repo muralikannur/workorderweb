@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { clearErrors } from '../../actions/errorActions';
 import XLSX from 'xlsx';
@@ -11,7 +11,7 @@ import $ from 'jquery';
 import { hasDuplicate } from '../../Utils/commonUtls';
 import { uniqueKeys } from '../../appConfig';
 
-class ExcelReader extends Component {
+class ExcelReader extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

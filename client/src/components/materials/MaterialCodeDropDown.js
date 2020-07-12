@@ -1,7 +1,9 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
+import { connect } from 'react-redux';
 import { getMaterialText }  from '../../Utils/woUtils';
 import { PATTERN_CODE} from '../../constants';
-class MaterialCodeDropDown extends Component {
+
+class MaterialCodeDropDown extends PureComponent {
 
 
 
@@ -34,4 +36,17 @@ class MaterialCodeDropDown extends Component {
   }
 }
 
-export default MaterialCodeDropDown;
+
+
+const mapStateToProps = (state, ownProps) => (
+  {
+    item : ownProps.item || state.config.currentItem,
+    material: ownProps.material || state.material
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  null,
+  null
+)(MaterialCodeDropDown);

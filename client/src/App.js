@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from 'react-redux';
 
@@ -20,7 +20,7 @@ import ForgotPassword from './components/auth/ForgotPassword';
 
 import Optimization from './components/Optimization';
 
-class App extends Component {
+class App extends PureComponent {
 
   render() {
     return (

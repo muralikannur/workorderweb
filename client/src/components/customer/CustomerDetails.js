@@ -1,11 +1,11 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { notify_error } from '../../Utils/commonUtls';
 import $ from 'jquery';
 
 
-class CustomerDetails extends Component {
+class CustomerDetails extends PureComponent {
  
   constructor(props){
     super(props);
@@ -44,6 +44,15 @@ componentWillReceiveProps(newProps){
 
   }
 
+  verifyCustomerCode = (e) => {
+    const { value } = e.target;
+    if(value.length == 3){
+      this.props.getCustomerCode(value.toUpperCase());
+    }
+  }
+
+  
+
   onSubmit = e => {
     e.preventDefault();
     
@@ -69,7 +78,7 @@ componentWillReceiveProps(newProps){
     const newCustomer = {customercode,companyname,contactperson, phone, whatsapp, email, address1, address2, pin, gst };
 
       this.props.saveCustomer(newCustomer, this.props.currentCustomer);
-      //$('#btnCustomersClose').click();
+      $('#btnCustomersClose').click();
 
   };
 
@@ -91,7 +100,7 @@ componentWillReceiveProps(newProps){
                   <label htmlFor="customercode" className="col-sm-3 col-form-label">Customer Code <span style={{color:'red'}}>*</span></label>
                   <div className="col-sm-9">
                       {this.props.currentCustomer == 0 ? 
-                        <input type="text" maxLength="3" onChange={ (e) => this.onChange(e)} value={this.state.customercode}   className="form-control" id="customercode" name="customercode" placeholder="Customer Ccode"/>
+                        <input type="text" maxLength="3" onChange={ (e) => this.onChange(e)} value={this.state.customercode} onBlur={ (e) => this.verifyCustomerCode(e)}  className="form-control" id="customercode" name="customercode" placeholder="Customer Ccode"/>
                       :
                       <div style={{padding:"2px", fontWeight:"bold"}}>{this.state.customercode}</div>
                       }
@@ -100,14 +109,14 @@ componentWillReceiveProps(newProps){
                   </div>
 
                   <div className="form-group row">
-                  <label htmlFor="contactperson" className="col-sm-3 col-form-label">Contact Person</label>
+                  <label htmlFor="contactperson" className="col-sm-3 col-form-label">Contact Person <span style={{color:'red'}}>*</span></label>
                   <div className="col-sm-9">
                       <input type="text" onChange={ (e) => this.onChange(e)} value={this.state.contactperson}   className="form-control" id="contactperson" name="contactperson" placeholder="Contact Person"/>
                   </div>
                   </div>
 
                   <div className="form-group row">
-                  <label htmlFor="companyname" className="col-sm-3 col-form-label">Company Name </label>
+                  <label htmlFor="companyname" className="col-sm-3 col-form-label">Company Name <span style={{color:'red'}}>*</span></label>
                   <div className="col-sm-9">
                       <input type="text" onChange={ (e) => this.onChange(e)} value={this.state.companyname}   className="form-control" id="companyname" name="companyname" placeholder="Company Name"/>
                   </div>
@@ -135,7 +144,7 @@ componentWillReceiveProps(newProps){
 
 
                   <div className="form-group row">
-                  <label className="col-sm-3 col-form-label">Address</label>
+                  <label className="col-sm-3 col-form-label">Address <span style={{color:'red'}}>*</span></label>
                   
                   <div className="col-sm-9">
                       <input style={{width:"500px"}} type="text" onChange={ (e) => this.onChange(e)} value={this.state.address1}  className="form-control" id="address1" name="address1" placeholder="Address1"/>
@@ -146,7 +155,7 @@ componentWillReceiveProps(newProps){
                   </div>
 
                   <div className="form-group row">
-                  <label htmlFor="whatsapp" className="col-sm-3 col-form-label">GST <span style={{color:'red'}}>*</span></label>
+                  <label htmlFor="whatsapp" className="col-sm-3 col-form-label">GST </label>
                   <div className="col-sm-9">
                   <input style={{width:"300px"}} type="text" onChange={ (e) => this.onChange(e)} value={this.state.gst}  className="form-control" id="gst" name="gst" placeholder="GST"/>
                   </div>

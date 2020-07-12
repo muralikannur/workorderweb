@@ -1,10 +1,11 @@
 import { SET_CURRENT_ITEM,  SET_CURRENT_REMARK, SET_CURRENT_CUSTOMER, SET_CURRENT_MATERIAL_TAB, SET_EDIT_MODE } from './types';
-
+import { getNewWoItem }  from '../Utils/woUtils';
 // SET CURRENT ITEM
 export const setCurrentItem = (i) => {
+
   return {
     type: SET_CURRENT_ITEM,
-    payload: i
+    payload: i || getNewWoItem(-1)
   };
 };
 

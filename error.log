@@ -135,3 +135,94 @@
     at Object._errnoException (util.js:992:11)
     at _exceptionWithHostPort (util.js:1014:20)
     at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-05-23T04:48:17.576Z [auth\login.js] error: User Does not exist. Email:muralikannur@gmail.com - undefined
+
+2020-07-12T02:06:00.461Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-07-12T02:18:56.128Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+
+2020-07-12T02:44:21.511Z [api\customer.js] error: Cast to ObjectId failed for value "ttt" at path "_id" for model "customer" - CastError: Cast to ObjectId failed for value "ttt" at path "_id" for model "customer"
+    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
+    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
+    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
+    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
+    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
+    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
+    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
+    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
+    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
+    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
+    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
+    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
+    at _combinedTickCallback (internal/process/next_tick.js:131:7)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+
+2020-07-12T02:47:21.512Z [api\customer.js] error: Cast to ObjectId failed for value "ttt" at path "_id" for model "customer" - CastError: Cast to ObjectId failed for value "ttt" at path "_id" for model "customer"
+    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
+    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
+    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
+    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
+    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
+    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
+    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
+    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
+    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
+    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
+    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
+    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
+    at _combinedTickCallback (internal/process/next_tick.js:131:7)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+
+2020-07-12T02:47:41.781Z [api\customer.js] error: Cast to ObjectId failed for value "YYY" at path "_id" for model "customer" - CastError: Cast to ObjectId failed for value "YYY" at path "_id" for model "customer"
+    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
+    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
+    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
+    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
+    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
+    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
+    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
+    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
+    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
+    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
+    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
+    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
+    at _combinedTickCallback (internal/process/next_tick.js:131:7)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+
+2020-07-12T02:52:26.367Z [api\customer.js] error: Cast to ObjectId failed for value "YYY" at path "_id" for model "customer" - CastError: Cast to ObjectId failed for value "YYY" at path "_id" for model "customer"
+    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
+    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
+    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
+    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
+    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
+    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
+    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
+    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
+    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
+    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
+    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
+    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
+    at _combinedTickCallback (internal/process/next_tick.js:131:7)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+
+2020-07-12T03:35:16.614Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
+    at Customer.findOne.then.customer (C:\murali\shape\workorderweb\routes\api\customer.js:36:50)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)
+
+2020-07-12T03:35:27.434Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
+    at Customer.findOne.then.customer (C:\murali\shape\workorderweb\routes\api\customer.js:36:50)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)
+
+2020-07-12T03:38:02.042Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
+    at Customer.findOne.then.customer (C:\murali\shape\workorderweb\routes\api\customer.js:36:50)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)

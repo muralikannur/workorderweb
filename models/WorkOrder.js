@@ -30,6 +30,7 @@ const WorkOrderSchema = new Schema({
   },  
 
   client:{ type: String,  required: false  },
+  project:{ type: String,  required: false  },
   billing_address1:{ type: String,  required: false  },
   billing_address2:{ type: String,  required: false  },
   billing_pin:{ type: String,  required: false  },
@@ -40,9 +41,7 @@ const WorkOrderSchema = new Schema({
   shipping_pin:{ type: String,  required: false  },
   shipping_phone:{ type: String,  required: false  },
   shipping_gst:{ type: String,  required: false  },
-
-
-
+  ship_to_billing:{ type: Boolean,  default: true }
 
 });
 

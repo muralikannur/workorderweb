@@ -3,7 +3,9 @@ import {
   SAVE_MAIN,
   SAVE_ITEMS,
   CREATE_WO,
-  CLEAR_WO
+  CLEAR_WO,
+  SAVE_ITEM,
+  SAVE_CHILD_ITEMS
 } from '../../actions/types';
 
 const initialState = {
@@ -25,6 +27,14 @@ export default function(state = initialState, action) {
     case  SAVE_ITEMS:
       let woWithNewItems = {...state,woitems:action.payload}
       return woWithNewItems;  
+    case  SAVE_ITEM:
+      let items = state.woitems.filter(i => i.itemnumber != action.payload.itemnumber)
+      let woWithNewItem = {...state,woitems:[...items, action.payload]}
+      return woWithNewItem;  
+    case  SAVE_CHILD_ITEMS:
+      let cItems = state.woitems.filter(i => i.parentId != action.parentId)
+      let woWithNewCItem = {...state,woitems:[...cItems, ...action.childItems]}
+      return woWithNewCItem;        
     case  SAVE_MAIN:
       let woWithMainModified = {...state,status:action.status}
       return woWithMainModified;      

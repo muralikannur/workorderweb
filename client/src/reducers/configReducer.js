@@ -1,9 +1,10 @@
 import {
   SET_CURRENT_ITEM, SET_CURRENT_REMARK, SET_CURRENT_MATERIAL_TAB, SET_EDIT_MODE
 } from '../actions/types';
+import { getNewWoItem }  from '../Utils/woUtils';
 
 const initValue = {
-  currentItem:{},
+  currentItem:getNewWoItem(-1),
   currentRemark:0,
   currentCustomer:{},
   materialTab:'',

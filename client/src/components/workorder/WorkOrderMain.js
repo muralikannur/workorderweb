@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import { ToastContainer} from 'react-toastify';
@@ -26,7 +26,7 @@ import { setCurrentItem, setCurrentRemark, setMaterialTab } from '../../actions/
 
 import { downloadCuttingList } from '../../Utils/ExcelUtils';
 
-class WorkOrderMain extends Component {
+class WorkOrderMain extends PureComponent {
 
   constructor(props){
     super(props);
@@ -114,19 +114,10 @@ class WorkOrderMain extends Component {
         address.shipping_address2,
         address.shipping_pin,
         address.shipping_phone,
-        address.shipping_gst
+        address.shipping_gst,
+        address.ship_to_billing
       );
   }
-
-
-  // deleteWorkOrder = () =>{
-  //   if(window.confirm('Do you want to Delete this Work Order?')){
-  //     this.props.saveWorkOrder({...this.props.wo,status:WO_STATUS.DELETED});
-  //     this.props.updateWorkOrderList(this.props.wo.wonumber,WO_STATUS.DELETED);      
-  //     const { history } = this.props;
-  //     if(history) history.push('/wolist');
-  //   }
-  // }
 
   restoreWorkOrder = () =>{
     if(window.confirm('Do you want to Restore this Work Order?')){
@@ -203,7 +194,7 @@ class WorkOrderMain extends Component {
     items.map(e => {$('#item-row-' + e.itemnumber).css("background-color","#fff")});
 
     //MATERIAL NOT SELECTED
-    let errItems = items.filter(i => i.code == 0).map(i => i.itemnumber);
+    let errItems = items.filter(i => i.code == 0 || i.code == PATTERN_CODE ).map(i => i.itemnumber);
     if(errItems.length > 0){
       this.highlightError(errItems);
       notify_error("Material not selected for the following items..\n" + errItems.join());
@@ -343,7 +334,7 @@ class WorkOrderMain extends Component {
                   
               </div>
               <div className="modal-body" style={{paddingBottom:"0px"}}>
-                <MaterialMain materialTab={this.props.materialTab} items={this.props.wo.woitems} material={this.props.material} wolist={this.props.wolist} woId={this.props.wo._id} />
+                <MaterialMain woId={this.props.wo._id} />
               </div>
             </div>
           </div>
@@ -415,7 +406,7 @@ class WorkOrderMain extends Component {
           
           <div className="col-md-3 grid-margin container-fluid" >
           {/* style={{position:"fixed",zIndex:"1050", margin:"0 auto", right:"0"}} */}
-            <WorkOrderPreview item={this.props.item} material={this.props.material} clearErrors={this.props.clearErrors} />
+            <WorkOrderPreview />
           </div>
         </div>
 

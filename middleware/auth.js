@@ -7,9 +7,10 @@ function auth(req, res, next) {
   const token = req.header('x-auth-token');
 
   // Check for token
-  if (!token)
-    return res.status(401).json({ msg: '' });
-
+  if (!token){
+    console.log('No token present.');
+    return res.status(401).json({ msg: 'No token present.' });
+  }
   try {
     // Verify token
     const decoded = jwt.verify(token, config.get('jwtSecret'));
@@ -22,7 +23,8 @@ function auth(req, res, next) {
       }).catch(err => { logger.error(err); next(); })
     
   } catch (e) {
-    res.status(400).json({ msg: '' });
+    console.log('Invalid Token');
+    res.status(400).json({ msg: 'Invalid Token' });
   }
 }
 

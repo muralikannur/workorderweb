@@ -22,6 +22,8 @@ export const CREATE_WO = 'CREATE_WO';
 export const SAVE_MAIN = 'SAVE_MAIN';
 export const SAVE_ITEMS = 'SAVE_ITEMS';
 export const CLEAR_WO = 'CLEAR_WO';
+export const SAVE_ITEM = 'SAVE_ITEM';
+export const SAVE_CHILD_ITEMS = 'SAVE_CHILD_ITEMS';
 
 export const GET_PROFILE = 'GET_PROFILE';
 export const SAVE_PROFILE = 'SAVE_PROFILE';

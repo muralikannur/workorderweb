@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import $ from 'jquery';
 
 import {EB_START_NUMBER} from '../../constants'
 
-class WorkOrderEdgeBand extends Component {
+class WorkOrderEdgeBand extends PureComponent {
 
 
 
@@ -51,7 +51,7 @@ class WorkOrderEdgeBand extends Component {
               }
               
               return (
-                <option title={titleText} value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} >{e.eb_thickness} - {e.eb_width}</option>
+              <option title={titleText} value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} > {e.laminate > 200 ? 'EP:' : ''} {e.eb_thickness} - {e.eb_width}</option>
               )})
           }
           <option id="0">New...</option>

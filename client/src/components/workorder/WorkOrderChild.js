@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
 
 import { REMARKS, EB_START_NUMBER} from '../../constants';
 import { getMaterialText, getEBText, getEBOptions }  from '../../Utils/woUtils';
@@ -8,7 +8,7 @@ import WorkOrderEdgeBand from './WorkOrderEdgeBand';
 import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
 
 
-class WorkOrderChild extends Component {
+class WorkOrderChild extends PureComponent {
 
 
   render() {

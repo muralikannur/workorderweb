@@ -1,13 +1,15 @@
-import React, { Component} from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
 import $ from 'jquery';
-import { REMARKS, PATTERN_TYPE, PATTERN_CODE} from '../../constants';
+import { PATTERN_TYPE} from '../../constants';
 import { notify_error } from '../../Utils/commonUtls';
 import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
-import { getNewWoItem, getEBThickness }  from '../../Utils/woUtils';
-import { getPatternBoardSize, getPatternLaminateSize }  from '../../Utils/remarksUtils';
+import { getEBThickness }  from '../../Utils/woUtils';
+import { getPatternBoardSize }  from '../../Utils/remarksUtils';
 
-class RemarksPattern extends Component {
+import { updatePattern } from './remarksActions';
+
+class RemarksPattern extends PureComponent {
  
   constructor(props){
     super(props);
@@ -17,8 +19,6 @@ class RemarksPattern extends Component {
       splitsCount:0,
       patternSplits:[],
       eb_a:0,eb_b:0,eb_c:0,eb_d:0
-
-
     }
     this.boardHeight = 0;
     this.boardWidth = 0;
@@ -32,19 +32,18 @@ class RemarksPattern extends Component {
   }
 
   updateState() {
-    if(this.props.item){
-      const item = this.props.item;
-      this.setState({ patternType : item.patternType })
-      this.setState({ patternSplits : item.patternSplits })
-      this.setState({ splitsCount : item.patternSplits.length })
-      this.setState({ patternBoardCode : item.patternBoardCode })
+    if(this.props.patternType){
+      this.setState({ patternType : this.props.patternType })
+      this.setState({ patternSplits : this.props.patternSplits })
+      this.setState({ splitsCount : this.props.patternSplits.length })
+      this.setState({ patternBoardCode : this.props.patternBoardCode })
 
-      if(this.props.material.edgebands){
-        const edgebands = this.props.material.edgebands;
-        this.setState({ eb_a : getEBThickness(item.eb_a,edgebands)});
-        this.setState({ eb_b : getEBThickness(item.eb_b,edgebands)});
-        this.setState({ eb_c : getEBThickness(item.eb_c,edgebands)});
-        this.setState({ eb_d : getEBThickness(item.eb_d,edgebands)});
+      if(this.props.edgebands){
+        const edgebands = this.props.edgebands;
+        this.setState({ eb_a : getEBThickness(this.props.eb_a,edgebands)});
+        this.setState({ eb_b : getEBThickness(this.props.eb_b,edgebands)});
+        this.setState({ eb_c : getEBThickness(this.props.eb_c,edgebands)});
+        this.setState({ eb_d : getEBThickness(this.props.eb_d,edgebands)});
       }
       
     }
@@ -145,8 +144,8 @@ class RemarksPattern extends Component {
   
   UpdateRemark(){
 
-    let itemHeight =parseInt(this.props.item.height);
-    let itemWidth = parseInt(this.props.item.width);
+    let itemHeight = parseInt(this.props.height);
+    let itemWidth = parseInt(this.props.width);
 
     let totalSliptHeight = this.getSplitSum(); 
 
@@ -182,65 +181,15 @@ class RemarksPattern extends Component {
       return;
     }
 
+    this.props.updatePattern(this.state.patternBoardCode,this.state.patternType, this.state.patternSplits, this.boardHeight, this.boardWidth)
 
-    let newItem = JSON.parse(JSON.stringify(this.props.item));
-    newItem = { ...newItem, patternBoardCode: this.state.patternBoardCode, patternType: this.state.patternType, patternSplits: this.state.patternSplits}
-    let remarks = newItem.remarks;
-    if(remarks.length == 0 || !remarks.includes(REMARKS.PATTERN)){
-      remarks.push(REMARKS.PATTERN);
-    }
-
-    let patternBoard = getNewWoItem(); 
-
-    patternBoard = {...patternBoard,
-      itemnumber:0,
-      parentId:this.props.item.itemnumber,
-      height:this.boardHeight,
-      width:this.boardWidth,
-      quantity:this.props.item.quantity,
-      code:this.state.patternBoardCode,
-      childNumber:1,
-      comments:'Pattern Board for Item #' + this.props.item.itemnumber
-    }
-
-    let splitItems = [];
-    this.state.patternSplits.map((p,index) => {
-
-      let  {height, width} = getPatternLaminateSize(
-        this.props.item,
-        this.props.material.edgebands, 
-        p,
-        this.state.patternSplits.length, 
-        this.state.patternType, 
-        patternBoard)
-
-      let splitItem = JSON.parse(JSON.stringify(patternBoard));
-
-      splitItem = {
-        ...splitItem,
-        code:p.code, 
-        height, 
-        width, 
-        childNumber: index+2, 
-        comments: 'Pattern Laminate - ' + (parseInt(index) + 1) + ' for Item #' + this.props.item.itemnumber
-      } ;
-
-      splitItems.push(splitItem);
-    })
-    
-
-    let items = this.props.wo.woitems.filter(i => i.itemnumber != this.props.item.itemnumber)
-    items = items.filter(item => item.parentId != this.props.item.itemnumber);
-    items = [...items, newItem, patternBoard, ...splitItems]
-    this.props.saveItems(items);
-    //this.props.setCurrentItem(newItem);
     $('#btnRemarksClose').click();
 
   }
   render() {
 
-    let itemHeight =parseInt(this.props.item.height);
-    let itemWidth = parseInt(this.props.item.width);
+    let itemHeight =parseInt(this.props.height);
+    let itemWidth = parseInt(this.props.width);
 
     // let heightEB = 0;
     // let widthEB = 0;
@@ -250,7 +199,8 @@ class RemarksPattern extends Component {
     // heightEB += Math.round(this.state.eb_b);
     // heightEB += Math.round(this.state.eb_d);
 
-    const boardSize = getPatternBoardSize(this.props.item,this.props.material.edgebands);
+    const {height, width, eb_a, eb_b, eb_c, eb_d} = this.props;
+    const boardSize = getPatternBoardSize({height, width, eb_a, eb_b, eb_c, eb_d},this.props.edgebands);
     this.boardHeight = boardSize.height;
     this.boardWidth = boardSize.width;
 
@@ -260,7 +210,7 @@ class RemarksPattern extends Component {
 
     let totalSliptHeight = this.getSplitSum();
 
-    let mCodes = this.props.material.materialCodes.filter(mc => mc.board == 0 && mc.front_laminate != 0);
+    let mCodes = this.props.materialCodes.filter(mc => mc.board == 0 && mc.front_laminate != 0);
     if(!mCodes || mCodes.length == 0){
       return(<div>No Material Codes defined with only Laminates..</div>)
     }
@@ -279,7 +229,7 @@ class RemarksPattern extends Component {
               <tr>
                 <td  style={{width:"30%"}}>
                   Board
-                  <MaterialCodeDropDown onChange={this.onPatternBoardCodeChange} codeValue={this.state.patternBoardCode} item={this.props.item} material={this.props.material} excludeOnlyLaminate={true} />
+                  <MaterialCodeDropDown onChange={this.onPatternBoardCodeChange} codeValue={this.state.patternBoardCode} excludeOnlyLaminate={true} />
                 </td>
                 <td style={{width:"30%"}}>
                   Pattern Type
@@ -322,7 +272,7 @@ class RemarksPattern extends Component {
                       return <tr key={i}>
                         <td>{pattern.id}</td>
                         <td>
-                        <MaterialCodeDropDown codeValue={pattern.code} onChange={(e) => this.onPatternLaminateCodeChange(e,pattern.id)} item={this.props.item} material={this.props.material} onlyLaminate={true} />
+                        <MaterialCodeDropDown codeValue={pattern.code} onChange={(e) => this.onPatternLaminateCodeChange(e,pattern.id)} onlyLaminate={true} />
 
                         </td>
                         <td>
@@ -335,7 +285,7 @@ class RemarksPattern extends Component {
                     })
                   }
                     <tr  style={{backgroundColor:"#ccc"}}>
-                      <td></td><td >Balance</td><td>{parseInt( this.state.patternType == PATTERN_TYPE.HORIZONTAL ? this.props.item.height : this.props.item.width) - totalSliptHeight}</td><td></td>
+                      <td></td><td >Balance</td><td>{parseInt( this.state.patternType == PATTERN_TYPE.HORIZONTAL ? this.props.height : this.props.width) - totalSliptHeight}</td><td></td>
                     </tr>
                     </tbody>
                   </table>
@@ -345,7 +295,7 @@ class RemarksPattern extends Component {
                   <table style={{float:"right"}}>
                   <tbody>
                     <tr>
-                      <td style={{textAlign:"center"}}><span style={{fontSize:'10px'}}>{this.props.item.width}</span></td>
+                      <td style={{textAlign:"center"}}><span style={{fontSize:'10px'}}>{this.props.width}</span></td>
                       <td></td>
                     </tr>
                     <tr>
@@ -363,15 +313,10 @@ class RemarksPattern extends Component {
                         </div>
 
                       </td>
-                      <td> <span style={{fontSize:'10px'}}>{this.props.item.height}</span></td>
+                      <td> <span style={{fontSize:'10px'}}>{this.props.height}</span></td>
                     </tr>
                     </tbody>
                   </table>
-
-
-
-
-
                 </td>
 
               </tr>
@@ -405,12 +350,24 @@ class RemarksPattern extends Component {
   }
 }
 
-RemarksPattern.propTypes = {
-  item: PropTypes.object.isRequired,
-  wo: PropTypes.object.isRequired,
-  material: PropTypes.object.isRequired,  
-  saveItems: PropTypes.func.isRequired
-}
+const mapStateToProps = state => (
+  {
+    patternBoardCode:state.config.currentItem.patternBoardCode,
+    patternType:state.config.currentItem.patternType,
+    patternSplits:state.config.currentItem.patternSplits,
+    height:state.config.currentItem.height,
+    width:state.config.currentItem.width,
+    edgebands: state.material.edgebands,
+    materialCodes: state.material.materialCodes,
+    eb_a : state.config.currentItem.eb_a,
+    eb_b : state.config.currentItem.eb_b,
+    eb_c : state.config.currentItem.eb_c,
+    eb_d : state.config.currentItem.eb_d
+  }
+);
 
-
-export default RemarksPattern;
+export default connect(
+  mapStateToProps,
+  {updatePattern},
+  null
+)(RemarksPattern);

@@ -1,13 +1,12 @@
-import React, { Component} from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
 import $ from 'jquery';
-import { REMARKS, EB_START_NUMBER, PROFILE_TYPE} from '../../constants';
 import { notify_error, notify_success, isEmptyOrSpaces }  from '../../Utils/commonUtls';
-import { setDoubleThick }  from '../../Utils/remarksUtils';
 import MaterialCodeDropDown from '../materials/MaterialCodeDropDown';
-import { getNewWoItem }  from '../../Utils/woUtils';
 
-class RemarksDoubleThick extends Component {
+import { updateDoubleThick } from './remarksActions';
+
+class RemarksDoubleThick extends PureComponent {
  
   constructor(props){
     super(props);
@@ -29,9 +28,9 @@ class RemarksDoubleThick extends Component {
 
   updateState() {
     //if(this.props.item != null && this.props.item.doubleThickWidth != "0"){
-      this.setState({ doubleThickWidth : this.props.item.doubleThickWidth });
-      this.setState({ doubleThickCode : this.props.item.doubleThickCode == 0 ? this.props.item.code : this.props.item.doubleThickCode });
-      let dblSides = this.props.item.doubleThickSides || "ABCD";
+      this.setState({ doubleThickWidth : this.props.doubleThickWidth });
+      this.setState({ doubleThickCode : this.props.doubleThickCode == 0 ? this.props.code : this.props.doubleThickCode });
+      let dblSides = this.props.doubleThickSides || "ABCD";
       this.setState({ A : dblSides.includes("A") });
       this.setState({ B : dblSides.includes("B") });
       this.setState({ C : dblSides.includes("C") });
@@ -67,47 +66,8 @@ class RemarksDoubleThick extends Component {
       return;
     }
 
-    let newItem = JSON.parse(JSON.stringify(this.props.item));
+    this.props.updateDoubleThick(this.state.doubleThickWidth,dblSides,this.state.doubleThickCode)
 
-    newItem = { ...newItem, doubleThickWidth: this.state.doubleThickWidth, doubleThickSides: dblSides}
-    let remarks = newItem.remarks;
-    if(remarks.length == 0 || !remarks.includes(REMARKS.DBLTHICK)){
-      remarks.push(REMARKS.DBLTHICK);
-    }
-
-    let newItem1 = getNewWoItem() //JSON.parse(JSON.stringify(newItem));
-    const {eb_a, eb_b, eb_c, eb_d, height, width, quantity} = newItem;
-    newItem1 = {...newItem1, 
-      itemnumber:0, 
-      childNumber:1,
-      code:this.state.doubleThickCode,
-      parentId:this.props.item.itemnumber,
-      eb_a, eb_b, eb_c, eb_d, height, width, quantity
-
-    };
-
-    let newItem2 = JSON.parse(JSON.stringify(newItem1));
-    newItem2 = {...newItem2, 
-      childNumber:2
-    };
-
-    if(!setDoubleThick(dblSides, this.props.item, newItem1, newItem2, this.state.doubleThickWidth)){
-      return;
-    }
-
-    let items = this.props.wo.woitems.filter(i => i.itemnumber != this.props.item.itemnumber)
-    items = items.filter(item => item.parentId != this.props.item.itemnumber);
-
-    items = [...items,newItem]
-
-    if(newItem1.quantity != 0){
-      items = [...items,newItem1]
-    }
-    if(newItem2.quantity != 0){
-      items = [...items,newItem2]
-    }
-
-    this.props.saveItems(items);
 
     $('#btnRemarksClose').click();
   }
@@ -118,11 +78,11 @@ class RemarksDoubleThick extends Component {
     this.height = 0
     this.width = 0;
 
-    if(this.props.item){
-      if(this.props.item.height != '')
-        this.height = parseInt(this.props.item.height);
-      if(this.props.item.width != '')
-        this.width = parseInt(this.props.item.width);
+    if(this.props.height){
+      if(this.props.height != '')
+        this.height = parseInt(this.props.height);
+      if(this.props.width != '')
+        this.width = parseInt(this.props.width);
     }
 
     return(
@@ -132,7 +92,7 @@ class RemarksDoubleThick extends Component {
               <tr>
                 <td>
                   <h5>Material</h5>
-                  <MaterialCodeDropDown onChange={this.onChange} codeName="doubleThickCode" codeValue={this.state.doubleThickCode} item={this.props.item} material={this.props.material}  excludeOnlyLaminate={true} /> 
+                  <MaterialCodeDropDown onChange={this.onChange} codeName="doubleThickCode" codeValue={this.state.doubleThickCode}  excludeOnlyLaminate={true} /> 
                 </td>
                 <td>
                   <h5>Width</h5>
@@ -187,12 +147,20 @@ class RemarksDoubleThick extends Component {
   }
 }
 
-RemarksDoubleThick.propTypes = {
-  wo: PropTypes.object.isRequired,
-  item: PropTypes.object.isRequired,
-  material: PropTypes.object.isRequired,  
-  saveItems: PropTypes.func.isRequired
-}
+const mapStateToProps = state => (
+  {
+    doubleThickCode:state.config.currentItem.doubleThickCode,
+    doubleThickWidth:state.config.currentItem.doubleThickWidth,
+    doubleThickSides:state.config.currentItem.doubleThickSides,
+    height:state.config.currentItem.height,
+    width:state.config.currentItem.width,
+    code:state.config.currentItem.code
+    
+  }
+);
 
-
-export default RemarksDoubleThick;
+export default connect(
+  mapStateToProps,
+  {updateDoubleThick},
+  null
+)(RemarksDoubleThick);

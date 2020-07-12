@@ -1,6 +1,7 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
 
-class MaterialLaminate extends Component {
+class MaterialLaminate extends PureComponent {
  
   constructor(props){
     super(props);
@@ -12,13 +13,13 @@ class MaterialLaminate extends Component {
 
   componentDidMount(){
     window.setTimeout(() => {
-      this.setState({laminates:this.props.material.laminates});
+      this.setState({laminates:this.props.laminates});
     },1000)
   }
 
   componentWillReceiveProps(nextProps){
     if(nextProps.currentTab == 'laminates' && (nextProps.nextTab != 'laminates' && nextProps.nextTab != '')){
-      if(nextProps.material.laminates != this.state.laminates){
+      if(nextProps.laminates != this.state.laminates){
         this.props.save(this.state.laminates)
       } else {
         this.props.save('changeTab');
@@ -26,7 +27,7 @@ class MaterialLaminate extends Component {
     }
 
     if(this.props.isCancelClicked){
-      this.setState({laminates:this.props.material.laminates});
+      this.setState({laminates:this.props.laminates});
     }
   }
 
@@ -98,10 +99,10 @@ class MaterialLaminate extends Component {
 
 
   isUsed = (id) => {
-    if(this.props.material.materialCodes && this.props.material.materialCodes.find(mc => mc.front_laminate == id ||  mc.back_laminate == id)){
+    if(this.props.materialCodes && this.props.materialCodes.find(mc => mc.front_laminate == id ||  mc.back_laminate == id)){
       return true;
     }
-    if(this.props.material.edgebands && this.props.material.edgebands.find(eb => eb.laminate == id )){
+    if(this.props.edgebands && this.props.edgebands.find(eb => eb.laminate == id )){
       return true;
     }
     return false;
@@ -161,5 +162,17 @@ class MaterialLaminate extends Component {
   }
 }
 
-export default MaterialLaminate;
 
+const mapStateToProps = state => (
+  {
+    laminates: state.material.laminates,
+    materialCodes: state.material.materialCodes,
+    edgebands: state.material.edgebands
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  null,
+  null
+)(MaterialLaminate);

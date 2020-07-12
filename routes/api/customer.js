@@ -24,6 +24,13 @@ router.get('/', auth, (req, res) => {
 router.get('/:id',auth, (req, res) => {
     const id = req.params.id;
     let search = { _id: id };
+
+    //if customercode
+    if(id.length == 3){
+      search = { customercode: id };
+    }
+
+    
     Customer.findOne(search)
       .then(customer => {
         if(req.user.name == 'ADMIN' ||  customer.user_id == req.user.id)
@@ -36,6 +43,7 @@ router.get('/:id',auth, (req, res) => {
         res.status(400).json(err)
       })
 });
+
 
 //Create Customer
 router.post('/', auth, (req,  res) => {

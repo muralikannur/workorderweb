@@ -1,6 +1,8 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect'
 
-class MaterialCode extends Component {
+class MaterialCode extends PureComponent {
  
   constructor(props){
       super(props);
@@ -12,14 +14,14 @@ class MaterialCode extends Component {
 
   componentDidMount(){
     window.setTimeout(() => {
-      this.setState({materialCodes:this.props.material.materialCodes});
+      this.setState({materialCodes:this.props.materialCodes});
     },1000)
   }
 
   componentWillReceiveProps(nextProps){
 
     if(nextProps.currentTab == 'materialCodes' && (nextProps.nextTab != 'materialCodes' && nextProps.nextTab != '')){
-      if(nextProps.material.materialCodes != this.state.materialCodes){
+      if(nextProps.materialCodes != this.state.materialCodes){
         this.props.save(this.state.materialCodes)
       } else {
         this.props.save('changeTab');
@@ -27,7 +29,7 @@ class MaterialCode extends Component {
     }
 
     if(this.props.isCancelClicked){
-      this.setState({materialCodes:this.props.material.materialCodes});
+      this.setState({materialCodes:this.props.materialCodes});
     }
   }
 
@@ -98,7 +100,7 @@ class MaterialCode extends Component {
   }
 
   isUsed = (id) => {
-    if(this.props.items && this.props.items.find(i => i.code == id)){
+    if(this.props.usedCodes.includes(id)){
       return true;
     }
     return false;
@@ -129,7 +131,7 @@ class MaterialCode extends Component {
                 <div className="form-group" style={{marginBottom:"0px"}}>
                     <select  onChange={this.onChange} defaultValue={materialCode.board}  id="board" name="board" className="js-example-basic-single input-xs  w-100">
                     <option value="0"></option>
-                    {this.props.material.boards.map( (e) => {
+                    {this.props.boards.map( (e) => {
                     return (
                     <option value={e.boardNumber} key={e.boardNumber} >[{e.boardNumber}] {e.type} - {e.thickness}mm ({e.height} x {e.width}) {e.grade}  {e.company} </option>
                     )})}
@@ -140,7 +142,7 @@ class MaterialCode extends Component {
                 <div className="form-group" style={{marginBottom:"0px"}}>
                     <select  onChange={this.onChange} defaultValue={materialCode.front_laminate}  id="front_laminate" name="front_laminate" className="js-example-basic-single input-xs  w-100">
                     <option value="0"></option>
-                    {this.props.material.laminates.map( (e) => {
+                    {this.props.laminates.map( (e) => {
                     return (
                     <option value={e.laminateNumber} key={e.laminateNumber} >[{e.laminateNumber}] {e.code} - {e.thickness}mm - {e.grains} </option>
                     )})}
@@ -151,7 +153,7 @@ class MaterialCode extends Component {
                 <div className="form-group" style={{marginBottom:"0px"}}>
                     <select  onChange={this.onChange} defaultValue={materialCode.back_laminate}  id="back_laminate" name="back_laminate" className="js-example-basic-single input-xs  w-100">
                     <option value="0"></option>
-                    {this.props.material.laminates.map( (e) => {
+                    {this.props.laminates.map( (e) => {
                     return (
                     <option value={e.laminateNumber} key={e.laminateNumber} >{e.code} - {e.thickness}mm - {e.grains} </option>
                     )})}
@@ -182,4 +184,31 @@ class MaterialCode extends Component {
   }
 }
 
-export default MaterialCode;
+const getUsedCodes = createSelector(
+  [(state) => state.wo.woitems],
+  (items) => {
+    let usedCodes = [];
+    items.map(i => {
+      if(i.code != 0 && !usedCodes.includes(i.code)){
+        usedCodes.push(parseInt(i.code));
+      }
+    })
+    return usedCodes;
+  }
+)
+
+const mapStateToProps = state => (
+  {
+    materialCodes: state.material.materialCodes,
+    laminates: state.material.laminates,
+    boards: state.material.boards,   
+    usedCodes: getUsedCodes(state)
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  null,
+  null
+)(MaterialCode);
+

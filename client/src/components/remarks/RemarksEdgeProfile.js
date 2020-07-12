@@ -1,9 +1,10 @@
-import React, { Component} from 'react';
+import React, { PureComponent} from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 import { REMARKS, PROFILE_TYPE, EB_START_NUMBER} from '../../constants';
 
-class RemarksEdgeProfile extends Component {
+class RemarksEdgeProfile extends PureComponent {
  
   constructor(props){
     super(props);
@@ -86,12 +87,14 @@ class RemarksEdgeProfile extends Component {
   }
 }
 
-RemarksEdgeProfile.propTypes = {
-  item: PropTypes.object.isRequired,
-  wo: PropTypes.object.isRequired,
-  material: PropTypes.object.isRequired,  
-  saveItems: PropTypes.func.isRequired
-}
+const mapStateToProps = state => (
+  {
+    profileNumber:state.config.currentItem.profileNumber
+  }
+);
 
-
-export default RemarksEdgeProfile;
+export default connect(
+  mapStateToProps,
+  {updateProfile},
+  null
+)(RemarksEdgeProfile);

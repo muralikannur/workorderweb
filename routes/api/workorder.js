@@ -14,7 +14,7 @@ router.get('/', auth, (req, res) => {
     if (req.user.name == "ADMIN") {
         search = {};
     }
-    WorkOrder.find(search,{_id:1,customer_id:1,wonumber:1,status:1, date:1, client:1})
+    WorkOrder.find(search,{_id:1,customer_id:1,wonumber:1,status:1, date:1, client:1, project:1})
         .then(wo => {
             res.json(wo)
         })
@@ -42,7 +42,7 @@ router.get('/:id',auth, (req, res) => {
 //Update workorder details 
 router.post('/:id',auth, (req, res) => {
 
-  let { user_id,client,billing_address1,billing_address2,billing_pin,billing_phone,billing_gst,shipping_address1,shipping_address2,shipping_pin,shipping_phone,shipping_gst, status} = req.body;
+  let { user_id,client,project,billing_address1,billing_address2,billing_pin,billing_phone,billing_gst,shipping_address1,shipping_address2,shipping_pin,shipping_phone,shipping_gst,ship_to_billing, status} = req.body;
   if(user_id != req.user.id){
     logger.error("User Authentication failed while creating new Work Order");
     res.json({"error":"User Authentication failed while creating new Work Order"})
@@ -53,7 +53,7 @@ router.post('/:id',auth, (req, res) => {
   if(status){
     updateQuery = {status};
   } else if(billing_address1){
-    updateQuery = {client,billing_address1,billing_address2,billing_pin,billing_phone,billing_gst,shipping_address1,shipping_address2,shipping_pin,shipping_phone,shipping_gst};
+    updateQuery = {client,project,billing_address1,billing_address2,billing_pin,billing_phone,billing_gst,shipping_address1,shipping_address2,shipping_pin,shipping_phone,shipping_gst,ship_to_billing};
   } else {
     let err = {'err':'Required parameters missing (status/address).'}
     logger.error(); res.json(err);
@@ -83,6 +83,7 @@ router.post('/', auth, (req,  res) => {
     customer_id, 
     materialWoId,
     client,
+    project,
     billing_address1,
     billing_address2,
     billing_pin,
@@ -92,7 +93,8 @@ router.post('/', auth, (req,  res) => {
     shipping_address2,
     shipping_pin,
     shipping_phone,
-    shipping_gst
+    shipping_gst,
+    ship_to_billing
   } = req.body;
 
   if(user_id != req.user.id){
@@ -173,6 +175,7 @@ router.post('/', auth, (req,  res) => {
         user_id, 
         customer_id, 
         client,
+        project,
         billing_address1,
         billing_address2,
         billing_pin,
@@ -182,7 +185,8 @@ router.post('/', auth, (req,  res) => {
         shipping_address2,
         shipping_pin,
         shipping_phone,
-        shipping_gst
+        shipping_gst,
+        ship_to_billing
       });
       newWO.save().then(item => {
         let materialDef = { wo_id:item._id }
