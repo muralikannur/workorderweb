@@ -3,7 +3,7 @@ import { notify_error }  from './commonUtls';
 import { getEBThickness }  from '../Utils/woUtils';
 import { PATTERN_TYPE} from '../constants';
 
-export const setDoubleThick = (dblThkSides, item, newItem1, newItem2, doubleThickWidth) => {
+export const setDoubleThick = (dblThkSides, item, newItem1, newItem2, newItem3, newItem4, doubleThickData) => {
 
     var A = dblThkSides.includes("A")|| false;
     var B = dblThkSides.includes("B")|| false;
@@ -11,42 +11,50 @@ export const setDoubleThick = (dblThkSides, item, newItem1, newItem2, doubleThic
     var D = dblThkSides.includes("D")|| false;
 
     let requiredWidth = 0
-    if(A & C){
-      requiredWidth = parseInt(doubleThickWidth)*2;
-    } else if(A || C){
-      requiredWidth = parseInt(doubleThickWidth);
+    let itemWidth = item.width;
+    let itemHeight = item.height;
+
+    if(A){
+      newItem1.quantity = item.quantity;
+      newItem1.height = item.height;
+      newItem1.width = doubleThickData.A.thick;
+      newItem1.code = doubleThickData.A.code;
+      itemWidth -= doubleThickData.A.thick;
+    }
+    if(C){
+      newItem3.quantity = item.quantity;
+      newItem3.height = item.height;
+      newItem3.width = doubleThickData.C.thick;
+      newItem3.code = doubleThickData.C.code;
+      itemWidth -= doubleThickData.C.thick;
     }
 
-    if(item.width - requiredWidth < 1 ){
-      notify_error('Item width ' + item.width + ' not enough for the Double Thick Width ' + doubleThickWidth);
+
+
+    if(B){
+      newItem2.quantity = item.quantity;
+      newItem2.height = itemWidth;
+      newItem2.width = doubleThickData.B.thick;
+      newItem2.code = doubleThickData.B.code;
+      itemHeight -= doubleThickData.B.thick;
+    }
+    if(D){
+      newItem4.quantity = item.quantity;
+      newItem4.height = itemWidth;
+      newItem4.width = doubleThickData.D.thick;
+      newItem4.code = doubleThickData.D.code;
+      itemHeight -= doubleThickData.D.thick;
+    }
+
+
+
+    if(itemWidth < 1 ){
+      notify_error('Item width ' + item.width + ' not enough for the Double Thick Width ' );
       return false;
     }
-
-    //Default (ABCD)
-    newItem1.height = item.height;
-    newItem1.width = doubleThickWidth;
-    newItem2.width = doubleThickWidth;
-    newItem2.height = item.width - (parseInt(doubleThickWidth)*2);
-
-    //get Width sides (BD) quantity
-    if(B || D){
-      newItem2.quantity = item.quantity;
-    } 
-    if(B && D){
-      newItem2.quantity = item.quantity * 2;
-    } 
-
-    //get Height sides (AC) quantity
-    if(A || C){
-      newItem1.quantity = item.quantity;
-
-      if(A && C){
-        newItem1.quantity = item.quantity * 2;
-      } else {
-        newItem2.height = item.width - parseInt(doubleThickWidth)
-      } 
-    } else {
-      newItem2.height = item.width;
+    if(itemHeight < 1 ){
+      notify_error('Item Height ' + item.height + ' not enough for the Double Thick Width ' );
+      return false;
     }
 
 

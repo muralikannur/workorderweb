@@ -59,7 +59,8 @@ class MaterialEdgeBand extends PureComponent {
     }
 
     if(name=="eb_thickness") value = parseFloat(e.target.value);
-    if(name=="eb_width") value = parseInt(e.target.value);
+
+
 
     var materialEdgeBands = this.state.materialEdgeBands;
     var materialEdgeBand = materialEdgeBands.find(i => i.materialEdgeBandNumber == this.state.currentItem);
@@ -78,6 +79,7 @@ class MaterialEdgeBand extends PureComponent {
       laminate:laminateNumber,
       eb_thickness:'',
       eb_width:'',
+      percentage:10
     }
     this.setState({materialEdgeBands: [...this.state.materialEdgeBands, newMaterialEdgeBand], currentItem:maxId});
     //this.props.saveItems( [...this.state.woitems, newItem]);
@@ -146,8 +148,9 @@ class MaterialEdgeBand extends PureComponent {
                     <tbody>
                   <tr  style={{lineHeight:"1", fontWeight:"normal"}}>
                         <th style={{width:"5%"}}>#</th>
-                        <th style={{width:"40%"}}> Thickness</th>
-                        <th style={{width:"40%"}}> Width</th>
+                        <th style={{width:"30%"}}> Thickness</th>
+                        <th style={{width:"30%"}}> Width</th>
+                        <th style={{width:"20%"}}> Wastage(%)</th>
                         <th style={{width:"15%"}}></th>
                   </tr>
                   {this.state.materialEdgeBands.filter(eb => eb.laminate == laminate.laminateNumber).sort((a,b) => a.materialEdgeBandNumber > b.materialEdgeBandNumber ? 1  : -1 ).map( (materialEdgeBand, i) => {
@@ -174,7 +177,11 @@ class MaterialEdgeBand extends PureComponent {
                               </select>
                           </div>
                       </td>
-
+                      <td>
+                          <div className="form-group" style={{marginBottom:"0px"}}>
+                              <input  onChange={this.onChange} defaultValue={materialEdgeBand.percentage}  id="percentage" name="percentage" className="js-example-basic-single input-xs  w-100" />
+                          </div>
+                      </td>
 
                       <td>
                       &nbsp;            
@@ -204,8 +211,9 @@ class MaterialEdgeBand extends PureComponent {
                     <tbody>
                   <tr  style={{lineHeight:"1", fontWeight:"normal"}}>
                         <th style={{width:"5%"}}>#</th>
-                        <th style={{width:"40%"}}> Thickness</th>
-                        <th style={{width:"40%"}}> Width</th>
+                        <th style={{width:"30%"}}> Thickness</th>
+                        <th style={{width:"30%"}}> Width</th>
+                        <th style={{width:"20%"}}> Wastage(%)</th>
                         <th style={{width:"15%"}}></th>
                   </tr>
                   {this.state.materialEdgeBands.filter(eb => eb.laminate == parseInt(board.boardNumber) + EB_START_NUMBER.BOARD).sort((a,b) => a.materialEdgeBandNumber > b.materialEdgeBandNumber ? 1  : -1 ).map( (materialEdgeBand, i) => {
@@ -232,7 +240,11 @@ class MaterialEdgeBand extends PureComponent {
                               </select>
                           </div>
                       </td>
-
+                      <td>
+                          <div className="form-group" style={{marginBottom:"0px"}}>
+                              <input  onChange={this.onChange} defaultValue={materialEdgeBand.percentage}  id="percentage" name="percentage" className="js-example-basic-single input-xs  w-100" />
+                          </div>
+                      </td>
 
                       <td>
                       &nbsp;            

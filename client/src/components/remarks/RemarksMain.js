@@ -114,7 +114,8 @@ showMaterialDefinition = () => {
 const mapStateToProps = state => ({
   itemnumber: state.config.currentItem.itemnumber,
   remarks: state.config.currentItem.remarks,
-  code: state.config.currentItem.code
+  code: state.config.currentItem.code,
+  currentItem:state.config.currentItem
 });
 
 

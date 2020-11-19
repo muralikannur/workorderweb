@@ -43,38 +43,41 @@
 
       let eb_a_items = wo.woitems.filter(i => !isNaN(i.eb_a) && i.eb_a == eb.materialEdgeBandNumber);
       eb_a_items.map(i => {
-        a_count = parseInt(i.height) * parseInt(i.quantity)
+        a_count = a_count + parseInt(i.height) * parseInt(i.quantity)
       })
 
       let eb_b_items = wo.woitems.filter(i => !isNaN(i.eb_b) && i.eb_b == eb.materialEdgeBandNumber);
       eb_b_items.map(i => {
-        b_count = parseInt(i.width) * parseInt(i.quantity)
+        b_count = b_count + parseInt(i.width) * parseInt(i.quantity)
       })      
 
       let eb_c_items = wo.woitems.filter(i => !isNaN(i.eb_c) && i.eb_c == eb.materialEdgeBandNumber);
       eb_c_items.map(i => {
-        c_count = parseInt(i.height) * parseInt(i.quantity)
+        c_count = c_count + parseInt(i.height) * parseInt(i.quantity)
       })
 
       let eb_d_items = wo.woitems.filter(i => !isNaN(i.eb_d) && i.eb_d == eb.materialEdgeBandNumber);
       eb_d_items.map(i => {
-        d_count= parseInt(i.width) * parseInt(i.quantity)
+        d_count = d_count + parseInt(i.width) * parseInt(i.quantity)
       })    
 
       count = a_count + b_count + c_count + d_count
 
+      if(!eb.percentage || isNaN(eb.percentage)){
+        eb.percentage = 1;
+      }
 
       eb_list.push({
         LAM_BOARD:laminateName,
         THICK:  parseFloat(eb.eb_thickness),
         WIDTH:  parseInt(eb.eb_width),
         LENGTH:count,
-        WASTAGE: '5%',
-        TOTAL_REQUIRED: count * 1.05,
-        A:a_count * 1.05,
-        B:b_count * 1.05,
-        C:c_count * 1.05,
-        D:d_count * 1.05
+        WASTAGE: eb.percentage + '%',
+        TOTAL_REQUIRED: count + Math.round((count * eb.percentage / 100)),
+        A:a_count + Math.round((a_count * eb.percentage / 100)),
+        B:b_count + Math.round((b_count * eb.percentage / 100)),
+        C:c_count + Math.round((c_count * eb.percentage / 100)),
+        D:d_count + Math.round((d_count * eb.percentage / 100))
 
       })
     })
@@ -139,7 +142,7 @@
       }
 
 
-      if(i.doubleThickWidth == 0 && i.ledgeType == 0){
+     // if(i.doubleThickWidth == 0 && i.ledgeType == 0){
         if(material.edgebands && material.edgebands.length > 0){
           
           cutting_Width -=  getEBThickness(i.eb_a,material.edgebands);
@@ -148,7 +151,7 @@
           cutting_Height -= getEBThickness(i.eb_d,material.edgebands);
         
         }
-      }
+     // }
 
 
       if(i.profileNumber != 0){
@@ -206,6 +209,8 @@
         Material:matText,
         Comments:i.comments
       })
+
+      console.log(cutting_list);
 
       //Items
 

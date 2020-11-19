@@ -54,7 +54,7 @@ class WorkOrderEdgeBand extends PureComponent {
               <option title={titleText} value={e.materialEdgeBandNumber}  key={e.materialEdgeBandNumber} > {e.laminate > 200 ? 'EP:' : ''} {e.eb_thickness} - {e.eb_width}</option>
               )})
           }
-          <option id="0">New...</option>
+          {/* <option id="0">New...</option> */}
         </select>
       }
     </div>

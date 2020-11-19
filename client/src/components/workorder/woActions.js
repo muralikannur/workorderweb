@@ -4,6 +4,7 @@ import { tokenConfig } from '../../actions/authActions';
 import { returnErrors } from '../../actions/errorActions';
 import { getMaterial } from '../materials/materialActions';
 import { notify_error, notify_success } from '../../Utils/commonUtls';
+import { data } from 'jquery';
 
 export const createWorkOrder = wo => (dispatch, getState) => {
   axios
@@ -21,7 +22,8 @@ export const createWorkOrder = wo => (dispatch, getState) => {
           wonumber:res.data.wonumber,
           customer_id:res.data.customer_id,
           project:res.data.project,
-          date:res.data.date
+          date:res.data.date,
+          client:res.data.client
         }
 
         dispatch({

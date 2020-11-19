@@ -29,3 +29,16 @@ export const getEBThickness = (id) => (dispatch, getState) =>{
     }
     return 0;
   }
+
+  export const getEBWidth = (id) => (dispatch, getState) =>{
+    let edgebands = getState().material.edgebands;
+    console.log(edgebands);
+    if(!edgebands || edgebands.length == 0) return 0;
+    
+    const eb = edgebands.find(e => e.materialEdgeBandNumber == id);
+    console.log(eb);
+    if(eb){
+      return parseInt(eb.eb_width);
+    }
+    return 0;
+  }

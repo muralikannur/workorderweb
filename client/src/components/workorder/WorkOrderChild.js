@@ -26,7 +26,7 @@ class WorkOrderChild extends PureComponent {
           // let ebWithoutProfiles = this.props.material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
           // let childEBOptions = [...ebOptions, ...ebWithoutProfiles];
 
-          let childEBOptions = getEBOptions(this.props.childitems[0],this.props.material);
+          
 
 
           let [editA, editB, editC, editD, editCode] = Array(4).fill(false);
@@ -36,6 +36,9 @@ class WorkOrderChild extends PureComponent {
           if(item.remarks.includes(REMARKS.DBLTHICK)){
               editCode = true;
               editA = true;
+              editB = true;
+              editC = true;
+              editD = true;
           }
                       
           
@@ -45,7 +48,7 @@ class WorkOrderChild extends PureComponent {
               .map((child,i) => {
 
                 let mCode = this.props.material.materialCodes.find(m => m.materialCodeNumber == child.code);
-
+                let childEBOptions = getEBOptions(child,this.props.material);
                 return(
               
                 <tr key={i} style={{backgroundColor:"#ddd", color:"#555", padding:"2px"}}>

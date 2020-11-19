@@ -190,13 +190,51 @@ class MaterialProfile extends PureComponent {
 }
 
 const getUsedProfiles = createSelector(
-  [(state) => state.wo.woitems],
-  (items) => {
+  [(state) => state.wo.woitems,
+   (state) => state.material.edgebands],
+  (items, edgebands) => {
     let usedProfiles = [];
+    let edgeProfiles = edgebands.filter(e => e.laminate > 200);
+
+console.log(edgeProfiles);
+
     items.map(i => {
+
+      //Hand Profile
       if(i.profileNumber != 0 && !usedProfiles.includes(i.profileNumber)){
         usedProfiles.push(parseInt(i.profileNumber));
       }
+
+      //Edge Profiles
+      if(i.eb_a != 0){
+        let eb = edgeProfiles.find(e => e.materialEdgeBandNumber == i.eb_a);
+        if(eb && !usedProfiles.includes(eb.laminate - 200)){
+          usedProfiles.push(eb.laminate - 200)
+        }
+      }
+
+      if(i.eb_b != 0){
+        let eb = edgeProfiles.find(e => e.materialEdgeBandNumber == i.eb_b);
+        if(eb && !usedProfiles.includes(eb.laminate - 200)){
+          usedProfiles.push(eb.laminate - 200)
+        }
+      }
+
+      if(i.eb_c != 0){
+        let eb = edgeProfiles.find(e => e.materialEdgeBandNumber == i.eb_c);
+        if(eb && !usedProfiles.includes(eb.laminate - 200)){
+          usedProfiles.push(eb.laminate - 200)
+        }
+      }
+
+      if(i.eb_d != 0){
+        let eb = edgeProfiles.find(e => e.materialEdgeBandNumber == i.eb_d);
+        if(eb && !usedProfiles.includes(eb.laminate - 200)){
+          usedProfiles.push(eb.laminate - 200)
+        }
+      }
+
+
     })
     return usedProfiles;
   }

@@ -79,19 +79,19 @@ class MaterialMain extends PureComponent {
 
     switch(this.state.currentTab){
       case 'boards':
-        if(!this.validateBoards(data)) return false;
+        if(!this.validateBoards(data)) {this.setState({isSaveClicked:false,nextTab:''}); return false;}
         break;
       case 'laminates':
-          if(!this.validateLaminates(data)) return false;
+          if(!this.validateLaminates(data)) {this.setState({isSaveClicked:false,nextTab:''}); return false;}
           break;
       case 'edgebands':
-          if(!this.validateEdgeBands(data)) return false;
+          if(!this.validateEdgeBands(data)) {this.setState({isSaveClicked:false,nextTab:''}); return false;}
           break;     
       case 'profiles':
-          if(!this.validateProfiles(data)) return false;
+          if(!this.validateProfiles(data)) {this.setState({isSaveClicked:false,nextTab:''}); return false;}
           break;             
       case 'materialCodes':
-          if(!this.validateMaterialCodes(data)) return false;
+          if(!this.validateMaterialCodes(data)) {this.setState({isSaveClicked:false,nextTab:''}); return false;}
           break;           
     }
     var nextTab = this.state.nextTab === 'save' ? this.state.currentTab : this.state.nextTab;
@@ -267,6 +267,14 @@ class MaterialMain extends PureComponent {
       notify_error("Edge Band with .45 thick should be of 22 width. Error in following Item.. \n" + errItems.map(i => i.materialEdgeBandNumber).join());
       return false;
     }
+
+    //PERCENTAGE SHOULD BE NUMBER 
+    errItems = materialEdgeBands.filter(i => i.laminate < 200 && (isNaN(i.percentage) || i.percentage > 50));
+    if(errItems.length > 0){
+      this.highlightError(errItems,'edgeband','materialEdgeBandNumber',true);
+      notify_error("Incorrect Percentage. Error in following Item.. \n" + errItems.map(i => i.materialEdgeBandNumber).join());
+      return false;
+    } 
 
     this.props.saveMaterialEdgeBands(materialEdgeBands);
     return true;

@@ -50,6 +50,10 @@ const CustomerSchema = new Schema({
   user_id: {
     type: Schema.Types.ObjectId,
     required: true
+  },
+  status: {
+    type:String,
+    default:'Active'
   }
   
 });

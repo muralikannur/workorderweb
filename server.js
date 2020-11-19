@@ -32,6 +32,7 @@ app.use('/api/wo', require('./routes/api/workorder'));
 app.use('/api/material', require('./routes/api/material'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/customer', require('./routes/api/customer'));
+app.use('/api/opt', require('./routes/api/optimization'));
 
 
 if (process.env.NODE_ENV != 'development') {

@@ -54,13 +54,13 @@ export const getEBOptions = (item, material) => {
     return ebOptions;
   }
 
-  if(item.parentId != 0){
-    const ebWithoutProfiles = material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
-    if(ebWithoutProfiles && ebWithoutProfiles.length > 0){
-      ebOptions = [...ebOptions, ...ebWithoutProfiles];
-    }
-    return ebOptions;
-  }
+  // if(item.parentId != 0){
+  //   const ebWithoutProfiles = material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
+  //   if(ebWithoutProfiles && ebWithoutProfiles.length > 0){
+  //     ebOptions = [...ebOptions, ...ebWithoutProfiles];
+  //   }
+  //   return ebOptions;
+  // }
 
   // let ebWithoutProfiles = material.edgebands.filter(e => e.laminate < EB_START_NUMBER.PROFILE )
   // let childEBOptions = [...ebOptions, ...ebWithoutProfiles];
@@ -102,13 +102,19 @@ export const getEBOptions = (item, material) => {
       const laminate = material.edgebands.filter(eb => eb.laminate == mat.front_laminate );
       const board = material.edgebands.filter(eb => eb.laminate == parseInt(mat.board) + EB_START_NUMBER.BOARD);
 
-      if(laminate || board){
-        ebOptions = [...ebOptions, ...laminate, ...board];
+      if(laminate && laminate.length > 0){
+        ebOptions = [...ebOptions, ...laminate];
       }
+      if(board && board.length > 0){
+        ebOptions = [...ebOptions, ...board];
+      }
+
+
       let eProfile = material.profiles.find(p => p.type == PROFILE_TYPE.E)
       if(eProfile){
         const eprofileEB = material.edgebands.find(eb => eb.laminate == EB_START_NUMBER.PROFILE + parseInt(eProfile.profileNumber));
-        ebOptions = [...ebOptions, eprofileEB];  
+        if(eprofileEB)
+          ebOptions = [...ebOptions, eprofileEB];  
       }
 
     } else if(item.code == PATTERN_CODE){
@@ -172,7 +178,7 @@ export const getRemarkDataDetails = (id, item, material) =>{
           remarkData = eProfile.type + ' - H: ' + eProfile.height + ' - W: ' + eProfile.width;
         break;
     case REMARKS.DBLTHICK:
-        remarkData = 'DBL THICK - ' + item.doubleThickWidth;
+        remarkData = 'DBL THICK';
         break;    
     case REMARKS.SHAPE:
         remarkData = 'SHAPE - ' + item.shapeDetails.substring(0,15);
@@ -215,7 +221,6 @@ export const getRemarkDataDetails = (id, item, material) =>{
       comments:'',
       profileNumber:0,
       profileSide:'',
-      doubleThickWidth:0,
       ledgeType:0,
       shapeDetails:'',
       patternType:0,
@@ -223,8 +228,8 @@ export const getRemarkDataDetails = (id, item, material) =>{
       patternSplits:[],
       patternBoardCode:0,
       doubleThickSides:'ABCD',
-      doubleThickCode:0,
       ebCopied:false,
-      childNumber:0
+      childNumber:0,
+      doubleThickData:new Object()
     }
   }

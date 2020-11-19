@@ -4,9 +4,9 @@ import { ToastContainer} from 'react-toastify';
 import $ from 'jquery';
 
 import { clearErrors } from '../../actions/errorActions';
-import { saveCustomer, getAllCustomers, setCustomer, getCustomerCode} from './customerActions';
-import { getAllWorkOrders } from '../workorder/woActions';
-
+import { saveCustomer, getAllCustomers, setCustomer, getCustomerCode, updateCustomerStatus} from './customerActions';
+import { getAllWorkOrders, clearWorkOrder } from '../workorder/woActions';
+import { clearMaterial } from '../materials/materialActions';
 import CustomerDetails from './CustomerDetails';
 
 class CustomerList extends PureComponent {
@@ -19,8 +19,8 @@ class CustomerList extends PureComponent {
   }
  
   componentDidMount(){
-    // this.props.clearErrors();
-    //this.props.getAllCustomers();
+    this.props.clearMaterial();
+    this.props.clearWorkOrder();
   }
 
   toLoginPage = () => {
@@ -49,6 +49,25 @@ showWorkOrders = (customer) => {
   if(history) history.push('/wolist');
 }
 
+deleteCustomer = (code, id) =>{
+  if(window.confirm('Do you want to Delete the Customer ' + code + '?')){
+    this.props.updateCustomerStatus(id, code, 'Deleted');
+  }
+}
+
+removeCustomer = (code, id) =>{
+  if(window.confirm('Do you want to Permenently Delete the Customer ' + code + '?')){
+    this.props.updateCustomerStatus(id, code, 'Removed');
+  }
+}
+
+restoreCustomer = (code, id) =>{
+  if(window.confirm('Do you want to Restore the Customer ' + code + '?')){
+    this.props.updateCustomerStatus(id, code, 'Active');
+  }
+}  
+
+
   render() {
 
     if(!this.props.isAuthenticated) this.toLoginPage();
@@ -74,27 +93,60 @@ showWorkOrders = (customer) => {
             <div className="col-12" >
 
             {(!this.props.customerlist || this.props.customerlist.length == 0) ? <h5>No Customers</h5> :
+            <div>
               <table className="table table-striped wolist" style={{border:"#CCC 1px solid", width:"100%"}}>
                 <thead>
                   <tr>
-                      <th>Customer Code</th>
-                      <th>Customer Name</th>
-                      <th>Phone Number</th>
-                      <th></th>
+                      <th style={{width:"10%"}}>Customer Code</th>
+                      <th style={{width:"30%"}}>Customer Name</th>
+                      <th style={{width:"30%"}}>Phone Number</th>
+                      <th style={{width:"15%"}}>EDIT</th>
+                      <th style={{width:"15%"}}>DELETE</th>
 
                   </tr>
                 </thead>
                 <tbody>
-                  {this.props.customerlist.map(cl => { return(
+                  {this.props.customerlist.filter(c => c.status == 'Active').map(cl => { return(
                     <tr key={cl._id}>
                       <td onClick={() => {this.showWorkOrders(cl)}}  >{cl.customercode}</td>
                       <td onClick={() => {this.showWorkOrders(cl)}}>{cl.companyname}</td>
                       <td onClick={() => {this.showWorkOrders(cl)}}>{cl.phone}</td>
-                      <td onClick={() => {this.editCustomer(cl)}}><i className="icon-doc" ></i></td>
+                      <td><a href="#" onClick={() => {this.editCustomer(cl)}}><i className="icon-doc" ></i> edit</a></td>
+                      <td><a href="#" onClick={() => {this.deleteCustomer(cl.customercode, cl._id)}}>DELETE</a></td> 
                     </tr>
                   )})}
                 </tbody>
               </table>
+
+
+              <div style={{marginTop:"30px"}}>
+              <h6 style={{color:"red"}}>DELETED CUSTOMERS</h6>
+              <table className="table table-striped wolist" style={{border:"#CCC 1px solid", width:"100%"}}>
+              <thead>
+                <tr>
+                    <th style={{width:"10%"}}>Customer Code</th>
+                    <th style={{width:"30%"}}>Customer Name</th>
+                    <th style={{width:"30%"}}>Phone Number</th>
+                    <th style={{width:"15%"}}>RESTORE</th>
+                    <th style={{width:"15%",color:"red"}}>REMOVE</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {this.props.customerlist.filter(c => c.status == 'Deleted').map(cl => { return(
+                  <tr key={cl._id}>
+                    <td onClick={() => {this.showWorkOrders(cl)}}  >{cl.customercode}</td>
+                    <td onClick={() => {this.showWorkOrders(cl)}}>{cl.companyname}</td>
+                    <td onClick={() => {this.showWorkOrders(cl)}}>{cl.phone}</td>
+                    <td><a href="#" onClick={() => {this.restoreCustomer(cl.customercode, cl._id)}}>RESTORE</a></td>
+                    <td style={{color:"red"}}><a href="#" onClick={() => {this.removeCustomer(cl.customercode, cl._id)}}>REMOVE</a></td> 
+                  </tr>
+                )})}
+              </tbody>
+              </table>
+              </div>
+            </div>
+
             }
             </div>
           </div>
@@ -115,6 +167,6 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {saveCustomer, getAllCustomers, getAllWorkOrders, setCustomer, getCustomerCode},
+  {saveCustomer, getAllCustomers, getAllWorkOrders, setCustomer, getCustomerCode, updateCustomerStatus, clearMaterial, clearWorkOrder},
   null
 )(CustomerList);

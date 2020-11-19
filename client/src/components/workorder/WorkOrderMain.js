@@ -20,6 +20,7 @@ import WorkOrderDetails from './WorkOrderDetails';
 //Actions
 import { clearErrors } from '../../actions/errorActions';
 import { saveWorkOrder, updateStatus, updateAddress } from './woActions';
+import { getEBWidth } from './woCommonActions';
 import { getMaterial, clearMaterial, saveMaterial, copyMaterial } from '../materials/materialActions';
 import { saveItems, clearWorkOrder } from './woActions';
 import { setCurrentItem, setCurrentRemark, setMaterialTab } from '../../actions/configActions';
@@ -190,14 +191,17 @@ class WorkOrderMain extends PureComponent {
 
     //Exclude Pattern Main item (code=100) in validaton
     let items = this.props.wo.woitems;
-
+    let errItems = [];
     items.map(e => {$('#item-row-' + e.itemnumber).css("background-color","#fff")});
 
     //MATERIAL NOT SELECTED
-    let errItems = items.filter(i => i.code == 0 || i.code == PATTERN_CODE ).map(i => i.itemnumber);
+    let errItemsParent = items.filter(i => i.code == 0 && i.itemnumber != 0).filter(i => i.code != PATTERN_CODE ).map(i => i.itemnumber);
+    let errItemsChild = items.filter(i => i.code == 0 && i.parentId != 0).filter(i => i.code != PATTERN_CODE ).map(i => i.parentId);
+
+
     if(errItems.length > 0){
       this.highlightError(errItems);
-      notify_error("Material not selected for the following items..\n" + errItems.join());
+      notify_error("Material not selected for the following items..\n" + [...errItemsParent, ...errItemsChild].join());
       return false;
     }
 
@@ -245,16 +249,29 @@ class WorkOrderMain extends PureComponent {
     let isValid = true;
     // DOUBLE THICK
     
-    let itemsWithDblThick = items.filter(i => ( i.parentId == 0 && i.doubleThickWidth != 0 ));
+    let itemsWithDblThick = items.filter(i => ( i.parentId == 0 && i.remarks.includes(REMARKS.DBLTHICK)));
     if(itemsWithDblThick.length > 0){
         itemsWithDblThick.map(i => {
           let child1 = items.find(c => ( c.parentId == i.itemnumber && c.childNumber == 1 ));
           let child2 = items.find(c => ( c.parentId == i.itemnumber && c.childNumber == 2 ));
-          if(!setDoubleThick(i.doubleThickSides,i,child1,child2,i.doubleThickWidth)) {
+          let child3 = items.find(c => ( c.parentId == i.itemnumber && c.childNumber == 3 ));
+          let child4 = items.find(c => ( c.parentId == i.itemnumber && c.childNumber == 4 ));
+          if(!setDoubleThick(i.doubleThickSides,i,child1,child2,child3,child4,i.doubleThickData)) {
             notify_error('Error while setting Double Thick for Item #' + i.itemnumber);
             isValid = false;
             return;
           }
+
+          if(i.doubleThickSides.includes('A') && (i.eb_a != 0 && this.props.getEBWidth(i.eb_a) != 45)) isValid = false;
+          if(i.doubleThickSides.includes('B') && (i.eb_b != 0 && this.props.getEBWidth(i.eb_b) != 45)) isValid = false;
+          if(i.doubleThickSides.includes('C') && (i.eb_c != 0 && this.props.getEBWidth(i.eb_c) != 45)) isValid = false;
+          if(i.doubleThickSides.includes('D') && (i.eb_d != 0 && this.props.getEBWidth(i.eb_d) != 45)) isValid = false;
+
+          if(!isValid) {
+            notify_error('For Double Thick, edgeband width should be 45. Item #' + i.itemnumber);
+            return;
+          }
+
         })
         if(!isValid) return false;
     }
@@ -429,5 +446,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {clearErrors, saveWorkOrder, getMaterial, saveItems, setCurrentItem, setCurrentRemark, setMaterialTab, updateStatus, updateAddress}
+  {clearErrors, saveWorkOrder, getMaterial, saveItems, setCurrentItem, setCurrentRemark, setMaterialTab, updateStatus, updateAddress, getEBWidth}
 )(WorkOrderMain);

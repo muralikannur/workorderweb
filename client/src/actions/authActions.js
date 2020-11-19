@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { returnErrors } from './errorActions';
 import { getProfile } from './profileActions';
-import { getAllWorkOrders} from '../components/workorder/woActions';
+import { getAllWorkOrders, clearWorkOrder} from '../components/workorder/woActions';
 import { getAllCustomers } from '../components/customer/customerActions';
+import { clearMaterial } from '../components/materials/materialActions';
 
 import {
   USER_LOADED,
@@ -89,7 +90,7 @@ export const login = ({ email, password }) => dispatch => {
         type: LOGIN_SUCCESS,
         payload: res.data
       })
-      dispatch(getProfile(res.data.user.id));
+      //dispatch(getProfile(res.data.user.id));
       dispatch(getAllWorkOrders());
       dispatch(getAllCustomers());
 
@@ -235,6 +236,9 @@ export const logout = () => (dispatch, getState) => {
   dispatch( {
     type: LOGOUT_SUCCESS
   });
+
+  dispatch(clearMaterial());
+  dispatch(clearWorkOrder());
 
 };
 

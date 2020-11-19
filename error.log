@@ -1,228 +1,74 @@
 
-2020-01-24T00:52:32.757Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
+2020-07-26T14:47:05.670Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-01-24T00:53:05.765Z [auth\verify.js] error: Invalid Verification Code. UID: 5e2a3fa516df2e4b546bef3d - undefined
+2020-07-26T15:04:42.872Z [api\customer.js] error: Customer Code ABC already exists. - undefined
 
-2020-01-24T00:53:35.234Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
+2020-07-26T15:06:02.054Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
+    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
 
-2020-01-24T00:54:20.738Z [auth\activate.js] error: Invalid Activation Code. UID: 5e2a3fa516df2e4b546bef3d - undefined
+2020-07-26T15:12:35.856Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
+    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
 
-2020-01-24T00:54:35.825Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
+2020-07-26T15:24:44.260Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
 
-2020-01-24T01:54:34.912Z [auth\reset.js] error: Error while resetting password. CastError: Cast to ObjectId failed for value "{ uid: '5e2a3fa516df2e4b546bef3d' }" at path "_id" for model "user" - undefined
+2020-07-26T15:27:13.199Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
 
-2020-01-24T02:14:49.503Z [auth\reset.js] error: Invalid Verification Code. : muralikannur@gmail.com - undefined
+2020-07-26T15:29:31.343Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
 
-2020-01-24T02:18:22.070Z [auth\login.js] error: Account not activated. Email:muralikannur@gmail.com - undefined
+2020-07-26T15:31:24.066Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
 
-2020-01-24T02:25:58.214Z [auth\reset.js] error: Invalid Verification Code. : muralikannur@gmail.com - undefined
+2020-07-30T05:53:28.603Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-01-24T02:38:09.908Z [workorderweb\server.js] error: read ECONNRESET - Error: read ECONNRESET
-    at _errnoException (util.js:992:11)
-    at TCP.onread (net.js:618:25)
+2020-07-30T05:56:47.475Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-02-01T02:15:22.181Z [api\customer.js] error: Customer Code YYY already exists. - undefined
+2020-07-30T05:59:03.573Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-02-06T03:06:56.424Z [auth\login.js] error: User Does not exist. Email:muralikannur@gmail.com - undefined
+2020-07-30T08:06:18.231Z [workorderweb\server.js] error: connect ECONNREFUSED 139.59.58.64:27017 - Error: connect ECONNREFUSED 139.59.58.64:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-02-08T05:34:00.577Z [workorderweb\server.js] error: read ECONNRESET - Error: read ECONNRESET
-    at _errnoException (util.js:992:11)
-    at TCP.onread (net.js:618:25)
+2020-07-30T08:07:32.833Z [workorderweb\server.js] error: connect ECONNREFUSED 139.59.58.64:27017 - Error: connect ECONNREFUSED 139.59.58.64:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-02-08T05:48:44.397Z [workorderweb\server.js] error: read ECONNRESET - Error: read ECONNRESET
-    at _errnoException (util.js:992:11)
-    at TCP.onread (net.js:618:25)
+2020-07-30T08:16:23.379Z [auth\login.js] error: User Does not exist. Email:forshaping@gmail.com - undefined
 
-2020-04-10T12:43:21.122Z [api\material.js] error: Cast to ObjectId failed for value "Select WorkOrder" at path "wo_id" for model "material" - CastError: Cast to ObjectId failed for value "Select WorkOrder" at path "wo_id" for model "material"
-    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
-    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
-    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
-    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
-    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
-    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
-    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
-    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
-    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
-    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
-    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
-    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
-    at _combinedTickCallback (internal/process/next_tick.js:131:7)
-    at process._tickCallback (internal/process/next_tick.js:180:9)
+2020-07-30T08:31:11.978Z [auth\login.js] error: User Does not exist. Email:forshaping@gmail.com - undefined
 
-2020-04-10T13:09:02.219Z [api\material.js] error: Cast to ObjectId failed for value "Select" at path "wo_id" for model "material" - CastError: Cast to ObjectId failed for value "Select" at path "wo_id" for model "material"
-    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
-    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
-    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
-    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
-    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
-    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
-    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
-    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
-    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
-    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
-    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
-    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
-    at _combinedTickCallback (internal/process/next_tick.js:131:7)
-    at process._tickCallback (internal/process/next_tick.js:180:9)
+2020-07-30T08:31:48.227Z [api\customer.js] error: Can not delete the customer - QQQ - undefined
 
-2020-04-10T18:23:10.209Z [api\material.js] error: Cast to ObjectId failed for value "Copy Materials from" at path "wo_id" for model "material" - CastError: Cast to ObjectId failed for value "Copy Materials from" at path "wo_id" for model "material"
-    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
-    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
-    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
-    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
-    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
-    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
-    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
-    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
-    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
-    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
-    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
-    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
-    at _combinedTickCallback (internal/process/next_tick.js:131:7)
-    at process._tickCallback (internal/process/next_tick.js:180:9)
+2020-07-30T08:37:13.462Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
+    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
 
-2020-04-19T07:30:26.648Z [api\workorder.js] error: User Authentication failed while creating new Work Order - undefined
+2020-07-30T09:50:55.600Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
+    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
 
-2020-04-19T07:30:37.363Z [api\workorder.js] error: User Authentication failed while creating new Work Order - undefined
+2020-08-09T04:45:57.060Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-04-19T07:35:26.393Z [api\workorder.js] error: User Authentication failed while creating new Work Order - undefined
+2020-08-18T13:34:52.570Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-04-19T07:35:30.847Z [api\workorder.js] error: User Authentication failed while creating new Work Order - undefined
+2020-08-23T09:53:18.859Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-04-19T07:36:11.768Z [api\workorder.js] error: User Authentication failed while creating new Work Order - undefined
+2020-08-23T09:58:14.217Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-04-20T10:55:40.065Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+2020-11-12T11:02:48.538Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-05-03T06:35:37.664Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+2020-11-19T10:21:29.264Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-05-03T06:38:50.365Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+2020-11-19T10:26:51.008Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
 
-2020-05-03T06:44:01.360Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
-
-2020-05-03T06:47:07.985Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
-
-2020-05-03T06:49:17.271Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
-
-2020-05-10T06:46:26.346Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
-
-2020-05-10T06:48:25.423Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
-
-2020-05-10T06:49:28.354Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
-
-2020-05-23T04:48:17.576Z [auth\login.js] error: User Does not exist. Email:muralikannur@gmail.com - undefined
-
-2020-07-12T02:06:00.461Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
-
-2020-07-12T02:18:56.128Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at Object._errnoException (util.js:992:11)
-    at _exceptionWithHostPort (util.js:1014:20)
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
-
-2020-07-12T02:44:21.511Z [api\customer.js] error: Cast to ObjectId failed for value "ttt" at path "_id" for model "customer" - CastError: Cast to ObjectId failed for value "ttt" at path "_id" for model "customer"
-    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
-    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
-    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
-    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
-    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
-    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
-    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
-    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
-    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
-    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
-    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
-    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
-    at _combinedTickCallback (internal/process/next_tick.js:131:7)
-    at process._tickCallback (internal/process/next_tick.js:180:9)
-
-2020-07-12T02:47:21.512Z [api\customer.js] error: Cast to ObjectId failed for value "ttt" at path "_id" for model "customer" - CastError: Cast to ObjectId failed for value "ttt" at path "_id" for model "customer"
-    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
-    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
-    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
-    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
-    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
-    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
-    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
-    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
-    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
-    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
-    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
-    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
-    at _combinedTickCallback (internal/process/next_tick.js:131:7)
-    at process._tickCallback (internal/process/next_tick.js:180:9)
-
-2020-07-12T02:47:41.781Z [api\customer.js] error: Cast to ObjectId failed for value "YYY" at path "_id" for model "customer" - CastError: Cast to ObjectId failed for value "YYY" at path "_id" for model "customer"
-    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
-    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
-    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
-    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
-    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
-    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
-    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
-    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
-    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
-    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
-    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
-    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
-    at _combinedTickCallback (internal/process/next_tick.js:131:7)
-    at process._tickCallback (internal/process/next_tick.js:180:9)
-
-2020-07-12T02:52:26.367Z [api\customer.js] error: Cast to ObjectId failed for value "YYY" at path "_id" for model "customer" - CastError: Cast to ObjectId failed for value "YYY" at path "_id" for model "customer"
-    at new CastError (C:\murali\shape\workorderweb\node_modules\mongoose\lib\error\cast.js:29:11)
-    at ObjectId.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schema\objectid.js:242:11)
-    at ObjectId.SchemaType.applySetters (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:892:12)
-    at ObjectId.SchemaType._castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1304:15)
-    at ObjectId.SchemaType.castForQuery (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1294:15)
-    at ObjectId.SchemaType.castForQueryWrapper (C:\murali\shape\workorderweb\node_modules\mongoose\lib\schematype.js:1273:15)
-    at cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\cast.js:307:32)
-    at model.Query.Query.cast (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:4528:12)
-    at model.Query.Query._castConditions (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:1762:10)
-    at model.Query.<anonymous> (C:\murali\shape\workorderweb\node_modules\mongoose\lib\query.js:2015:8)
-    at model.Query._wrappedThunk [as _findOne] (C:\murali\shape\workorderweb\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
-    at process.nextTick (C:\murali\shape\workorderweb\node_modules\kareem\index.js:369:33)
-    at _combinedTickCallback (internal/process/next_tick.js:131:7)
-    at process._tickCallback (internal/process/next_tick.js:180:9)
-
-2020-07-12T03:35:16.614Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at Customer.findOne.then.customer (C:\murali\shape\workorderweb\routes\api\customer.js:36:50)
-    at <anonymous>
-    at process._tickCallback (internal/process/next_tick.js:188:7)
-
-2020-07-12T03:35:27.434Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at Customer.findOne.then.customer (C:\murali\shape\workorderweb\routes\api\customer.js:36:50)
-    at <anonymous>
-    at process._tickCallback (internal/process/next_tick.js:188:7)
-
-2020-07-12T03:38:02.042Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at Customer.findOne.then.customer (C:\murali\shape\workorderweb\routes\api\customer.js:36:50)
-    at <anonymous>
-    at process._tickCallback (internal/process/next_tick.js:188:7)
+2020-11-19T10:28:03.259Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)

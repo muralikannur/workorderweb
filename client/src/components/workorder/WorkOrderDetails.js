@@ -172,8 +172,7 @@ class WorkOrderDetails extends PureComponent {
      if(isEmptyOrSpaces(this.state.billing_address1) || 
         isEmptyOrSpaces(this.state.billing_address2)|| 
         isEmptyOrSpaces(this.state.billing_pin)|| 
-        isEmptyOrSpaces(this.state.billing_phone)|| 
-        isEmptyOrSpaces(this.state.billing_gst)){
+        isEmptyOrSpaces(this.state.billing_phone)){
     notify_error('Please enter complete Billing Address');
     return;
     }
@@ -182,16 +181,17 @@ class WorkOrderDetails extends PureComponent {
       this.setShippingAddress();
     }
 
-     if(isEmptyOrSpaces(this.state.shipping_address1) || 
-        isEmptyOrSpaces(this.state.shipping_address2)|| 
-        isEmptyOrSpaces(this.state.shipping_pin)|| 
-        isEmptyOrSpaces(this.state.shipping_phone)|| 
-        isEmptyOrSpaces(this.state.shipping_gst)){
-    notify_error('Please enter complete Shipping Address');
-    return;
-    }
+
 
     window.setTimeout(() => {
+      if(isEmptyOrSpaces(this.state.shipping_address1) || 
+      isEmptyOrSpaces(this.state.shipping_address2)|| 
+      isEmptyOrSpaces(this.state.shipping_pin)|| 
+      isEmptyOrSpaces(this.state.shipping_phone)){
+  notify_error('Please enter complete Shipping Address');
+  return;
+  }
+  
       this.upsertWO();
     },100)
 
@@ -364,7 +364,7 @@ class WorkOrderDetails extends PureComponent {
 
                   <select id="materialWoId" name="materialWoId" className="js-example-basic-single input-xs" style={{width:"500px"}} onChange={ (e) => this.onChange(e)} >
                       <option id="0">Select WorkOrder</option>
-                      {this.props.wolist.map(wl => { return(
+                      {this.props.wolist.filter(wl => wl.status == 'New').map(wl => { return(
                         <option value={wl._id} key={wl._id}>{wl.wonumber}</option>
                       )})}
                     </select>

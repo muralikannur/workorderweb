@@ -60,46 +60,69 @@ export const updateProfile = (profileNumber, profileSide) => (dispatch, getState
 }
 
 
-export const updateDoubleThick = (doubleThickWidth, dblSides, doubleThickCode) => (dispatch, getState) => {
+export const updateDoubleThick = (doubleThickData, dblSides) => (dispatch, getState) => {
   let newItem = getNewItem(getState,REMARKS.DBLTHICK);
-  newItem = { ...newItem, doubleThickWidth, dblSides}
+  newItem = { ...newItem, doubleThickData, doubleThickSides: dblSides}
 
 
   let newItem1 = getNewWoItem() //JSON.parse(JSON.stringify(newItem));
-  const {eb_a, eb_b, eb_c, eb_d, height, width, quantity} = newItem;
+  const {height, width, quantity} = newItem;
   newItem1 = {...newItem1, 
     itemnumber:0, 
     childNumber:1,
-    code:doubleThickCode,
+    code:doubleThickData.A ? doubleThickData.A.code : 0,
     parentId:newItem.itemnumber,
-    eb_a, eb_b, eb_c, eb_d, height, width, quantity
+    comments:'Item #' + newItem.itemnumber + ' DblThk-A',
+    height, width, quantity
 
   };
 
   let newItem2 = JSON.parse(JSON.stringify(newItem1));
   newItem2 = {...newItem2, 
-    childNumber:2
+    childNumber:2,
+    comments:'Item #' + newItem.itemnumber + ' DblThk-B',
+    code:doubleThickData.B ? doubleThickData.B.code : 0
+  };
+  let newItem3 = JSON.parse(JSON.stringify(newItem1));
+  newItem3 = {...newItem3, 
+    childNumber:3,
+    comments:'Item #' + newItem.itemnumber + ' DblThk-C',
+    code:doubleThickData.C ? doubleThickData.C.code : 0
+  };
+  let newItem4 = JSON.parse(JSON.stringify(newItem1));
+  newItem4 = {...newItem4, 
+    childNumber:4,
+    comments:'Item #' + newItem.itemnumber + ' DblThk-D',
+    code:doubleThickData.D ? doubleThickData.D.code : 0
   };
 
-  if(!setDoubleThick(dblSides, newItem, newItem1, newItem2, doubleThickWidth)){
+
+
+  if(!setDoubleThick(dblSides, newItem, newItem1, newItem2, newItem3, newItem4, doubleThickData)){
     return;
   }
 
   updateCurrentItem(dispatch, newItem);
 
   let childItems = [];
-  if(newItem1.quantity != 0){
+  if(dblSides.includes('A')){
     childItems.push(newItem1);
   }
-  if(newItem2.quantity != 0){
+  if(dblSides.includes('B')){
     childItems.push(newItem2);
+  }
+  if(dblSides.includes('C')){
+    childItems.push(newItem3);
+  }
+  if(dblSides.includes('D')){
+    childItems.push(newItem4);
   }
 
   if(childItems.length > 0){
     dispatch({
       type: SAVE_CHILD_ITEMS,
       parentId: newItem.itemnumber,
-      childItems: [newItem1, newItem2]
+      childItems
     });
   }
 

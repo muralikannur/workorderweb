@@ -347,15 +347,15 @@ class WorkOrderItems extends PureComponent {
           modifiedItem.profileNumber = 0;
           modifiedItem.profileSide= '';
           break;
-        case REMARKS.E_PROFILE:
-            modifiedItem.eb_a = 0;
-            modifiedItem.eb_b = 0;
-            modifiedItem.eb_c = 0;
-            modifiedItem.eb_d = 0;
-          break;
+        // case REMARKS.E_PROFILE:
+        //     modifiedItem.eb_a = 0;
+        //     modifiedItem.eb_b = 0;
+        //     modifiedItem.eb_c = 0;
+        //     modifiedItem.eb_d = 0;
+        //   break;
         case REMARKS.DBLTHICK:
             unModifiedItems = unModifiedItems.filter(item => item.parentId != itemNumber);
-            modifiedItem.doubleThickWidth = 0;
+            modifiedItem.doubleThickData = new Object();
             break;
 
         case REMARKS.LEDGE:

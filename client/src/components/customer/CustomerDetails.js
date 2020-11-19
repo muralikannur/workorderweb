@@ -64,7 +64,7 @@ componentWillReceiveProps(newProps){
       return;
     }
 
-    if(phone == '' || email == '' || whatsapp == '' ){
+    if(phone == '' || email == '' || whatsapp == '' || address1 == '' || address2 == '' || pin == ''){
       notify_error("Please enter mandatory fields");
       return;
     }

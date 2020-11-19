@@ -37,6 +37,11 @@ class WorkOrderList extends PureComponent {
       materialWoId:0
     }
   }
+
+  componentDidMount(){
+    this.props.clearMaterial();
+    this.props.clearWorkOrder();
+  }
  
   toLoginPage = () => {
     const { history } = this.props;
@@ -156,7 +161,7 @@ getWorkOrder = (id, status) => {
                         <th style={{width:"200px"}}>Project Name</th>
                         <th style={{width:"200px"}}>Status</th>
                         <th style={{width:"100px"}}>RESTORE</th>
-                        <th style={{width:"100px"}}>DELETE</th>
+                        <th style={{width:"100px", color:"red"}}>REMOVE</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -168,7 +173,7 @@ getWorkOrder = (id, status) => {
                         <td>{wl.project}</td>
                         <td>{wl.status}</td>
                         <td><a href="#" onClick={() => {this.restoreWorkOrder(wl.wonumber,wl._id)}}>RESTORE</a></td>  
-                        <td><a href="#" onClick={() => {this.removeWorkOrder(wl.wonumber,wl._id)}}>DELETE</a></td>  
+                        <td style={{color:"red"}}><a href="#" onClick={() => {this.removeWorkOrder(wl.wonumber,wl._id)}}>REMOVE</a></td>  
                       </tr>
                     )})}
                   </tbody>

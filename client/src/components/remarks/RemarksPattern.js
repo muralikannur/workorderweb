@@ -259,12 +259,12 @@ class RemarksPattern extends PureComponent {
               <tbody>
 
               <tr>
-                <td  style={{width:"40%"}}>
+                <td  style={{width:"55%"}}>
 
                   <table  className="table  table-striped"  style={{ width:"100%", fontSize:"10px", border:"#ccc 1px solid", display:`${this.state.patternSplits.length > 0 ? "block" : "none"}`}}>
                   <tbody>
                     <tr style={{backgroundColor:"#ccc"}}>
-                      <td>#</td><td>Laminate</td><td style={{width:"10px"}}>{this.state.patternType == PATTERN_TYPE.HORIZONTAL ? "Height" : "Width"}</td><td title="Edge Band" >EB</td>
+                      <td>#</td><td style={{ width:"60%"}}>Laminate</td><td style={{width:"10px"}}>{this.state.patternType == PATTERN_TYPE.HORIZONTAL ? "Height" : "Width"}</td><td title="Edge Band" >EB</td>
                     </tr>
                   
                 {
@@ -291,7 +291,7 @@ class RemarksPattern extends PureComponent {
                   </table>
 
                 </td>
-                <td style={{width:"60%"}}>
+                <td style={{width:"45%"}}>
                   <table style={{float:"right"}}>
                   <tbody>
                     <tr>
