@@ -88,6 +88,16 @@ class WorkOrderMain extends PureComponent {
     this.setState({[name]:value});
   }
 
+  showOptimization = () => {
+
+    window.open(
+      'https://workorderweb.com/opt?id='+this.props.wo._id,
+      '_blank' 
+    );
+
+  }
+  
+
   submitWorkOrder = () => {
     //NO ITEMS ADDED
     if(this.props.wo.woitems.length == 0){
@@ -373,8 +383,9 @@ class WorkOrderMain extends PureComponent {
                     {this.props.editMode ?
                       <div>
                         <button type="button" id="btnMaterial" className="btn btn-primary" style={{marginLeft:"20px"}}  data-toggle="modal" data-target="#materialModal">Define Materials</button>
-                        <button id="btnSaveWO" type="button" className="btn btn-success" style={{lineHeight:"1px",marginLeft:"20px"}} onClick={() => {this.saveWorkOrder(true);}}><i className="icon-doc" ></i>Save</button>
-                        <button id="btnExport" type="button" className="btn btn-primary"  style={{lineHeight:"1px",marginLeft:"20px"}} onClick={() => {this.saveToExcel();}}><i className="icon-grid" ></i>Download</button>
+                        <button id="btnSaveWO" type="button" className="btn btn-primary" style={{lineHeight:"1px",marginLeft:"20px"}} onClick={() => {this.saveWorkOrder(true);}}><i className="icon-doc" ></i>Save</button>
+                        <button id="btnExport" type="button" className="btn btn-primary"  style={{lineHeight:"1px",marginLeft:"20px"}} onClick={() => {this.saveToExcel();}}><i className="icon-list" ></i>Download</button>
+                        <button id="btnExport" type="button" className="btn btn-primary"  style={{lineHeight:"1px",marginLeft:"20px"}} onClick={() => {this.showOptimization();}}><i className="icon-grid" ></i>Optimization</button>
                       </div>
                     :
                       <button id="btnRestore" type="button" className="btn btn-success"  style={{lineHeight:"1px"}} onClick={() => {this.restoreWorkOrder();}}><i className="icon-reload" ></i>Restore</button>

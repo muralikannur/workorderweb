@@ -18,11 +18,12 @@ import Verification from './components/auth/Verification';
 import ResetPassword from './components/auth/ResetPassword';
 import ForgotPassword from './components/auth/ForgotPassword';
 
-import Optimization from './components/Optimization';
-
 class App extends PureComponent {
 
+  
+
   render() {
+    const reload = () => window.location.reload();
     return (
       <Provider store={store}>
         <BrowserRouter>
@@ -36,7 +37,6 @@ class App extends PureComponent {
                 <Route path="/wolist" component={WorkOrderList}></Route>
                 <Route path="/customerlist" component={CustomerList}></Route>                
                 <Route path="/settings" component={Settings}></Route>
-                <Route path="/opt" component={Optimization}></Route>
               </div>
             </div>
           </div>
@@ -45,7 +45,8 @@ class App extends PureComponent {
           <Route path="/activation" component={Activation}></Route>  
           <Route path="/verification" component={Verification}></Route>    
           <Route path="/resetpassword" component={ResetPassword}></Route>        
-          <Route path="/forgotpassword" component={ForgotPassword}></Route>        
+          <Route path="/forgotpassword" component={ForgotPassword}></Route>
+          <Route path="/opt" onEnter={reload} />        
 
           <Footer />
         </BrowserRouter>
