@@ -94,7 +94,10 @@ router.post('/', (req, res) => {
 
 
           // }
-          res.json({msg:'Email verification link sent to ' + user.email});
+
+
+          //res.json({msg:'Email verification link sent to ' + user.email});
+          res.json({msg:'User Created successfully.' + user.email});
 
 
 
