@@ -121,6 +121,8 @@ router.post('/', auth, (req,  res) => {
           res.status(200).json({error:'Customer Code ' + customercode + ' already exists.'})
         } else {
           const user_id = req.user.id;
+          console.log(user_id);
+          
           const newCustomer = new Customer({ customercode,companyname,contactperson,phone,whatsapp,email,address1,address2,pin,gst, user_id});
           newCustomer.save().then(c => {
               res.status(200).json(c);

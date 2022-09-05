@@ -1,388 +1,155 @@
 
-2020-07-26T03:01:54.080Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T13:42:17.108Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T03:01:55.131Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T13:42:17.146Z [workorderweb\server.js] error: username must be a string - MongoError: username must be a string
+    at passwordDigest (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:32:43)
+    at ScramSHA1._executeScram (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:147:29)
+    at RandomBytesJob.<anonymous> (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:240:19)
+    at RandomBytesJob.<anonymous> (node:internal/crypto/random:107:5)
+    at RandomBytesJob.onJobDone (node:internal/crypto/random:302:3)
 
-2020-07-26T03:02:40.540Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T13:45:10.523Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T03:02:41.574Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T13:45:10.551Z [workorderweb\server.js] error: username must be a string - MongoError: username must be a string
+    at passwordDigest (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:32:43)
+    at ScramSHA1._executeScram (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:147:29)
+    at RandomBytesJob.<anonymous> (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:240:19)
+    at RandomBytesJob.<anonymous> (node:internal/crypto/random:107:5)
+    at RandomBytesJob.onJobDone (node:internal/crypto/random:302:3)
 
-2020-07-26T03:09:08.238Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T15:49:14.094Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T03:09:09.464Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T15:49:14.143Z [workorderweb\server.js] error: username must be a string - MongoError: username must be a string
+    at passwordDigest (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:32:43)
+    at ScramSHA1._executeScram (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:147:29)
+    at RandomBytesJob.<anonymous> (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:240:19)
+    at RandomBytesJob.<anonymous> (node:internal/crypto/random:107:5)
+    at RandomBytesJob.onJobDone (node:internal/crypto/random:302:3)
 
-2020-07-26T03:12:07.919Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:14:35.694Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T03:12:09.002Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T16:14:35.761Z [workorderweb\server.js] error: Authentication failed. - MongoError: Authentication failed.
+    at Function._getError (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:125:14)
+    at C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:175:31
+    at Connection.messageHandler (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connect.js:334:5)
+    at Connection.emit (node:events:527:28)
+    at processMessage (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connection.js:364:10)
+    at Socket.<anonymous> (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connection.js:533:15)
+    at Socket.emit (node:events:527:28)
+    at addChunk (node:internal/streams/readable:315:12)
+    at readableAddChunk (node:internal/streams/readable:289:9)
+    at Socket.Readable.push (node:internal/streams/readable:228:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
 
-2020-07-26T03:15:41.354Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:19:54.667Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T03:15:42.403Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T16:19:54.733Z [workorderweb\server.js] error: Authentication failed. - MongoError: Authentication failed.
+    at Function._getError (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:125:14)
+    at C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:175:31
+    at Connection.messageHandler (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connect.js:334:5)
+    at Connection.emit (node:events:527:28)
+    at processMessage (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connection.js:364:10)
+    at Socket.<anonymous> (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connection.js:533:15)
+    at Socket.emit (node:events:527:28)
+    at addChunk (node:internal/streams/readable:315:12)
+    at readableAddChunk (node:internal/streams/readable:289:9)
+    at Socket.Readable.push (node:internal/streams/readable:228:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
 
-2020-07-26T03:23:54.646Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:22:10.570Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T03:23:55.744Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T16:22:22.777Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T03:29:01.704Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:22:22.862Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T03:29:02.761Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T16:22:49.979Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-26T03:32:13.853Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:22:50.217Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-26T03:32:14.904Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T16:24:15.819Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T03:37:08.779Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:24:15.910Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T03:37:09.819Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T16:24:23.376Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T03:39:23.923Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:24:23.462Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T03:39:25.117Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T16:25:33.964Z [api\customer.js] error: Cannot read properties of null (reading 'user_id') - TypeError: Cannot read properties of null (reading 'user_id')
+    at C:\MURALI\wow\workorderweb\routes\api\customer.js:38:50
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
 
-2020-07-26T03:40:42.841Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:26:53.929Z [api\customer.js] error: Cannot read properties of null (reading 'user_id') - TypeError: Cannot read properties of null (reading 'user_id')
+    at C:\MURALI\wow\workorderweb\routes\api\customer.js:38:50
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
 
-2020-07-26T03:40:44.066Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T16:31:48.523Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T14:47:03.654Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:31:48.589Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T14:47:05.670Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
+2022-08-15T16:31:58.550Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T14:57:54.909Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:31:58.633Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T14:57:55.941Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T16:32:05.906Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-26T15:03:55.610Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-15T16:32:05.975Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-26T15:03:56.685Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-15T16:32:15.639Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-26T15:04:42.872Z [api\customer.js] error: Customer Code ABC already exists. - undefined
+2022-08-15T16:32:15.751Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-26T15:06:02.054Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+2022-08-15T16:33:23.658Z [api\workorder.js] info: [object Object] - undefined
 
-2020-07-26T15:11:51.654Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-16T06:18:18.077Z [api\workorder.js] info: [object Object] - undefined
 
-2020-07-26T15:11:52.725Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-08-16T06:34:37.926Z [api\workorder.js] info: [object Object] - undefined
 
-2020-07-26T15:12:35.856Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+2022-08-16T08:00:09.782Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T15:17:45.223Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-08-16T08:00:09.898Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T15:17:46.261Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-09-05T14:03:32.536Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T15:18:01.322Z [api\workorder.js] info: [object Object] - undefined
+2022-09-05T14:03:32.661Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T15:24:31.207Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-09-05T14:07:05.306Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T15:24:32.472Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-09-05T14:07:05.390Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T15:24:44.260Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
+2022-09-05T14:07:13.877Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T15:27:13.199Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
+2022-09-05T14:07:13.951Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T15:29:31.343Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
+2022-09-05T14:11:03.743Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T15:31:02.000Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-09-05T14:11:03.822Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T15:31:03.047Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-09-05T14:17:14.601Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T15:31:24.066Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
+2022-09-05T14:17:14.681Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T15:31:56.572Z [api\workorder.js] info: [object Object] - undefined
+2022-09-05T14:17:26.492Z [auth\login.js] error: Email not verified. pratheerthk@gmail.com - undefined
 
-2020-07-26T15:35:10.969Z [api\workorder.js] info: [object Object] - undefined
+2022-09-05T14:20:12.024Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-26T15:35:21.968Z [api\workorder.js] info: [object Object] - undefined
+2022-09-05T14:20:12.091Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-26T15:40:40.606Z [api\workorder.js] info: [object Object] - undefined
+2022-09-05T14:20:16.858Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-27T01:06:55.996Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-09-05T14:20:16.998Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-27T01:06:57.026Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-09-05T14:20:24.448Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-27T01:20:58.185Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-09-05T14:20:24.507Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-27T01:20:59.229Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-09-05T14:20:49.421Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-27T01:29:06.092Z [workorderweb\server.js] info: Server started on port 5000 - undefined
+2022-09-05T14:20:49.527Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-27T01:29:07.142Z [workorderweb\server.js] info: MongoDB Connected... - undefined
+2022-09-05T14:20:51.568Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-27T01:29:47.254Z [api\workorder.js] info: [object Object] - undefined
+2022-09-05T14:20:51.626Z [workorderweb\server.js] info: MongoDB Connected... - undefined
 
-2020-07-27T01:29:56.935Z [api\workorder.js] info: [object Object] - undefined
+2022-09-05T14:21:02.677Z [workorderweb\server.js] info: Server started on port 5000 - undefined
 
-2020-07-27T01:42:29.085Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-27T01:42:30.118Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-27T04:16:29.800Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-27T04:16:30.845Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-27T16:10:34.564Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-27T16:10:35.598Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-27T16:31:28.114Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-27T16:31:35.150Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-27T16:34:13.823Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-27T16:34:32.530Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-27T16:34:37.782Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-27T16:41:34.397Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-27T16:41:35.429Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-27T16:45:10.484Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-27T16:45:11.520Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-27T16:45:30.968Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-27T16:54:47.282Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-27T16:54:48.331Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-27T16:58:51.458Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-27T16:58:52.524Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-27T17:00:59.291Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-27T17:01:00.339Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-27T17:01:36.831Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-27T17:01:37.867Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T05:25:39.094Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T05:25:40.126Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T05:53:26.591Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T05:53:28.603Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-07-30T05:55:55.127Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T05:56:12.943Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T05:56:47.475Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-07-30T05:57:48.308Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T05:58:29.037Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T05:59:03.573Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-07-30T08:05:51.179Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T08:06:18.231Z [workorderweb\server.js] error: connect ECONNREFUSED 139.59.58.64:27017 - Error: connect ECONNREFUSED 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-07-30T08:07:05.789Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T08:07:32.833Z [workorderweb\server.js] error: connect ECONNREFUSED 139.59.58.64:27017 - Error: connect ECONNREFUSED 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-07-30T08:14:38.000Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T08:14:39.040Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T08:16:23.379Z [auth\login.js] error: User Does not exist. Email:forshaping@gmail.com - undefined
-
-2020-07-30T08:31:11.978Z [auth\login.js] error: User Does not exist. Email:forshaping@gmail.com - undefined
-
-2020-07-30T08:31:29.229Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T08:31:30.283Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T08:31:48.227Z [api\customer.js] error: Can not delete the customer - QQQ - undefined
-
-2020-07-30T08:35:50.394Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T08:35:51.425Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T08:37:13.462Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-
-2020-07-30T09:38:47.144Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T09:38:48.169Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T09:41:12.458Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T09:42:39.485Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T09:43:10.674Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T09:47:10.360Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T09:47:46.511Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T09:50:55.600Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-
-2020-07-30T09:51:40.439Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T09:53:44.909Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T09:53:49.409Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T09:57:11.812Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T09:57:12.854Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T10:00:21.815Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T10:10:29.043Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T10:10:30.084Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T10:10:52.523Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T10:13:04.097Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T10:13:05.151Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T10:14:03.789Z [api\workorder.js] info: [object Object] - undefined
-
-2020-07-30T10:16:08.907Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T10:16:09.961Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T10:16:53.460Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T10:16:54.510Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-07-30T10:18:42.439Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-07-30T10:18:43.507Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-09T04:45:55.048Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-09T04:45:57.060Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-08-09T06:10:24.412Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-09T06:10:25.440Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-09T07:21:43.107Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-09T07:21:44.133Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-09T07:46:43.208Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-09T07:46:44.359Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-09T08:00:03.461Z [api\workorder.js] info: [object Object] - undefined
-
-2020-08-09T08:01:56.334Z [api\workorder.js] info: [object Object] - undefined
-
-2020-08-09T10:53:04.704Z [api\workorder.js] info: [object Object] - undefined
-
-2020-08-09T10:53:46.096Z [api\workorder.js] info: [object Object] - undefined
-
-2020-08-18T13:34:50.548Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-18T13:34:52.570Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-08-18T13:39:31.726Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-18T13:39:32.752Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-18T13:40:44.726Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-18T13:40:45.766Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-18T14:07:29.116Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-18T14:07:30.154Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-18T14:08:58.859Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-18T14:08:59.885Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-18T14:10:09.632Z [api\workorder.js] info: [object Object] - undefined
-
-2020-08-18T14:23:06.779Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-18T14:23:07.812Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-18T14:23:24.212Z [api\workorder.js] info: [object Object] - undefined
-
-2020-08-18T14:23:46.641Z [api\workorder.js] info: [object Object] - undefined
-
-2020-08-18T14:24:42.638Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-18T14:24:43.663Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-18T14:24:54.851Z [api\workorder.js] info: [object Object] - undefined
-
-2020-08-18T15:31:34.225Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-18T15:31:35.250Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-18T15:33:20.888Z [api\workorder.js] info: [object Object] - undefined
-
-2020-08-18T15:34:12.634Z [api\workorder.js] info: [object Object] - undefined
-
-2020-08-18T15:36:17.427Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-18T15:36:18.528Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-18T15:37:30.320Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-18T15:37:31.351Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-19T03:29:38.230Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-19T03:29:39.263Z [workorderweb\server.js] info: MongoDB Connected... - undefined
-
-2020-08-23T09:53:16.846Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-23T09:53:18.859Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-08-23T09:58:12.198Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-08-23T09:58:14.217Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-11-12T11:02:14.019Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-11-12T11:02:48.538Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-11-13T01:49:09.197Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-11-19T10:20:47.257Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-11-19T10:21:29.264Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-11-19T10:26:08.999Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-11-19T10:26:51.008Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-11-19T10:27:22.238Z [workorderweb\server.js] info: Server started on port 5000 - undefined
-
-2020-11-19T10:28:03.259Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
+2022-09-05T14:21:02.748Z [workorderweb\server.js] info: MongoDB Connected... - undefined

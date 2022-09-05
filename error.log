@@ -1,74 +1,69 @@
 
-2020-07-26T14:47:05.670Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
+2022-08-15T13:42:17.146Z [workorderweb\server.js] error: username must be a string - MongoError: username must be a string
+    at passwordDigest (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:32:43)
+    at ScramSHA1._executeScram (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:147:29)
+    at RandomBytesJob.<anonymous> (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:240:19)
+    at RandomBytesJob.<anonymous> (node:internal/crypto/random:107:5)
+    at RandomBytesJob.onJobDone (node:internal/crypto/random:302:3)
 
-2020-07-26T15:04:42.872Z [api\customer.js] error: Customer Code ABC already exists. - undefined
+2022-08-15T13:45:10.551Z [workorderweb\server.js] error: username must be a string - MongoError: username must be a string
+    at passwordDigest (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:32:43)
+    at ScramSHA1._executeScram (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:147:29)
+    at RandomBytesJob.<anonymous> (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:240:19)
+    at RandomBytesJob.<anonymous> (node:internal/crypto/random:107:5)
+    at RandomBytesJob.onJobDone (node:internal/crypto/random:302:3)
 
-2020-07-26T15:06:02.054Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+2022-08-15T15:49:14.143Z [workorderweb\server.js] error: username must be a string - MongoError: username must be a string
+    at passwordDigest (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:32:43)
+    at ScramSHA1._executeScram (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:147:29)
+    at RandomBytesJob.<anonymous> (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:240:19)
+    at RandomBytesJob.<anonymous> (node:internal/crypto/random:107:5)
+    at RandomBytesJob.onJobDone (node:internal/crypto/random:302:3)
 
-2020-07-26T15:12:35.856Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+2022-08-15T16:14:35.761Z [workorderweb\server.js] error: Authentication failed. - MongoError: Authentication failed.
+    at Function._getError (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:125:14)
+    at C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:175:31
+    at Connection.messageHandler (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connect.js:334:5)
+    at Connection.emit (node:events:527:28)
+    at processMessage (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connection.js:364:10)
+    at Socket.<anonymous> (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connection.js:533:15)
+    at Socket.emit (node:events:527:28)
+    at addChunk (node:internal/streams/readable:315:12)
+    at readableAddChunk (node:internal/streams/readable:289:9)
+    at Socket.Readable.push (node:internal/streams/readable:228:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
 
-2020-07-26T15:24:44.260Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
+2022-08-15T16:19:54.733Z [workorderweb\server.js] error: Authentication failed. - MongoError: Authentication failed.
+    at Function._getError (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:125:14)
+    at C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\auth\scram.js:175:31
+    at Connection.messageHandler (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connect.js:334:5)
+    at Connection.emit (node:events:527:28)
+    at processMessage (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connection.js:364:10)
+    at Socket.<anonymous> (C:\MURALI\wow\workorderweb\node_modules\mongodb-core\lib\connection\connection.js:533:15)
+    at Socket.emit (node:events:527:28)
+    at addChunk (node:internal/streams/readable:315:12)
+    at readableAddChunk (node:internal/streams/readable:289:9)
+    at Socket.Readable.push (node:internal/streams/readable:228:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
 
-2020-07-26T15:27:13.199Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
+2022-08-15T16:22:49.979Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-26T15:29:31.343Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
+2022-08-15T16:22:50.217Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-26T15:31:24.066Z [api\customer.js] error: Can not delete the customer - 5f1d9d7189a9372948cb1ec4 - undefined
+2022-08-15T16:25:33.964Z [api\customer.js] error: Cannot read properties of null (reading 'user_id') - TypeError: Cannot read properties of null (reading 'user_id')
+    at C:\MURALI\wow\workorderweb\routes\api\customer.js:38:50
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
 
-2020-07-30T05:53:28.603Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
+2022-08-15T16:26:53.929Z [api\customer.js] error: Cannot read properties of null (reading 'user_id') - TypeError: Cannot read properties of null (reading 'user_id')
+    at C:\MURALI\wow\workorderweb\routes\api\customer.js:38:50
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
 
-2020-07-30T05:56:47.475Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
+2022-08-15T16:32:05.906Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-30T05:59:03.573Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
+2022-08-15T16:32:05.975Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-30T08:06:18.231Z [workorderweb\server.js] error: connect ECONNREFUSED 139.59.58.64:27017 - Error: connect ECONNREFUSED 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
+2022-08-15T16:32:15.639Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-30T08:07:32.833Z [workorderweb\server.js] error: connect ECONNREFUSED 139.59.58.64:27017 - Error: connect ECONNREFUSED 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
+2022-08-15T16:32:15.751Z [auth\login.js] error: Email not verified. muralikannur@gmail.com - undefined
 
-2020-07-30T08:16:23.379Z [auth\login.js] error: User Does not exist. Email:forshaping@gmail.com - undefined
-
-2020-07-30T08:31:11.978Z [auth\login.js] error: User Does not exist. Email:forshaping@gmail.com - undefined
-
-2020-07-30T08:31:48.227Z [api\customer.js] error: Can not delete the customer - QQQ - undefined
-
-2020-07-30T08:37:13.462Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-
-2020-07-30T09:50:55.600Z [api\customer.js] error: Cannot read property 'user_id' of null - TypeError: Cannot read property 'user_id' of null
-    at C:\murali\shape\workorderweb\routes\api\customer.js:38:50
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-
-2020-08-09T04:45:57.060Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-08-18T13:34:52.570Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-08-23T09:53:18.859Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-08-23T09:58:14.217Z [workorderweb\server.js] error: connect ECONNREFUSED 127.0.0.1:27017 - Error: connect ECONNREFUSED 127.0.0.1:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-11-12T11:02:48.538Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-11-19T10:21:29.264Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-11-19T10:26:51.008Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
-
-2020-11-19T10:28:03.259Z [workorderweb\server.js] error: connect ETIMEDOUT 139.59.58.64:27017 - Error: connect ETIMEDOUT 139.59.58.64:27017
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1141:16)
+2022-09-05T14:17:26.492Z [auth\login.js] error: Email not verified. pratheerthk@gmail.com - undefined

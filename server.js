@@ -10,11 +10,12 @@ app.use(express.json());
 app.set('trust proxy', true);
 
 const db = config.get('mongoURI');
-console.log(process.env.NODE_ENV)
+console.log(db)
 mongoose
   .connect(db, { 
+    keepAlive: true,
     useNewUrlParser: true,
-    useCreateIndex: true
+    useUnifiedTopology: true 
   }) 
   .then(() => logger.info('MongoDB Connected...'))
   .catch(err => logger.error(err));

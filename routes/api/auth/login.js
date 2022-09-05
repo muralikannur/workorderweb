@@ -19,10 +19,13 @@ router.post('/', (req, res) => {
     logger.error("Please enter all fields");
     return res.status(400).json({ msg: 'Please enter all fields' });
   }
+
+  console.log(User.find());
   
   // Check for existing user
   User.findOne({ email })
     .then(user => {
+      console.log('found user...');
       if(!user){
         logger.error("User Does not exist. Email:" + email);
         return res.status(400).json({ msg: 'User Does not exist' });
@@ -81,6 +84,9 @@ router.post('/', (req, res) => {
           })
 
         })
+    }).catch(e => {
+      console.log('error whiel getting user.....');
+      console.log(e)
     })
 });
 

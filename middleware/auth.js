@@ -4,6 +4,11 @@ const User = require('../models/User');
 const logger = require('../logger')(module);
 
 function auth(req, res, next) {
+
+  // req.user = {id:'62fa72d4a21d5e6dbc45b419',name:'murali'};
+  // next();
+
+
   const token = req.header('x-auth-token');
 
   // Check for token
